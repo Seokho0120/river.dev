@@ -1,7 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Open_Sans } from 'next/font/google';
-import Head from 'next/head';
 
 const sans = Open_Sans({ subsets: ['latin'] });
 
@@ -23,7 +22,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang='ko' className={sans.className}>
-      {/* <link rel='icon' href='/favicon.ico' sizes='any' /> */}
       <body>{children}</body>
     </html>
   );
