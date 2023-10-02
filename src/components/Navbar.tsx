@@ -9,7 +9,7 @@ import Link from 'next/link';
 import PostIcon from './ui/icons/PostIcon';
 import PostFillIcon from './ui/icons/PostFillIcon';
 
-const menu = [
+const NAV_MENU = [
   {
     href: '/',
     title: 'Home',
@@ -34,14 +34,14 @@ export default function Navbar() {
   const pathName = usePathname();
 
   return (
-    <div className='flex justify-between items-center w-full h-full max-w-3xl mx-auto mt-10'>
+    <div className='flex justify-between items-center w-full max-w-3xl mx-auto mt-10'>
       <Link href='/'>
         <div className='text-3xl font-bold'>River</div>
       </Link>
 
       <nav>
         <ul className='flex gap-4 items-center'>
-          {menu.map(({ icon, href, clickedIcon }) => (
+          {NAV_MENU.map(({ icon, href, clickedIcon }) => (
             <li key={href}>
               <Link href={href}>{pathName === href ? clickedIcon : icon}</Link>
             </li>

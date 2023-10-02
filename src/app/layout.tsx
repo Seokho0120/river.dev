@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Open_Sans } from 'next/font/google';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const sans = Open_Sans({ subsets: ['latin'] });
 
@@ -23,13 +24,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang='ko' className={sans.className}>
-      <body className='w-full overflow-auto'>
-        <header className='sticky top-0 bg-white z-10'>
+      <body className='flex flex-col w-full overflow-auto max-w-screen-md mx-auto'>
+        <header>
           <Navbar />
         </header>
-        <main className='w-full justify-center max-w-3xl mx-auto'>
-          {children}
-        </main>
+        <main className='grow'>{children}</main>
+        <Footer />
       </body>
     </html>
   );
