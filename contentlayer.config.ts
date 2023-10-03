@@ -33,12 +33,21 @@ export const Post = defineDocumentType(() => ({
       type: 'string',
       required: true,
     },
+    category: {
+      type: 'string',
+      required: true,
+    },
     image: {
       type: 'string',
     },
   },
   computedFields,
 }));
+
+const rehypeOptions = {
+  theme: 'material-theme-darker',
+  keepBackground: true,
+};
 
 export default makeSource({
   contentDirPath: 'posts',
@@ -50,7 +59,7 @@ export default makeSource({
       [
         rehypePrettyCode,
         {
-          theme: 'material-theme-darker',
+          theme: 'material-theme-palenight',
           onVisitHighlightedLine(node: any) {
             node.properties.className.push('line-highlighted');
           },
