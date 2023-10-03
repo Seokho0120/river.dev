@@ -1,8 +1,8 @@
 import { getAllPosts } from 'src/service/post';
 import FilterablePost from 'src/components/FilterablePost';
 
-export default function PostsPage() {
-  const posts = getAllPosts();
+export default async function PostsPage() {
+  const posts = await getAllPosts();
   const categories = [...new Set(posts.map((post) => post.category))];
 
   return (

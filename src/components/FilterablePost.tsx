@@ -1,5 +1,9 @@
-import { Post } from 'contentlayer/generated';
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
+import { Post } from 'contentlayer/generated';
+import PostCard from './PostCard';
 
 type Props = {
   posts: Post[];
@@ -9,19 +13,15 @@ type Props = {
 const ALL_POSTS = '전체 보기';
 
 export default function FilterablePost({ posts, categories }: Props) {
+  const [selected, setSelected] = useState(ALL_POSTS);
+  const filtered =
+    selected === ALL_POSTS
+      ? posts
+      : posts.filter((post) => post.category === selected);
+
   return (
     <section>
-      {posts.map(({ slug, title, summary, publishedAt }) => (
-        <article key={slug}>
-          <Link href={`/post/${slug}`}>
-            <h2>{title}</h2>
-            <h6>{summary}</h6>
-            <p>
-              <h2>{publishedAt}</h2>
-            </p>
-          </Link>
-        </article>
-      ))}
+      <PostCard posts={filtered} />
     </section>
   );
 }
