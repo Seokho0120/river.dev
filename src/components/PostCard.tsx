@@ -9,11 +9,11 @@ export default function PostCard({ posts }: Props) {
   return (
     <>
       {posts.map(({ slug, title, summary, publishedAt }) => (
-        <article key={slug}>
+        <article key={slug} className='rounded-xl mb-8'>
           <Link href={`/posts/${slug}`}>
-            <h3>{title}</h3>
-            <p>{summary}</p>
-            <time>{publishedAt}</time>
+            <h2 className='text-2xl font-bold mb-2'>{title}</h2>
+            <h6 className='my-1 text-sm'>{summary}</h6>
+            <p className='text-xs'>{publishedAt}</p>
           </Link>
         </article>
       ))}
