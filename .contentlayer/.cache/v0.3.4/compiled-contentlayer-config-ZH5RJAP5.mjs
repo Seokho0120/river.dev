@@ -4,9 +4,9 @@ import {
   makeSource
 } from "contentlayer/source-files";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
+import rehypePrettyCode from "rehype-pretty-code";
 var computedFields = {
   slug: {
     type: "string",
@@ -51,7 +51,6 @@ var contentlayer_config_default = makeSource({
         rehypePrettyCode,
         {
           theme: "material-theme-darker",
-          keepBackground: true,
           onVisitHighlightedLine(node) {
             node.properties.className.push("line-highlighted");
           },
@@ -75,4 +74,4 @@ export {
   Post,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-ITRBNU65.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-ZH5RJAP5.mjs.map

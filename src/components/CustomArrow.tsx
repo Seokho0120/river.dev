@@ -12,7 +12,7 @@ export function CustomArrow({ type, onClick }: CustomArrowsProps) {
       onClick={onClick}
       className={`absolute ${
         type === 'left' ? 'left-0' : 'right-0'
-      } top-2.5/3 transform -translate-y-1/2 transition-opacity duration-200 opacity-0 hover:opacity-90 text-point`}
+      } top-2.5/3 transform -translate-y-1/2 transition-opacity duration-200 opacity-0 hover:opacity-90 text-point dark:text-orange-400`}
     >
       {type === 'left' ? (
         <MdKeyboardArrowLeft className='w-10 h-10' />

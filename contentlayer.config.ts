@@ -4,9 +4,9 @@ import {
   makeSource,
 } from 'contentlayer/source-files';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
+import rehypePrettyCode from 'rehype-pretty-code';
 
 /** @type {import('contentlayer/source-files').ComputedFields} */
 const computedFields: ComputedFields = {
@@ -55,7 +55,6 @@ export default makeSource({
         rehypePrettyCode,
         {
           theme: 'material-theme-darker',
-          keepBackground: true,
           onVisitHighlightedLine(node: any) {
             node.properties.className.push('line-highlighted');
           },

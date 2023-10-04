@@ -12,9 +12,11 @@ export default function Categories({ categories, selected, onClick }: Props) {
           <li
             key={category}
             onClick={() => onClick(category)}
-            className={`cursor-pointer ${
-              selected === category ? 'text-point' : 'text-gray-500'
-            } hover:text-point`}
+            className={`cursor-pointer  hover:text-point dark:hover:text-orange-400 ${
+              selected === category
+                ? 'text-point dark:text-orange-400'
+                : 'text-gray-500'
+            }`}
           >
             {category}
           </li>

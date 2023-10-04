@@ -8,6 +8,7 @@ import MeFillIcon from './ui/icons/MeFillIcon';
 import Link from 'next/link';
 import PostIcon from './ui/icons/PostIcon';
 import PostFillIcon from './ui/icons/PostFillIcon';
+import ThemeSwitch from './ThemeSwitch';
 
 const NAV_MENU = [
   {
@@ -36,7 +37,9 @@ export default function Navbar() {
   return (
     <div className='flex justify-between items-center w-full mt-20'>
       <Link href='/'>
-        <div className='text-3xl font-bold hover:text-point'>River</div>
+        <div className='text-3xl font-bold hover:text-point dark:hover:text-orange-400'>
+          River
+        </div>
       </Link>
 
       <nav>
@@ -46,6 +49,9 @@ export default function Navbar() {
               <Link href={href}>{pathName === href ? clickedIcon : icon}</Link>
             </li>
           ))}
+          <li>
+            <ThemeSwitch />
+          </li>
         </ul>
       </nav>
     </div>

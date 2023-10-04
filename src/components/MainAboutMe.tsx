@@ -26,12 +26,12 @@ export default function MainAboutMe() {
         </div>
       </div>
       <div className='pt-5 leading-7'>
-        <p>
+        <div>
           같이의 가치를 믿는 개발자, 이석호 입니다.{' '}
           <p>
             개발자의 가치는 비지니스 가치를 구현하는데서 나온다고 생각합니다.
           </p>
-        </p>
+        </div>
         <p>앞으로 자주 뵈었으면 좋겠습니다.</p>
       </div>
     </section>

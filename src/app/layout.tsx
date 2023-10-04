@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Open_Sans } from 'next/font/google';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import Provider from 'src/components/Provider';
 
 const sans = Open_Sans({ subsets: ['latin'] });
 
@@ -24,12 +25,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang='ko' className={sans.className}>
-      <body className='antialiased w-full flex flex-col overflow-auto max-w-screen-md mx-auto px-4'>
-        <header className='mb-16'>
-          <Navbar />
-        </header>
-        <main className='grow'>{children}</main>
-        <Footer />
+      <body className='w-full flex flex-col overflow-auto antialiased max-w-screen-md mx-auto px-4 dark:bg-gray-900'>
+        <Provider>
+          <header className='mb-16'>
+            <Navbar />
+          </header>
+          <main className='grow'>{children}</main>
+          <Footer />
+        </Provider>
       </body>
     </html>
   );
