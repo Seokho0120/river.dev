@@ -3,5 +3,6 @@
 import firstMdx from './first.mdx.json' assert { type: 'json' }
 import secondMdx from './second.mdx.json' assert { type: 'json' }
 import thirdMdx from './third.mdx.json' assert { type: 'json' }
+import testMdx from './test.mdx.json' assert { type: 'json' }
 
-export const allPosts = [firstMdx, secondMdx, thirdMdx]
+export const allPosts = [firstMdx, secondMdx, thirdMdx, testMdx]

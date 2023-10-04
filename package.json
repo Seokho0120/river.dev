@@ -17,6 +17,7 @@
     "react": "latest",
     "react-dom": "latest",
     "react-icons": "^4.11.0",
+    "react-multi-carousel": "^2.8.4",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-pretty-code": "^0.9.5",
     "rehype-slug": "^5.1.0",

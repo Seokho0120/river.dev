@@ -1,9 +1,11 @@
-import FeaturedPosts from '../components/FeaturedPosts';
+import CarouselPosts from 'src/components/CarouselPosts';
+import MainAboutMe from 'src/components/MainAboutMe';
 
 export default function Home() {
   return (
     <>
-      <FeaturedPosts />
+      <MainAboutMe />
+      <CarouselPosts />
     </>
   );
 }
