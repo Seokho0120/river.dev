@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Post } from 'contentlayer/generated';
 import PostCard from './PostCard';
 import Categories from './Categories';

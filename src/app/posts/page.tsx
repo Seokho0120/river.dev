@@ -4,7 +4,7 @@ import FilterablePost from 'src/components/FilterablePost';
 export default async function PostsPage() {
   const posts = await getAllPosts();
   const categories = [...new Set(posts.map((post) => post.category))];
-  console.log('posts', posts);
+
   return (
     <>
       <FilterablePost posts={posts} categories={categories} />
