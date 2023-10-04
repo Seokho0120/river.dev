@@ -44,21 +44,18 @@ export const Post = defineDocumentType(() => ({
   computedFields,
 }));
 
-const rehypeOptions = {
-  theme: 'material-theme-darker',
-  keepBackground: true,
-};
-
 export default makeSource({
   contentDirPath: 'posts',
   documentTypes: [Post],
   mdx: {
-    remarkPlugins: [],
+    remarkPlugins: [remarkGfm],
     rehypePlugins: [
+      rehypeSlug,
       [
         rehypePrettyCode,
         {
-          theme: 'material-theme-palenight',
+          theme: 'material-theme-darker',
+          keepBackground: true,
           onVisitHighlightedLine(node: any) {
             node.properties.className.push('line-highlighted');
           },
@@ -66,8 +63,14 @@ export default makeSource({
             node.properties.className = ['word-highlighted'];
           },
         },
-        ,
-        rehypeOptions,
+      ],
+      [
+        rehypeAutolinkHeadings,
+        {
+          properties: {
+            className: ['anchor'],
+          },
+        },
       ],
     ],
   },

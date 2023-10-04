@@ -3,7 +3,10 @@ import {
   defineDocumentType,
   makeSource
 } from "contentlayer/source-files";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
+import remarkGfm from "remark-gfm";
 var computedFields = {
   slug: {
     type: "string",
@@ -37,29 +40,33 @@ var Post = defineDocumentType(() => ({
   },
   computedFields
 }));
-var rehypeOptions = {
-  theme: "material-theme-darker",
-  keepBackground: true
-};
 var contentlayer_config_default = makeSource({
   contentDirPath: "posts",
   documentTypes: [Post],
   mdx: {
-    remarkPlugins: [],
+    remarkPlugins: [remarkGfm],
     rehypePlugins: [
+      rehypeSlug,
       [
         rehypePrettyCode,
         {
-          theme: "material-theme-palenight",
+          theme: "material-theme-darker",
+          keepBackground: true,
           onVisitHighlightedLine(node) {
             node.properties.className.push("line-highlighted");
           },
           onVisitHighlightedWord(node) {
             node.properties.className = ["word-highlighted"];
           }
-        },
-        ,
-        rehypeOptions
+        }
+      ],
+      [
+        rehypeAutolinkHeadings,
+        {
+          properties: {
+            className: ["anchor"]
+          }
+        }
       ]
     ]
   }
@@ -68,4 +75,4 @@ export {
   Post,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-2QWT2AJF.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-ITRBNU65.mjs.map
