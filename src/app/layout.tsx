@@ -24,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang='ko' className={sans.className}>
-      <body className='flex flex-col w-full overflow-auto max-w-screen-md mx-auto'>
+      <body className='antialiased mt-20 w-full flex flex-col overflow-auto max-w-screen-md mx-auto px-4'>
         <header className='mb-16'>
           <Navbar />
         </header>

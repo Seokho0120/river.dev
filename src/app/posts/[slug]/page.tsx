@@ -13,10 +13,18 @@ export default async function PostPage({ params: { slug } }: Props) {
 
   return (
     <section>
-      <div>
-        <h1>{title}</h1>
-        <h4>{summary}</h4>
-        <p>{publishedAt}</p>
+      <div className='flex flex-col border-b mb-6'>
+        <h1 className='text-3xl font-bold tracking-tighter max-w-full'>
+          {title}
+        </h1>
+        <div className='flex justify-between items-center mt-2 mb-6 text-sm max-w-full'>
+          <p className='text-xl text-neutral-600 dark:text-neutral-400'>
+            {summary}
+          </p>
+          <p className='text-neutral-600 dark:text-neutral-400'>
+            {publishedAt}
+          </p>
+        </div>
       </div>
 
       <Mdx code={body.code} />
