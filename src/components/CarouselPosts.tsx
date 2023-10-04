@@ -6,8 +6,8 @@ export default async function CarouselPosts() {
   const posts = await getAllPosts();
 
   return (
-    <section className='my-4'>
-      <h2 className='text-2xl font-bold my-2'>All Posts</h2>
+    <section className='mt-10 relative'>
+      <h2 className='absolute top-2 text-lg font-semibold'>All Posts</h2>
       <MultiCarousel>
         <CarouselCard posts={posts} />
       </MultiCarousel>

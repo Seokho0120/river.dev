@@ -34,7 +34,7 @@ export default function Navbar() {
   const pathName = usePathname();
 
   return (
-    <div className='flex justify-between items-center w-full'>
+    <div className='flex justify-between items-center w-full mt-20'>
       <Link href='/'>
         <div className='text-3xl font-bold hover:text-point'>River</div>
       </Link>

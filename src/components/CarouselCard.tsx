@@ -11,7 +11,7 @@ export default function CarouselCard({ posts }: Props) {
       {posts.map(({ slug, title, summary, publishedAt }) => (
         <article
           key={slug}
-          className='mb-8 w-60 rounded-md overflow-hidden border-t border-neutral-50 shadow-md hover:shadow-xl'
+          className='mb-8 w-64 rounded-md overflow-hidden border-t border-neutral-50 shadow-md hover:shadow-xl'
         >
           <Link href={`/posts/${slug}`} className='flex flex-col p-4'>
             <h2 className='text-2xl font-bold mb-2 truncate'>{title}</h2>
