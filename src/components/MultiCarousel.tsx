@@ -2,6 +2,7 @@
 
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import { CustomArrow } from './CustomArrow';
 
 const responsive = {
   superLargeDesktop: {
@@ -28,7 +29,15 @@ type Props = {
 
 export default function MultiCarousel({ children }: Props) {
   return (
-    <Carousel infinite autoPlay responsive={responsive} itemClass='m-2'>
+    <Carousel
+      infinite
+      autoPlay
+      responsive={responsive}
+      itemClass='m-8'
+      removeArrowOnDeviceType={['mobile']}
+      customLeftArrow={<CustomArrow type='left' onClick={() => {}} />}
+      customRightArrow={<CustomArrow type='right' onClick={() => {}} />}
+    >
       {children}
     </Carousel>
   );
