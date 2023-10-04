@@ -12,7 +12,7 @@
     "@tailwindcss/typography": "^0.5.10",
     "contentlayer": "^0.3.4",
     "date-fns": "^2.30.0",
-    "next": "latest",
+    "next": "^13.5.4",
     "next-contentlayer": "^0.3.4",
     "react": "latest",
     "react-dom": "latest",

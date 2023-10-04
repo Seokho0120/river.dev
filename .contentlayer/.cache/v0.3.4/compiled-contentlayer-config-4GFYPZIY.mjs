@@ -41,7 +41,6 @@ var Post = defineDocumentType(() => ({
   computedFields
 }));
 var contentlayer_config_default = makeSource({
-  contentDirPath: "posts",
   documentTypes: [Post],
   mdx: {
     remarkPlugins: [remarkGfm],
@@ -74,4 +73,4 @@ export {
   Post,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-5ECLF2LX.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-4GFYPZIY.mjs.map

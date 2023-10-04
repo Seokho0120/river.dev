@@ -53,9 +53,8 @@ export default makeSource({
   contentDirPath: 'posts',
   documentTypes: [Post],
   mdx: {
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: [],
     rehypePlugins: [
-      rehypeSlug,
       [
         rehypePrettyCode,
         {
@@ -67,14 +66,8 @@ export default makeSource({
             node.properties.className = ['word-highlighted'];
           },
         },
-      ],
-      [
-        rehypeAutolinkHeadings,
-        {
-          properties: {
-            className: ['anchor'],
-          },
-        },
+        ,
+        rehypeOptions,
       ],
     ],
   },

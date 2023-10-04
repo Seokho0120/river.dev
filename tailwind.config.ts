@@ -7,7 +7,9 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: { point: '#2492ff' },
+    },
   },
   plugins: [require('@tailwindcss/typography')],
 };

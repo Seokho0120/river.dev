@@ -1,5 +1,5 @@
 import { allPosts } from 'contentlayer/generated';
-import { getPostData } from 'src/service/post';
+// import { getPostData } from 'src/service/post';
 
 type Props = {
   params: {
@@ -8,16 +8,16 @@ type Props = {
 };
 
 export default async function PostPage({ params: { slug } }: Props) {
-  const post = await getPostData(slug);
-  const { title, summary, publishedAt } = post;
+  // const post = await getPostData(slug);
+  // const { title, summary, publishedAt } = post;
 
   return (
     <section>
-      <div>
+      {/* <div>
         <h1>{title}</h1>
         <h4>{summary}</h4>
         <p>{publishedAt}</p>
-      </div>
+      </div> */}
     </section>
   );
 }
