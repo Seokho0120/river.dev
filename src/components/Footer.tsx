@@ -16,7 +16,7 @@ const menu = [
 
 export default function Footer() {
   return (
-    <footer className='mx-auto mt-auto flex flex-col justify-center items-center py-6 text-sm'>
+    <footer className='mx-auto flex flex-col justify-center items-center py-6 text-sm'>
       <div className='flex gap-4 items-center hover:cursor-pointer py-2'>
         {menu.map(({ href, icon }) => (
           <a href={href} key={href} rel='noopener noreferrer'>

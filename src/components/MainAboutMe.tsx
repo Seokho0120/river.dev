@@ -3,7 +3,7 @@ import profileImage from '../../public/image/my-profile.jpg';
 
 export default function MainAboutMe() {
   return (
-    <section className='break-keep mb-40'>
+    <section className='break-keep'>
       <div className='my-4 flex items-center gap-8'>
         <div className='flex h-[100px] w-[100px] flex-shrink-0 md:h-[125px] md:w-[125px]'>
           <Image
