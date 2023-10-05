@@ -1,5 +1,5 @@
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
-import { useState } from 'react';
+import ArrowLeftIcon from './ui/icons/ArrowLeftIcon';
+import ArrowRightIcon from './ui/icons/ArrowRightIcon';
 
 interface CustomArrowsProps {
   onClick: () => void;
@@ -7,18 +7,13 @@ interface CustomArrowsProps {
 }
 
 export function CustomArrow({ type, onClick }: CustomArrowsProps) {
+  const BUTTON_CLASS = `absolute ${
+    type === 'left' ? 'left-0' : 'right-0'
+  } top-2.5/3 transform -translate-y-1/2 transition-opacity duration-200 opacity-0 hover:opacity-90 text-point dark:text-orange-400`;
+
   return (
-    <button
-      onClick={onClick}
-      className={`absolute ${
-        type === 'left' ? 'left-0' : 'right-0'
-      } top-2.5/3 transform -translate-y-1/2 transition-opacity duration-200 opacity-0 hover:opacity-90 text-point dark:text-orange-400`}
-    >
-      {type === 'left' ? (
-        <MdKeyboardArrowLeft className='w-10 h-10' />
-      ) : (
-        <MdKeyboardArrowRight className='w-10 h-10' />
-      )}
+    <button onClick={onClick} className={BUTTON_CLASS}>
+      {type === 'left' ? <ArrowLeftIcon /> : <ArrowRightIcon />}
     </button>
   );
 }

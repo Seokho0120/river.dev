@@ -11,7 +11,6 @@ export async function getPostData(fileName: string) {
   if (!post) throw new Error(`${fileName}에 해당하는 포스트를 찾을 수 없음 🥲`);
 
   const index = posts.indexOf(post);
-  console.log('index', index);
   const next = index > 0 ? posts[index - 1] : null;
   const prev = index < posts.length - 1 ? posts[index + 1] : null;
 

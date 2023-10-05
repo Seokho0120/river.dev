@@ -1,5 +1,6 @@
 import { getPostData } from 'src/service/post';
 import Mdx from 'src/components/Mdx';
+import PostNavigator from '@/src/components/PostNavigator';
 
 type Props = {
   params: {
@@ -29,9 +30,9 @@ export default async function PostPage({ params: { slug } }: Props) {
 
       <Mdx code={body.code} />
 
-      <section className='font-bold text-red-700'>
-        {prev && <p>{prev.title}</p>}
-        {next && <p>{next.title}</p>}
+      <section>
+        {prev && <PostNavigator post={prev} type='prev' />}
+        {next && <PostNavigator post={next} type='next' />}
       </section>
     </section>
   );
