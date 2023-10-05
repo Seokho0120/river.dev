@@ -9,7 +9,7 @@ type Props = {
 
 export default async function PostPage({ params: { slug } }: Props) {
   const post = await getPostData(slug);
-  const { title, summary, publishedAt, body } = post;
+  const { title, summary, publishedAt, body, next, prev } = post;
 
   return (
     <section>
@@ -28,6 +28,11 @@ export default async function PostPage({ params: { slug } }: Props) {
       </div>
 
       <Mdx code={body.code} />
+
+      <section className='font-bold text-red-700'>
+        {prev && <p>{prev.title}</p>}
+        {next && <p>{next.title}</p>}
+      </section>
     </section>
   );
 }
