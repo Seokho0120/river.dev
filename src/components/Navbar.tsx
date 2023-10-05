@@ -37,9 +37,9 @@ export default function Navbar() {
   return (
     <div className='flex justify-between items-center w-full mt-20'>
       <Link href='/'>
-        <div className='text-3xl font-bold hover:text-point dark:hover:text-orange-400'>
+        <p className='text-3xl underline decoration-wavy decoration-point dark:decoration-orange-400 decoration-2 font-bold hover:text-point dark:hover:text-orange-400'>
           River
-        </div>
+        </p>
       </Link>
 
       <nav>
