@@ -1,8 +1,9 @@
 import { Post, allPosts } from 'contentlayer/generated';
+import { cache } from 'react';
 
-export const getAllPosts = async () => {
+export const getAllPosts = cache(async () => {
   return allPosts.sort((a, b) => (a.publishedAt > b.publishedAt ? -1 : 1));
-};
+});
 
 export async function getPostData(fileName: string) {
   const posts = await getAllPosts();

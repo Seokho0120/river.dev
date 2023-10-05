@@ -1,4 +1,4 @@
-import { getPostData } from 'src/service/post';
+import { getAllPosts, getPostData } from 'src/service/post';
 import Mdx from 'src/components/Mdx';
 import PostNavigator from '@/src/components/PostNavigator';
 import { Metadata } from 'next';
@@ -59,4 +59,11 @@ export default async function PostPage({ params: { slug } }: Props) {
       </section>
     </article>
   );
+}
+
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
 }
