@@ -13,7 +13,7 @@ export default async function PostPage({ params: { slug } }: Props) {
   const { title, summary, publishedAt, body, next, prev } = post;
 
   return (
-    <section>
+    <article>
       <div className='flex flex-col border-b mb-6'>
         <h1 className='text-3xl font-bold tracking-tighter max-w-full'>
           {title}
@@ -30,10 +30,10 @@ export default async function PostPage({ params: { slug } }: Props) {
 
       <Mdx code={body.code} />
 
-      <section>
+      <section className='flex items-center justify-between mt-16'>
         {prev && <PostNavigator post={prev} type='prev' />}
         {next && <PostNavigator post={next} type='next' />}
       </section>
-    </section>
+    </article>
   );
 }
