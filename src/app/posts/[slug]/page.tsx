@@ -30,7 +30,7 @@ export default async function PostPage({ params: { slug } }: Props) {
 
       <Mdx code={body.code} />
 
-      <section className='flex items-center justify-between mt-16'>
+      <section className='hidden sm:flex items-center justify-between mt-16'>
         {prev && <PostNavigator post={prev} type='prev' />}
         {next && <PostNavigator post={next} type='next' />}
       </section>

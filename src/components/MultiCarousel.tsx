@@ -33,7 +33,7 @@ export default function MultiCarousel({ children }: Props) {
       infinite
       autoPlay
       responsive={responsive}
-      itemClass='m-14 md:m-10'
+      itemClass='m-12 sm:m-10'
       removeArrowOnDeviceType={['mobile']}
       customLeftArrow={<CustomArrow type='left' onClick={() => {}} />}
       customRightArrow={<CustomArrow type='right' onClick={() => {}} />}
