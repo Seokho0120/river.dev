@@ -1,6 +1,29 @@
 import { getPostData } from 'src/service/post';
 import Mdx from 'src/components/Mdx';
 import PostNavigator from '@/src/components/PostNavigator';
+import { Metadata } from 'next';
+
+export async function generateMetadata({
+  params: { slug },
+}: Props): Promise<Metadata> {
+  const {
+    title,
+    summary: description,
+    publishedAt: publishedTime,
+  } = await getPostData(slug);
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: { absolute: title },
+      description,
+      type: 'article',
+      publishedTime,
+      url: `https://river-dev.vercel.app/posts/${slug}`,
+    },
+  };
+}
 
 type Props = {
   params: {
