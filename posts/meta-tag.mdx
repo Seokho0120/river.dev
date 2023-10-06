@@ -1,0 +1,102 @@
+---
+title: 메타 태그란? (meta)
+publishedAt: '2022-11-16'
+summary: 메타 태그는 무엇일까? 메타메타메타몽
+category: Dev
+---
+
+<p align='center'>
+  <img src='/blog/meta.jpg' width={395} height={320} alt='메타메타메타몽' />
+</p>
+
+## 메타 태그란?
+
+메타 태그(meta tag)는 웹페이지가 담고 있는 컨텐츠가 아닌, **웹페이지 자체의 정보**를 명시하는 목적으로 사용되는 HTML태그 입니다.  
+이러한 웹페이지의 메타 정보는 주로 HTML의 `<meta>` 요소를 통해 마크업을 하고, HTML 문서 내에서 `<head>` 요소 내부에 배치되므로 일반 유저가 보게되는 웹페이지의 컨텐츠에는 아무런 영향을 주지 않습니다. 하지만 검색엔진과 같은 기계들이 웹페이지를 읽을때 메타 태그의 내용들이 서비스에서 어떻게 표시될지를 결정하는 핵심요소가 됩니다.
+
+### 정리
+
+- 태그는 웹페이지 자체의 정보인 메타데이터를 정의할때 사용됨.
+- 태그는 언제나 요소 내부에 위치해야함. 위치는 앞뒤 상관없지만, 태그 앞쪽에 위치해야함.
+- 브라우저와 검색 엔진을 사용할 수 있도록 웹 문서의 정보를 포함하기 때문에 SEO(검색엔진 최적화)와 관련이 깊음.
+
+## 속성
+
+메타 태그는 `http-equiv` `name` `content` 3가지 속성이 있습니다.
+
+#### http-equiv
+
+- http-equiv ="항목명"
+- 웹 브라우저 서버에 명령을 내리는 속성
+- name 속성을 대신해 사용 가능
+- html 문서가 응답 헤더와 웹 서버로부터 웹 브라우저에 전송됫을때만 의미를 가짐
+- content 속성의 점보, 값을 위한 HTTP header를 제공
+- html4에서는 문자 설정을 할때 사용했지만, html5에서는 문자 설정 방법이 더욱 간단해짐
+
+```jsx
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+<head>
+```
+
+#### name
+
+- 몇가지의 meta 정보의 이름을 정할 수 있으며, 지정하지 않으면 http-equiv 와 같은 기능
+
+#### content
+
+- meta 정보의 내용을 저장
+- name 속성과 http-equiv와 연관된 값을 줌
+
+## 사용법
+
+회사의 코드를 참고하여 대표적으로 사용되는 종류만 정리했습니다. 이외 더욱 많은 종류가 있고, 필요에 따라 구글링하여 사용하면 됩니다.
+
+#### 검색 엔진을 위한 키워드(keywords)를 정의
+
+```jsx
+<head>
+    <meta name="keywords" content="Video, Share, Camera, Live streaming, Upload, VOD, Broadcasting, Experience" />
+<head>
+```
+
+#### 웹 페이지에 대한 설명(description)을 정의
+
+```jsx
+<head>
+    <meta name="description" content="Create Your own Content and Share Great Experience with Various People." />
+<head>
+```
+
+#### 문서의 저자(author)를 정의
+
+```jsx
+<head>
+    <meta name="author" content="TCPSchool" />
+<head>
+```
+
+#### 5초 뒤에 다른 페이지로 리다이렉트(redirect)
+
+```jsx
+<head>
+    <meta http-equiv="refresh" content="5;url=http://www.tcpschool.com" />
+<head>
+```
+
+#### 모든 장치에서 웹 사이트가 잘 보이도록 뷰포트(viewport)를 설정
+
+```jsx
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<head>
+```
+
+---
+
+### 참고
+
+- https://www.daleseo.com/html-meta-tags-for-seo/
+- https://tcpschool.com/html-tags/meta
+- https://inpa.tistory.com/entry/HTML-📚-meta-태그-정리
