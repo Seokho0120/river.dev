@@ -1,0 +1,141 @@
+---
+title: Object is possibly 'null' 오류
+publishedAt: '2022-11-20'
+summary: 객체가 비어있을 수 있다니까?
+category: Dev
+---
+
+<p align='center'>
+  <img src='/blog/object-null.jpg' width={400} height={400} alt='object-null' />
+</p>
+
+## 발생 원인
+
+객체가 비어있을 수 있는데 해당 객체의 내부 메서드를 사용하거나, 내부 객체 키에 값을 넣어주려고 할 때 발생합니다.  
+쉽게 말해서 객체가 'null'일 수 있다는 뜻이고, 이럴 경우를 대비해주면 됩니다.
+
+## 예시
+
+코드를 보면 `const file = event.target.files[0];` 부분에서 에러가 발생합니다.
+
+```tsx
+const onChangeFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const maxSize = 5 * 1024 * 1024;
+    const file = event.target.files[0];
+    // Object is possibly 'null'.ts(2531) 오류
+    ...
+};
+```
+
+## 해결방법
+
+해결방법은 여러가지가 있습니다.
+
+### 1\. if문
+
+제가 현업에서 가장 많이 사용하는 방법입니다. 누구나 쉽게 이해할 수 있고 가독성이 좋기 때문입니다.
+다만 리서칭을 해보니 `if문`을 사용하면 매번 같은 케이스에 계속 `if문`을 사용해야하니 가장 좋지 않은 방법이라고 합니다.  
+하지만 개인적인 생각으로는 팀의 코드 스타일과 규칙에 따르면되지 않을까 싶습니다. 밑에서 이야기할 `옵셔널 체이닝`과 `타입단언 방식`도 물론 자주 사용했지만, 다양한 오류가 발생하는 경험이 많았습니다. 특히 백엔드 팀원들과 소통이 원활하지 못하다면 `if문`을 적극 추천합니다.
+
+```tsx
+const onChangeFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const maxSize = 5 * 1024 * 1024;
+    if (!event.target.files) return;
+      // file이 없는 경우 return
+    const file = event.target.files[0];
+    ...
+  };
+```
+
+### 2\. 옵셔널체이닝(optional chaining)
+
+옵셔널체이닝`?`은 객체 내의 `key`에 접근할 때 그 참조가 유효한지 아닌지 직접 명시하지 않고도 접근할 수 있는 연산자입니다. `?.` 앞의 평가대상이 만약 `nullish(undefined 혹은 null)`일 경우 평가를 멈추고 `undefined`를 반환합니다. 쉽게 말해서 앞에 대상의 값이 있는지 없는지 체크해주고, 없으면 `undefined` 던져준다 생각하면 됩니다.
+
+```tsx
+const students = {
+  mark: {
+    age: 20,
+    score: {
+      korean: 90,
+      english: 80,
+      math: 40,
+    },
+  },
+  john: {
+    age: 20,
+  },
+};
+
+console.log(students.mark.score.english);
+// 80;
+console.log(students.john.score.english);
+// TypeError: Cannot read properties of undefined (reading 'english')
+console.log(students.john?.score?.english);
+// undefined
+```
+
+#### 주의할점
+
+옵셔널체이닝은 존재하지 않아도 괜찮은 대상에만 적용해야합니다. 단순히 에러를 피하기 위해 남용하다가 디버깅이 어려워질 수 있습니다.  
+매우X1000000 중요한 내용입니다. 회사에서 저와 같은 주니어개발자들이 마감기간의 부담감과 압박을 느끼면 일단 만들자라는 마인드로 무분별하게 남용하는 코드들이 생길 수 있는데, 대표적으로 옵셔널체이닝이라고 생각합니다.  
+다행히(?) 저는 그렇지 않았지만 다른 팀원의 물음표 남발로 배포 직전에 힘들었던 기억이 있습니다...
+
+만약 `user` 객체가 무조건 꼭 있어야 하는데, 그 안의 `info`의 `age`는 필수값이 아니라면 아래와 같이 작성해야합니다.
+
+```tsx
+console.log(user?.info?.age); -> user 객체가 꼭 있어야할 필요가 없다는 뜻입니다.
+console.log(user.info?.age); -> user 객체가 없다면 에러를 뱉을 것입니다.
+```
+
+### 3\. 타입 단언(type assertion)
+
+`!`를 사용하거나 `as`를 사용합니다. (효과는 동일합니다.)  
+타입 단언이란 타입스크립트가 추론하지 못하는 타입을 개발자가 직접 명시해주는 문법입니다.
+
+#### as
+
+```tsx
+let someValue: unknown = 'this is a string';
+let strLength: number = (someValue as string).length;
+
+console.log(someValue);
+// 'this is a string'
+console.log(strLength);
+// 16
+```
+
+#### !
+
+```tsx
+interface nameObject {
+  firstName: string;
+  lastName: string | null;
+}
+
+let obj: nameObject = {
+  firstName: 'Kang',
+  lastName: null,
+};
+
+// 'obj.lastName' is possibly 'null'.ts(18047)
+// lastName 키의 값이 string이나 null이 들어올수 있지만
+// 만일 위와 같이 null이 들어와 버리면 toString을 실행할수 없기에 tsc 컴파일러가 미리 경고를 띄워준다.
+console.log(obj.lastName.toString());
+```
+
+타입 가드나 조건문을 쓰지않고 간단하게 `!`로 해결이 가능합니다만, 정말 `!`는 손모가지 걸고 사용해야하기 때문에 확신이 없다면 그냥 조건문 사용합시다..!
+
+```tsx
+console.log(obj.lastName!.toString());
+```
+
+---
+
+### 참고
+
+- https://ko.javascript.info/optional-chaining
+- https://coding-farmer.tistory.com/4
+- https://kyounghwan01.github.io/blog/TS/object-null/
+- https://abangpa1ace.tistory.com/256
+- https://timmousk.com/blog/typescript-object-is-possibly-null/
+- https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Optional_chaining
