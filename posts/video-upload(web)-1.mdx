@@ -29,7 +29,7 @@ Web부터 App까지 Meitalk의 **비디오 업로드 기능** 개발 과정과 �
 
 `readAsDataURL` 메서드를 선택한 이유는 이미지 업로드를 구현헀던 방식과 동일하고 1gb이하 파일을 무난하게 읽어올 수 있다고 판단했습니다.
 
-```tsx title="useUploadVideo.tsx"
+```tsx title="useUploadVideo.tsx" {3, 14}
 const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
   if (e.target.files && e.target.files.length > 0) {
     const reader = new FileReader();
@@ -125,8 +125,7 @@ URL은 사용이 완료되면 `URL.revokeObjectURL` 메서드를 호출하여 **
 이 과정에서 Binary, Base64, Blob 등 파일과 데이터를 표현하고 다루는 개념을 학습하고 포스팅까지 할 수 있었습니다.
 단순히 메서드 기능과 장단점을 다루는게 하닌, 동작의 원리부터 깊게 학습하며 파일을 다루는 기능을 효율적으로 진행할 수 있게 되었습니다.
 
-하지만.. 대표님이 급작스럽게 기획을 변경하십니다..😇<br/>
-**To be continued...**
+> 하지만.. 대표님이 급작스럽게 기획을 변경하십니다..😇<br/> **To be continued...**
 
 ---
 
