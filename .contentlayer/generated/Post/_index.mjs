@@ -4,6 +4,6 @@ import conditionalTernaryOperatorMdx from './conditional(ternary)operator.mdx.js
 import inputEtargetMdx from './input-etarget.mdx.json' assert { type: 'json' }
 import metaTagMdx from './meta-tag.mdx.json' assert { type: 'json' }
 import objectNullMdx from './object-null.mdx.json' assert { type: 'json' }
-import thirdMdx from './third.mdx.json' assert { type: 'json' }
+import videoUploadWeb_1Mdx from './video-upload(web)-1.mdx.json' assert { type: 'json' }
 
-export const allPosts = [conditionalTernaryOperatorMdx, inputEtargetMdx, metaTagMdx, objectNullMdx, thirdMdx]
+export const allPosts = [conditionalTernaryOperatorMdx, inputEtargetMdx, metaTagMdx, objectNullMdx, videoUploadWeb_1Mdx]

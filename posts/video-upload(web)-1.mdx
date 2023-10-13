@@ -1,0 +1,136 @@
+---
+title: 비디오 업로드 기능 만들기(Web) 1탄
+publishedAt: '2023-06-30'
+summary: 비디오를 업로드해보자!
+category: Dev
+---
+
+## 개요
+
+Web부터 App까지 Meitalk의 **비디오 업로드 기능** 개발 과정과 이슈를 해결하는 과정을 소개합니다.
+저를 믿고 서비스의 코어 기능을 맡겨준다는게 좋으면서도 부담되었지만, 위기를 기회삼아 역량을 보여줄 수 있는 좋은 기회라고 생각하고 밤새워 개발에 집중했습니다.
+
+## 과정
+
+업로드 과정은 아래와 같으며, 서버에 전달하기 전에 먼저 화면에 영상을 보여주기 위한 방법을 고민했습니다.
+
+- 파일을 업로드하고 화면에서 먼저 실행
+- 파일과 함께 필요한 데이터들을 FormData에 전부 담아서 서버에 전달
+
+#### readAsDataURL
+
+업로드 기능을 개발하기 위해 처음 선택한 방법은 FileReader객체의 `readAsDataURL` 메서드 입니다.
+
+> ✨ **FileReader 객체**는 데이터를 읽기 위한 목적으로 사용되는 객체이며, **readAsDataURL 메서드**는 base64형태의 데이터 URL을 읽어올 수 있습니다.
+
+`readAsDataURL` 메서드를 선택한 이유는 이미지 업로드를 구현헀던 방식과 동일하고 1gb이하 파일을 무난하게 읽어올 수 있다고 판단했습니다.
+
+```tsx title="useUploadVideo.tsx"
+const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  if (e.target.files && e.target.files.length > 0) {
+    const reader = new FileReader();
+
+    if (e.target.files[0].size > 300 * 1024 * 1024) {
+      e.target.value = '';
+      console.log('Error Modal');
+    } else {
+      setVideoFile(e.target.files[0]);
+      reader.onload = () => {
+        setVideoPreview(reader.result as string);
+      };
+    }
+    reader.readAsDataURL(e.target.files[0]);
+  }
+};
+```
+
+```tsx title="uploadVideo.tsx"
+{videoPreview ? (
+      <STC.VideoPreview>
+        <STC.DeleteFileBtn onClick={() => handleFileDelete()} />
+        <Player url={videoPreview} />
+      </STC.VideoPreview>
+    ) : (
+    // ...
+    );
+}
+```
+
+실제로 **100mb ~ 500mb 이하의 저용량 비디오**는 빠르게 업로드되서 화면에 보여줄 수 있었습니다.
+
+<p align='center'>
+  <img src='/blog/gif/upload-first.gif' width={800} alt='upload-first' />
+</p>
+
+## 이슈 및 개선
+
+하지만 **500mb 이상의 비디오**를 업로드 시 도중에 멈추거나 속도가 현저하게 저하되는 현상이 발생했습니다.
+**700mb 비디오 기준 4분이상 소요**가 되었고, 그 이상의 파일은 읽다가 멈추는 현상이 지속되었습니다.
+
+디버깅하며 원일을 찾아봤는데, 코드의 문제가 아닌 **파일을 읽는 방식이**이 잘못되었다는 것을 알게되었습니다.
+`base64`형태로 읽으면 바이너리 데이터를 직접 다룬다는 장점이 있지만, 바이너리 데이터를 텍스트로 바꾸는 64진법 인코딩을 통해 바이너리 데이터 대비
+**33%의 데이터양이 증가**한다는 치명적인 단점이 있었습니다.
+
+<p align='center'>
+  <img src='/blog/issue.png' alt='upload-first' />
+</p>
+
+정리하자면, `base64`는 바이너리 데이터를 다루기 위해 텍스트(문자열) 형태로 저장한 포맷이기 때문에 문자열이 길어서 가독성이 떨어지고,
+원본보다 **33%의 용량이 커져서 로딩속도가 저하**될 수 있습니다.
+
+#### URL.createObjectURL / revokeObjectURL
+
+해결책으로 찾은 방법은 `URL.createObjectURL` 메서드 입니다.
+
+> ✨ **URL.createObjectURL**메서드는 Blob 객체를 가지고 고유한 URL을 생성할 수 있습니다.
+
+URL은 현재 탭의 **브라우저 메모리에 저장**되고, 저장된 URL은 매핑된 Blob객체를 참고하고 있는 형태입니다.
+이러한 원리 때문에, base64와 달리 짧은 문자열만으로도 원래의 Blob 객체에 접근이 가능하고, 그에 따른 파일을 가져올 수 있습니다.
+
+그러나 이와 관련된 **메모리 이슈**가 존재합니다.<br/>
+Blob 객체가 URL로 변환되어 매핑된채 메모리에 저장되면, 명시적으로 해당 URL이 해제되기전까지 브라우저는 해당 **URL이 유효하다고 판단**하여
+자바스크립트의 **GC(Garbage Collection)가 동작하지 않습니다.**
+그렇기 때문에 **명시적으로 해제**시켜줘야하고, 그 방법이 `URL.revokeObjectURL` 메서드 입니다.
+
+```tsx title="useUploadVideo.tsx" {5, 13}
+const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  if (e.target.files && e.target.files.length > 0) {
+    const video = event.target.files?.[0];
+    if (video) {
+      const videoUrl = URL.createObjectURL(video);
+      setVideoPreview(videoUrl);
+    }
+  }
+};
+// ...
+useEffect(() => {
+  if (videoPreview) {
+    return () => URL.revokeObjectURL(videoPreview);
+  }
+}, [videoPreview]);
+```
+
+정리하자면 `URL.createObjectURL` 메서드로 파일을 Blob 객체로 변환하면 **메모리 사용량이 적고 효율적**이지만,
+URL은 사용이 완료되면 `URL.revokeObjectURL` 메서드를 호출하여 **메모리 해제**를 해줘야 합니다.
+
+## 성과 및 배운점
+
+기존에는 **비디오 700mb 기준 업로드 시간이 4분이상 소요**되었지만, 이슈를 해결하며 **700mb 기준 업로드 시간을 1분 이하로 단축**시켰으며,
+**메모리 누수현상까지 방지**할 수 있었습니다.
+
+이 과정에서 Binary, Base64, Blob 등 파일과 데이터를 표현하고 다루는 개념을 학습하고 포스팅까지 할 수 있었습니다.
+단순히 메서드 기능과 장단점을 다루는게 하닌, 동작의 원리부터 깊게 학습하며 파일을 다루는 기능을 효율적으로 진행할 수 있게 되었습니다.
+
+하지만.. 대표님이 급작스럽게 기획을 변경하십니다..😇<br/>
+**To be continued...**
+
+---
+
+## 참고
+
+- [mdn](https://developer.mozilla.org/ko/docs/Web/API/Blob#%EC%86%8D%EC%84%B1)
+- [https://ko.javascript.info/binary](https://ko.javascript.info/binary)
+- [https://www.csharpstudy.com](https://www.csharpstudy.com/Tip/Tip-base64.aspx)
+- [https://inpa.tistory.com/entry/](https://inpa.tistory.com/entry/JS-%F0%9F%93%9A-Base64-Blob-ArrayBuffer-File-%EB%8B%A4%EB%A3%A8%EA%B8%B0-%EC%A0%95%EB%A7%90-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-%EC%89%BD%EA%B2%8C-%EC%84%A4%EB%AA%85)
+- [https://www.jeong-min.com](https://www.jeong-min.com/40-image-upload-preview/#3-filereaderreadasarraybuffer)
+- [https://velog.io/@xxyeon129](https://velog.io/@xxyeon129/Formdata%EB%A1%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%85%EB%A1%9C%EB%93%9C%ED%95%98%EA%B8%B0#1-input-typefile%EB%A1%9C-%EC%97%85%EB%A1%9C%EB%93%9C-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EA%B0%80%EC%A0%B8%EC%98%A4%EA%B8%B0r)
