@@ -7,9 +7,9 @@ category: Dev
 
 ## 개요
 
-두바이 개발팀에서 담당하던 앱 업무가 저에게 인계되어, 어쩌다 보니 앱에서도 업로드 기능을 맡게되었습니다.😤
-하지만 괜찮습니다. 이번 기회로 앱을 처음 개발하며 `React Native`에 익숙해졌고, 웹보다 훨~씬 어렵고 힘든 이슈들을 해결했습니다.
+> 두바이 개발팀에서 담당하던 앱 업무가 저에게 인계되어, 어쩌다 보니 앱 업로드 기능도 개발하게되었습니다.😤
 
+하지만 괜찮습니다. 이번 기회로 앱개발에 입문하며 `React Native`에 익숙해졌고, 웹보다 훨~씬 어렵고 힘든 이슈들을 해결했습니다.
 앱에서도 웹과 같이 업로드 기능을 개발하는 과정에서 만났던 이슈와 개선에 관한 내용을 다룹니다.
 
 ## 목표
@@ -17,10 +17,101 @@ category: Dev
 - 웹과 동일하게 비디오 용량 5gb까지 업로드 기능 구현
 - 레거시 코드 리팩토링 및 가독성 좋은 코드로 개선
 
-## 과정 및 이슈
+## 이슈
 
-## 성과 및 배운점
+[tus-js-client 공식문서](https://github.com/tus/tus-js-client)에
+`react-native`도 지원한다고 명시되어 있기에 웹과 동일하게 `tus-js-client` 라이브러리를 사용해 업로드를 시도했습니다.
 
----
+```tsx title="useUploadVideoScreen.tsx"
+const handleUploadVideo = useCallback(async () => {
+  const limitSize = 1024 * 1024 * 5000;
+  const pickerOptions = {
+    mediaType: 'video' as MediaType,
+    videoQuality: 'medium' as AndroidVideoOptions | iOSVideoOptions,
+  };
 
-## 참고
+  const result = await launchImageLibrary(pickerOptions);
+  if (result.didCancel) {
+    return null;
+  }
+
+  if (result.assets) {
+    const selectedVideo = result.assets[0];
+    const videoUri = selectedVideo.uri;
+    // ...
+
+      setUpload(selectedVideo, {
+        endpoint: `${TEST}/api/upload`,
+        retryDelays: [0, 1000, 3000, 5000],
+        chunkSize: 5 * 1024 * 1024,
+        metadata: {
+          filename: selectedVideo.fileName,
+          filetype: selectedVideo.type,
+        },
+
+        onProgress(byUploaded, byTotal) {
+          const percentage = ((byUploaded / byTotal) * 100).toFixed(2);
+          setVideoProgress(Number(percentage));
+        },
+
+        onAfterResponse: (_, res) => {
+          const afterRes = res.getBody();
+          setTempAfterRes(afterRes);
+        },
+
+        // ...
+      });
+    }
+  }
+}, [setUpload]);
+```
+
+웹과 거의 동일한 코드로 구현했을때 일정 용량 대략 100mb이상의 파일이 업로드되지 않았고, 클라이언트에서 **메모리 이슈**가 발생했습니다.
+`tus-js-client`를 앱에 적용한 참고 자료를 찾지 못했기 때문에, 혹시 `react-native`를 지원하지 않거나 문제가 있지 않을까라는 생각에
+[react-native-tus-client](https://github.com/vinzscam/react-native-tus-client)와 같은 다른 라이브러리들을 사용해 재시도 해봤지만 **같은 이슈가 반복**되었습니다.
+
+`tus-protocol` 자체가 파일을 일정 단위로 잘라서 전달하는 기능인데, 메모리 이슈가 발생한다는게 이해가 되었고, 원인을 찾기 힘들었습니다.
+더불어 백엔드에서는 웹에서 [tus-java-client](https://github.com/tus/tus-java-client)로 세팅을 해놨기 떄문에, `tus protocol`을 필수적으로 적용해야 했습니다.
+
+## 과정 및 개선
+
+### 클라이언트 구현
+
+> ✨ **클라이언트**는 일반적으로 특정 프로토콜이나 서비스와 상호 작용하기 위한 **소프트웨어, 라이브러리 또는 모듈**을 의미합니다.
+
+그래서, 결국! **클라이언트**를 직접 구현하기로 결정했습니다.
+`tus protocol`을 기반으로 서버와 통신하고 파일 업로드를 처리하는 클라이언트를 직접 개발하고, 업로드를 테스트하는 방식이 가장 빠르고 효율적인 해결책이라고 판단했습니다.
+
+클라이언트를 구현함에 있어 필수사항은 아래와 같습니다. 개발 당시 `xcode` 실행 오류로 일단 안드로이드에서 먼저 테스트하며 구현했습니다.
+
+- `tus-js-client`라이브러리와 같은 기능을 제공 (청크 사이즈로 분할 업로드, 업로드 재개 기능)
+- [tus protocol 문서](https://tus.io/protocols/resumable-upload#status)를 보며 커스텀훅으로 구현
+- Axios로 직접 서버 엔드포인트에 api를 호출하는 과정 테스트 해야함
+
+### 구현 과정
+
+`tus protocol`은 HTTP 기반 오픈 포로토콜이기 때문에 `HTTP 메서드`를 사용합니다.<br/>
+`POST`는 데이터를 새로 생성하고 `PATCH`는 업로드를 재개하고 부분적으로 수정하며, `HEAD`는 GET요청의 헤더 내용만 가져오고 싶을때 사용됩니다.
+
+#### 1. uploadApi 함수 만들기
+
+`tus protocol` 기본동작 원리에 따라 **POST, PATCH를 따로 호출하는 인스턴스 2개**가 필요했으며, 호출 시 **중복되는 코드를 한번에 처리**하는 함수가 필요하다고 생각했습니다.
+그래서 인스턴스를 생성하는 공통 로직을 처리하면서 각 호출에서 전달되는 헤더 및 설정을 기반으로 다른 역할을 수행하는 `uploadApi 함수`를 만들었습니다.
+
+```tsx title="tusContext.ts"
+import axios from 'axios';
+
+const SERVER_URL = 'https://uploadtest.devaladdin.club';
+
+const api = (headers: any) => {
+  const instance = axios.create({
+    baseURL: SERVER_URL,
+    headers,
+    withCredentials: true,
+  });
+
+  return instance;
+};
+
+export default api;
+```
