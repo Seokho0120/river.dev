@@ -5,7 +5,8 @@ import inputEtargetMdx from './input-etarget.mdx.json' assert { type: 'json' }
 import metaTagMdx from './meta-tag.mdx.json' assert { type: 'json' }
 import objectNullMdx from './object-null.mdx.json' assert { type: 'json' }
 import videoUploadApp_3Mdx from './video-upload(app)-3.mdx.json' assert { type: 'json' }
+import videoUploadApp_4Mdx from './video-upload(app)-4.mdx.json' assert { type: 'json' }
 import videoUploadWeb_1Mdx from './video-upload(web)-1.mdx.json' assert { type: 'json' }
 import videoUploadWeb_2Mdx from './video-upload(web)-2.mdx.json' assert { type: 'json' }
 
-export const allPosts = [conditionalTernaryOperatorMdx, inputEtargetMdx, metaTagMdx, objectNullMdx, videoUploadApp_3Mdx, videoUploadWeb_1Mdx, videoUploadWeb_2Mdx]
+export const allPosts = [conditionalTernaryOperatorMdx, inputEtargetMdx, metaTagMdx, objectNullMdx, videoUploadApp_3Mdx, videoUploadApp_4Mdx, videoUploadWeb_1Mdx, videoUploadWeb_2Mdx]
