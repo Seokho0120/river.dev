@@ -9,5 +9,6 @@ import videoUploadApp_4Mdx from './video-upload(app)-4.mdx.json' assert { type: 
 import videoUploadWeb_1Mdx from './video-upload(web)-1.mdx.json' assert { type: 'json' }
 import videoUploadWeb_2Mdx from './video-upload(web)-2.mdx.json' assert { type: 'json' }
 import videoUploadApp_5Mdx from './video-upload(app)-5.mdx.json' assert { type: 'json' }
+import developComponentsMdx from './develop-components.mdx.json' assert { type: 'json' }
 
-export const allPosts = [conditionalTernaryOperatorMdx, inputEtargetMdx, metaTagMdx, objectNullMdx, videoUploadApp_3Mdx, videoUploadApp_4Mdx, videoUploadWeb_1Mdx, videoUploadWeb_2Mdx, videoUploadApp_5Mdx]
+export const allPosts = [conditionalTernaryOperatorMdx, inputEtargetMdx, metaTagMdx, objectNullMdx, videoUploadApp_3Mdx, videoUploadApp_4Mdx, videoUploadWeb_1Mdx, videoUploadWeb_2Mdx, videoUploadApp_5Mdx, developComponentsMdx]
