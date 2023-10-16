@@ -1,7 +1,7 @@
 ---
 title: 비디오 업로드 기능 만들기(App) 4탄
 publishedAt: '2023-07-09'
-summary: IOS에서 생긴 일..
+summary: Objective-C? int? long? 예?
 category: Dev
 ---
 
@@ -12,16 +12,116 @@ IOS에서 비디오 업로드 기능을 구현하고, 마주했던 이슈들을 
 ## 목표
 
 - IOS 환경에서 비디오 업로드 기능 구현
-- IOS/Android 각각 picker 분기처리
-- 코드 리팩토링
 
 ## 이슈
 
-안드로이드에서 정상 작동하는 업로드 기능이 IOS에서 명확한 오류가 보이지 않고, **앱 튕김현상**이 발생했습니다.
-또한, IOS에서 **picker의 불편함**을 찾아 개선했습니다.
+- IOS에서 간헐적으로 `offset` 값을 읽지 못하며 **앱 튕김 이슈**가 발생했습니다.
+
+## 과정
+
+### IOS 대용량 파일 업로드
+
+원인을 찾는 과정에서 **대략 2.5gb이상 파일**만 튕김현상이 발생하고 그 이하의 비디오는 정상 업로드된다는 특이점을 찾았습니다.
+코드에는 문제가 없었기 때문에 특이점을 바탕으로 라이브러리 자체의 문제라는 판단으로 `RNFS`라이브러리의 **IOS부분을 구현한 파일**을 찾아봤습니다.
+
+`RNFSManager.m` 파일은 React Natvie에서 사용되는 `RNFS(react-native-fs)`라이브러리의 IOS부분을 구현한 파일이며, **Objective-C 언어**로 작성되어 있었습니다.
+
+> ✨ **Objective-C**는 Apple의 iOS 및 macOS 개발에 사용되는 고유의 프로그래밍 언어입니다.
+
+`Objective-C`로 개발 시 파일처리 및 메모리 관리 측면에서 데이터 타입을 지정할때 `int`와 같이 작은 데이터 타입을 사용하면,
+파일의 크기가 큰 경우 `오버플로우(Overflow)` 이슈가 발생할 수 있습니다.
+
+> ✨ **오버플로우(Overflow)** 는 컴퓨터 하드웨어의 한계로 인해 발생하는 문제 중 하나로, 담을 수 있는 최대 허용 범위를 벗어난 값을 저장해 예상치 못한 결과가 나오는 현상입니다.
+
+```objective-c title="RNFSManager.m" {2, 5, 6}
+// Seek to the position if there is one.
+    [file seekToFileOffset: (int)position];
+    // ...
+    NSData *content;
+    if ((int)length > 0) {
+        content = [file readDataOfLength: (int)length];
+    } else {
+        content = [file readDataToEndOfFile];
+    }
+    // ...
+```
+
+위의 코드에서 **int 타입으로 지정된 부분이 이슈의 원인**이라는 것을 알게되었고, 이 과정에서 숫자 표현에 관한 재미있고 새로운 지식을 습득했습니다.
+
+#### 자바스크립트
+
+자바스크립트는 숫자를 표현할때 기본적으로 64비트 형식의 단일 `Number` 데이터 타입을 사용하고, 자바스크립트 엔진은 이를 내부적으로 값을 적절한 크기로 저장 및 관리합니다.
+그래서 크기에 상관없이 숫자를 표현하는데 문제가 없고, 예를 들면 `let largeNumber = 1234567890123456789012345678901234;` 이렇게 큰 숫자를 손쉽게 다룰 수 있습니다.
+
+#### Objective-C(또는 C 언어)와 Java
+
+Objective-C(또는 C 언어)와 Java는 데이터 타입이 **더 구체적으로 정의**됩니다.
+예를 들어, C와 Objective-C는 `int`와 `long`과 같은 정수 데이터 타입이 크기에 따라 다르게 정의되고 부호 여부도 다르게 처리됩니다.
+Java에서도 정수 데이터 타입이 크기에 따라 다르게 정의됩니다.
+
+#### int
+
+**int** 데이터 타입은 32비트 시스템에서 일반적으로 약 2gb까지의 양수 범위를 처리할 수 있습니다.
+**unsigned long** 데이터 타입은 시스템에 따라 다르지만 더 큰 범위의 양수를 처리할 수 있으며,
+32비트 시스템에서도 4바이트를 가지므로 `int`에 비해 더 큰 범위의 수를 처리할 수 있고 오버플로우 문제를 방지할 수 있습니다.
+
+> ✨ **정리** <br/>
+> RNFS 라이브러리에서 `int` 타입으로 지정했기 때문에 약 2gb 파일만 업로드가 가능했고, 그 이상의 파일을 업로드 시 앱 튕김 오류가 발생한것입니다.
+> 이를 해결하기 위해서는 `int` 타입보다 **더 큰 수를 처리할 수 있는 타입**으로 수정하면 해결될 것으로 예상했습니다.
+
+## 개선
+
+해결 방법은 간단했습니다. `int` 타입을 `unsigned long`과 같은 큰 데이터 타입으로 변경하는 것 입니다.
+**RNFSManager.m**를 직접 수정해도 되나? 라는 고민하는 과정에서 오픈소스 라이브러리를 간단하게 커스텀할 수 있는 방법을 찾았습니다.
+
+[patch-package](https://github.com/ds300/patch-package) 라이브러리는 node_modules속 라이브러리를
+커스텀한 상태가 배포 상태에서도 지속되도록 수정사항을 기억해둔 후 배포 시 node_modules 위에 덮어 씌워줍니다.
+하지만 매번 버전이 달라질 때마다 patch 파일의 버전을 인스톨 되어 있는 버전과 맞춰줘야 하는 **단점**이 있습니다.
+
+> ✨ **patch-package**는 라이브러리 자체에 버그가 있어서 신속한 수정이 필요하거나, 지원하지 않는 기능을 추가하고 싶을때 사용하면 안전하게 수정사항을 공유할 수 있는 좋은 방법입니다.
+
+```objective-c title="RNFSManager.m" {10, 15, 16}
+diff --git a/node_modules/react-native-fs/RNFSManager.m b/node_modules/react-native-fs/RNFSManager.m
+index 5ddd941..5678ad5 100755
+--- a/node_modules/react-native-fs/RNFSManager.m
++++ b/node_modules/react-native-fs/RNFSManager.m
+@@ -324,11 +324,11 @@ RCT_EXPORT_METHOD(read:(NSString *)filepath
+     }
+
+     // Seek to the position if there is one.
+-    [file seekToFileOffset: (int)position];
++    [file seekToFileOffset: (unsigned long)position];
+
+     NSData *content;
+-    if ((int)length > 0) {
+-        content = [file readDataOfLength: (int)length];
++    if ((unsigned long)length > 0) {
++        content = [file readDataOfLength: (unsigned long)length];
+     } else {
+         content = [file readDataToEndOfFile];
+     }
+```
+
+`int`타입을 전부 `unsigned long`으로 수정 후 1gb ~ 5gb 비디오 업로드를 테스트해본 결과,
+드디어! IOS에서도 안드로이드와 같이 빠르게 **정상적으로 업로드**되는 것을 확인할 수 있었습니다.
 
 ## 성과 및 배운점
+
+`Object-C`언어로 개발된 `RNFS` 라이브러리의 기존 `int`타입을 `patch-package` 라이브러리를 활용해 `unsigned long` 타입으로 수정하면서,
+IOS에서 업로드 시 앱튕김 현상을 해결하고 **고용량 비디오 업로드 기능을 구현**했습니다.
+
+이전까지 만났던 이슈들과 결이 다른 내용이었기 때문에 해결하며 힘듦과 재미를 동시에 느꼈으며, 이 과정에서 이슈를 해결할 수 있는 시야가 넓어졌다고 생각합니다.
+
+하지만 아직 끝나지 않아요..
+
+> 업로드 기능 마지막편은 다음 포스팅에서 계속됩니다..<br/> **To be continued..**
 
 ---
 
 ## 참고
+
+- [[ios] object-c NSData 가 뭔지 간단히 알아보자.](https://aroundck.tistory.com/1200)
+- [Why can't I write more than 2GB?](https://stackoverflow.com/questions/66900374/why-cant-i-write-more-than-2gb)
+- [[C] 자료형 (short int, int, long int )](https://copymaster.tistory.com/entry/C%EC%96%B8%EC%96%B4-%EC%9E%90%EB%A3%8C%ED%98%95)
+- [patch-package-github](https://github.com/ds300/patch-package)
+- [[patch-package] 오픈소스 라이브러리 간단하게 커스텀하기](https://velog.io/@goodenough/patch-package-%EC%98%A4%ED%94%88%EC%86%8C%EC%8A%A4-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC-%EA%B0%84%EB%8B%A8%ED%95%98%EA%B2%8C-%EC%BB%A4%EC%8A%A4%ED%85%80%ED%95%98%EA%B8%B0)
