@@ -5,10 +5,9 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Provider from 'src/components/Provider';
 import { AnalyticsContainer } from '../components/analytics';
+import GoogleAnalytics from '../components/GoogleAnalytics';
 
 const sans = Open_Sans({ subsets: ['latin'] });
-
-export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_MEASUREMENT_ID || '';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://river-dev.vercel.app/'),
@@ -40,6 +39,8 @@ export const metadata: Metadata = {
   },
 };
 
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_MEASUREMENT_ID || '';
+
 export default function RootLayout({
   children,
 }: {
@@ -47,6 +48,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang='ko' className={sans.className}>
+      <GoogleAnalytics GA_TRACKING_ID={GA_MEASUREMENT_ID} />
+
       <meta
         name='google-site-verification'
         content='DrXuqvDuhqEVVfKJMO_1BwzoHwMQ7jktZxGV1XOB56c'
