@@ -4,6 +4,7 @@ import { Open_Sans } from 'next/font/google';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Provider from 'src/components/Provider';
+import { AnalyticsContainer } from '../components/analytics';
 
 const sans = Open_Sans({ subsets: ['latin'] });
 
@@ -56,6 +57,7 @@ export default function RootLayout({
           <main className='grow'>{children}</main>
           <Footer />
         </Provider>
+        <AnalyticsContainer />
       </body>
     </html>
   );
