@@ -8,13 +8,32 @@ import Provider from 'src/components/Provider';
 const sans = Open_Sans({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://river-dev.vercel.app/'),
   title: {
     default: 'River Blog',
     template: 'River Blog | %s',
   },
-  description: '공부하고 기록하고 공유하는 River의 개인 기술 블로그',
+  description: '공부하고 기록하며 공유하는 이석호의 개인 기술 블로그',
   icons: {
     icon: '/favicon.ico',
+  },
+  openGraph: {
+    title: '이석호',
+    description: '공부하고 기록하며 공유하는 이석호의 개인 기술 블로그',
+    url: 'https://river-dev.vercel.app/',
+    locale: 'ko_KR',
+    type: 'website',
+    siteName: '이석호',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'standard',
+      'max-snippet': -1,
+    },
   },
 };
 
