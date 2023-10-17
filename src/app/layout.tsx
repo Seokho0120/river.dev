@@ -53,24 +53,16 @@ export default function RootLayout({
       />
 
       <Script
-        async
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_MEASUREMENT_ID}`}
-        strategy='afterInteractive'
       />
-      <Script
-        id='gtag-init'
-        strategy='afterInteractive'
-        dangerouslySetInnerHTML={{
-          __html: `
+      <Script id='google-analytics'>
+        {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${gtag.GA_MEASUREMENT_ID}', {
-            page_path: window.location.pathname,
-          });
-        `,
-        }}
-      />
+          gtag('config', '${gtag.GA_MEASUREMENT_ID}');
+        `}
+      </Script>
 
       <body className='w-full flex flex-col overflow-auto antialiased max-w-screen-md mx-auto px-4 dark:bg-gray-900'>
         <Provider>
