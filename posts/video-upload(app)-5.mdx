@@ -59,9 +59,9 @@ IOS에서 파일을 선택 시 읽지 못하거나, 오래 걸리는 이슈를 �
 
 - [issues/69](https://github.com/rnmods/react-native-document-picker/issues/69) - 해당 이슈
 
-### Code Snipet
+### Code Snippets
 
-IOS일때 pickDocument, Android일때 pickImagePicker가 실행되며 운영체제(OS)에 따라 사용하는 라이브러리를 분기처리했습니다.
+IOS일때 `pickDocument`, Android일때 `pickImagePicker`가 실행되며 운영체제(OS)에 따라 사용하는 라이브러리를 분기처리했습니다.
 
 ```tsx title="UploadVideoScreen.tsx" {4, 9}
 {Platform.OS === 'ios' ? (
