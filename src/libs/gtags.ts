@@ -1,45 +1,51 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { EventProps } from './types';
 
 export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_MEASUREMENT_ID || '';
 
-// https://developers.google.com/analytics/devguides/collection/gtagjs/pages
-export const pageview = (url: URL) => {
-  window.gtag('config', GA_MEASUREMENT_ID, {
-    page_path: url,
-  });
-};
+export interface EventProps {
+  action: Gtag.EventNames | string;
+  category: string;
+  label: string;
+  value: string | number;
+}
 
-// https://developers.google.com/analytics/devguides/collection/gtagjs/events
-export const event = ({ action, category, label, value }: EventProps) => {
-  try {
-    if (window) {
-      window.gtag('event', action, {
-        event_category: category,
-        event_label: label,
-        value: value,
-        // send_to: GA_TRACKING_ID,
-      });
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};
+// // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
+// export const pageview = (url: URL) => {
+//   window.gtag('config', GA_MEASUREMENT_ID, {
+//     page_path: url,
+//   });
+// };
 
-export const useGtag = () => {
-  const router = useRouter();
+// // https://developers.google.com/analytics/devguides/collection/gtagjs/events
+// export const event = ({ action, category, label, value }: EventProps) => {
+//   try {
+//     if (window) {
+//       window.gtag('event', action, {
+//         event_category: category,
+//         event_label: label,
+//         value: value,
+//         // send_to: GA_TRACKING_ID,
+//       });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
-  useEffect(() => {
-    const handleRouteChange = (url: URL) => {
-      pageview(url);
-    };
+// export const useGtag = () => {
+//   const router = useRouter();
 
-    router.events.on('routeChangeComplete', handleRouteChange);
-    router.events.on('hashChangeComplete', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-      router.events.off('hashChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);
-};
+//   useEffect(() => {
+//     const handleRouteChange = (url: URL) => {
+//       pageview(url);
+//     };
+
+//     router.events.on('routeChangeComplete', handleRouteChange);
+//     router.events.on('hashChangeComplete', handleRouteChange);
+//     return () => {
+//       router.events.off('routeChangeComplete', handleRouteChange);
+//       router.events.off('hashChangeComplete', handleRouteChange);
+//     };
+//   }, [router.events]);
+// };
