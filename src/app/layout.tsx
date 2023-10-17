@@ -6,7 +6,9 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Provider from 'src/components/Provider';
 import { AnalyticsContainer } from '../components/analytics';
-// import * as gtag from '../libs/gtags';
+import * as gtag from '../libs/gtags';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const sans = Open_Sans({ subsets: ['latin'] });
 
@@ -47,6 +49,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = (url: URL) => {
+      gtag.pageview(url);
+    };
+    router.events.on('routeChangeComplete', handleRouteChange);
+    router.events.on('hashChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+      router.events.off('hashChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
   return (
     <html lang='ko' className={sans.className}>
       <meta
@@ -54,17 +70,25 @@ export default function RootLayout({
         content='DrXuqvDuhqEVVfKJMO_1BwzoHwMQ7jktZxGV1XOB56c'
       />
 
+      {/* Global Site Tag (gtag.js) - Google Analytics */}
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        strategy='afterInteractive'
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_MEASUREMENT_ID}`}
       />
-      <Script id='google-analytics'>
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${GA_MEASUREMENT_ID}');
-        `}
-      </Script>
+      <Script
+        id='gtag-init'
+        strategy='afterInteractive'
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gtag.GA_MEASUREMENT_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+        }}
+      />
 
       <body className='w-full flex flex-col overflow-auto antialiased max-w-screen-md mx-auto px-4 dark:bg-gray-900'>
         <Provider>
