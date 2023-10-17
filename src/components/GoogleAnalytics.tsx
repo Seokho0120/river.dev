@@ -23,6 +23,8 @@ const GoogleAnalytics: React.FC<GoogleAnalyticsProps> = ({
 
     const url = pathname + searchParams.toString();
 
+    (window as any).gtag('config', GA_TRACKING_ID, { debug_mode: true });
+
     pageview(GA_TRACKING_ID, url);
   }, [GA_TRACKING_ID, pathname, searchParams]);
 
