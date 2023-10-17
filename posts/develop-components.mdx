@@ -1,7 +1,7 @@
 ---
-title: 컴포넌트 설계 기준과 파편화(미정)
+title: 컴포넌트 개선하기
 publishedAt: '2023-03-12'
-summary: 미정
+summary: 컴포넌트 파편화와 설계기준
 category: Dev
 ---
 
@@ -10,3 +10,172 @@ category: Dev
 미비한 컴포넌트 설계 기준과 컴포넌트 파편화로 겪은 이슈와 해결하는 내용을 다룹니다.
 
 ## 이슈
+
+메이톡 서비스가 점점 커지고 새로운 화면과 기능이 추가되는 과정에서 인원교체가 이뤄지며 컴포넌트 설계 기준이 모호해졌습니다.
+그 결과 각자 생각과 주관대로 컴포넌트를 관리하면서 **불필요한 유지보수 시간이 발생**했습니다.<br/>
+
+메인화면의 디자인 수정 요청이 들어왔는데 비슷하지만 조금씩 다른 수많은 화면이 존재했고,
+파일 이름까지 비슷해서 개발자와 디자이너의 불필요한 마찰이 생기는 일까지 발생했습니다.
+
+저는 이 상황의 심각성을 인지하고 **직접 개선**에 나섰습니다.
+
+## 원인
+
+### 미비한 컴포넌트 설계 기준
+
+문제가 되었던 `section`이며 메인부터 상세, 비디오 페이지 등 대략 10페이지가 넘는 곳에서 반복되었습니다.<br/>
+**명확한 설계 기준의 부재**로 각자의 입맛대로 구현 일관성, 확장성까지 제각각이었습니다.
+그 결과 수정요청이 들어오면 해당 section을 구현한 팀원에게 요청을 돌리거나, 매번 물어봐야하는 상황이 반복되었습니다.
+
+<p align='center'>
+  <img src='/blog/img/component.png' width={350} alt='component' />
+</p>
+
+이렇게 컴포넌트 설계의 명확한 기준이 없다면 팀원들 각자의 기준으로 컴포넌트를 구성하게 됩니다.
+극단적으로 누군가는 **section전체 영역**을 VideoItem이라 할 수 있고, 누군가는 VideoView, VideoProfile, VideoText과 같이 **비슷한 유형으로 그루핑**하여
+구분할 수도 있으며, 컴포넌트로 **만들지 않을 수도** 있습니다.
+
+### 컴포넌트 파편화
+
+> ✨ **컴포넌트 파편화**는 어플리케이션에서 비슷한 혹은 동일한 역할을하는 컴포넌트들이 디자인 및 동작 측면에서 일관성이 부족한 상태를 의미합니다.
+
+디자인과 기능이 거의 흡사하지만 각자의 기준에서 컴포넌트를 구현하고 관리했기 때문에 **컴포넌트 파편화 현상이 심각하게 발생**했습니다.
+
+**React**를 사용하는 이유 중 하나가 컴포넌트 기반의 개발로 **재사용성**과 **확장성**을 확보해 코드의 가독성과 유지보수성을 향상시키기 위함인데, 이 상황은 모두 적합하지 않은 상태였습니다.
+
+```tsx title="MyVod.tsx" {4}
+import MyPageListItem from '@components/MyPageListItem';
+<STC.StreamList>
+  {myVideo?.map((item: IAfterVideoType) => (
+    <MyPageListItem key={item.vodId} item={item} activeTab={0} />
+    // ...
+  ))}
+</STC.StreamList>;
+```
+
+```tsx title="VideoPage.tsx" {5}
+import StudioLoungeListItem from '../StudioLoungeListItem';
+<STC.StreamList>
+  {param === 'history' &&
+    historyVideos?.map((item: IHistoryVideoType) => (
+      <StudioLoungeListItem key={item.vodId} list={item} delete='history' />
+      // ...
+    ))}
+</STC.StreamList>;
+```
+
+### 의미없는 디자인시스템
+
+회사에 디자인시스템이 존재하긴하지만, 매번 바뀌는 윗선의 오더로 **의미가 퇴색**되었습니다.
+이 의미는 서비스의 가이드라인이 존재하지 않다는 것이고 그로인해 서비스의 일관성 부족, 불필요한 반복으로 인한 오류 등 치명적인 이슈가 지속적으로 발생할 수 있다는 것 입니다.
+
+만약 디자인시스템에서 관리되지 않는 버튼이 있다면 폰트나 컬러 등 페이지마다 제각각일 수 있습니다. 디자이너와 특정 페이지의 버튼을 얘기할때, 어느 페이지의 어느 위치에 있는 버튼과 같이
+페이지명과 위치를 함께 전달해줘야합니다. 이와 같은 대화들은 불필요하게 시간을 길어지게하고 디자이너와 개발자 모두
+여러개의 버튼들을 찾아 대조하고 수정해야하기 때문에 **유지보수 시간이 증가**했습니다.
+
+## 과정 및 해결
+
+이와 같은 문제는 디자인시스템을 적용하면 어느정도 해결할 수 있습니다. 실제로 저와 같은 이슈로 아토믹디자인 시스템을 적용한 사례를 쉽게 찾을 수 있습니다.
+**brad frost**의 [Atomic design](https://atomicdesign.bradfrost.com/chapter-2/)을 최대한 참고 했지만,
+시간상 오래 고민할 수 없는 상황이었기에 간단하게 section을 `Organisms`단위로 생각하고 개선했습니다.
+
+> ✨ **Organisms**은 Atom, Molecule보다 더 복잡하고 서비스에 표현될 수 있는 명확한 영역과 특정 컨텍스트를 가집니다.
+> 예를 들면, header라는 컴텐스트에 logo, navigation, search form을 포함할 수 있습니다. atom, molecule에 비해 구체적으로 표현되고 컨텍스트를 가지기 때문에 상대적으로 재사용성이 낮아지는 특성을 가집니다.
+
+### 명확한 컴포넌트
+
+`CommonVideoListItem`, `CommonVideoListItemInfo` 역할을 명확하게 인지할 수 있는 파일명을 적용했고, 필요한 props들의 값도 통일시키며 일관성을 유지시켰습니다.
+중복되거나 필요한 컨텐츠(Info, Profile, Player 등) 모두 컴포넌트로 나눠서 구현하고, 각 화면의 유형을 타입으로 명시해 화면에서 필요한 기능 및 컨텐츠만 렌더링될 수 있도록 개발했습니다.
+
+```tsx title="CommonVideoListItem.tsx"
+import CommonVideoListItemInfo from '@components/CommonVideoListItemInfo';
+import StreamPlayer from '@components/StreamPlayer';
+
+const CommonVideoListItem = (props: ICommonVideoListItemProps)
+ const {
+    item,
+    pageType,
+    deleteType,
+    isMe,
+  } = props;
+  // ...
+  return (
+    <STC.Container>
+      <STC.StreamWrapper onClick={() => onClickVod()} ref={streamRef}>
+        <StreamPlayer
+          url={setPlaybackUrl(item.playbackUrl, item.playToken)}
+          thumbnail={isMouseOver === true ? '' : item.thumbnail}
+          isMouseOver={isMouseOver}
+        />
+        // ...
+      </STC.StreamWrapper>
+
+      <CommonVideoListItemInfo
+        item={item}
+        pageType={pageType}
+        deleteType={deleteType}
+        isMe={isMe}
+      />
+    </STC.Container>
+  );
+};
+```
+
+```tsx title="CommonVideoListItemInfo.tsx"
+import Profile from '@components/Profile';
+import TitleAndInfo from '@components/TitleAndInfo';
+
+const CommonVideoListItemInfo = (props: ICommonVideoListItemProps) => {
+// ...
+<STC.VideoListItemInfoWrapper>
+  <STC.ProfileWrapper>
+    <Profile
+      type='ps36'
+      pageType={pageType}
+      channelId={item.channelId}
+      src={ isMe && // ...
+      }
+    />
+  </STC.ProfileWrapper>
+
+  <TitleAndInfo item={item} pageType={pageType} />
+
+  {deleteType && (
+    <CommonDeleteItem
+      item={item}
+      deleteType={deleteType}
+      // ...
+    />
+  )}
+</STC.VideoListItemInfoWrapper>;
+}
+```
+
+### 일관된 디자인
+
+주도적으로 기획, 디자인팀과의 유연한 커뮤니케이션으로 함께 시안을 수정했습니다.
+현 상황의 문제점을 리스트화화여 제시하고, 핵심적인 부분을 우선으로 **통일성있는 방향으로 시안 수정을 유도**했습니다.
+
+<p align='center'>
+  <img src='/blog/img/component-after.png' width={500} alt='omponent-after' />
+</p>
+
+비디오의 옵션들을 관심사 분리로 구분하며 상태(라이브, 재생시간)를 알려주는 모든 파트는 왼쪽 상단에, 이벤트 처리 버튼(삭제, 구독 등)들은 오른쪽 상단에 위치시켰습니다.
+또한, 각 페이지 특성이 보여지는 옵션(승인, 거절 등)들은 왼쪽 하단에 위치시켜 페이지 유형에 따라 필요한 부분에서만 보여지도록 수정하며, **일관성있는 하나의 section디자인을 유지**했습니다.
+
+## 성과 및 배운점
+
+파편화되었던 컴포넌트를 개선하고 관리하며 **유지보수 시간이 대략 50%이상 절감**되었고, 코드의 가독성이 좋아지며 누가봐도 명확한 의미를 인지할 수 있게 되었습니다.
+
+신규 페이지 추가 예정이 없다는 의견을 수용해 이러한 방식을 적용했지만, 이 구조의 **단점도 명확하게 존재**했습니다.
+페이지가 지속적으로 추가된다면 필요한 `props`의 종류와 갯수가 많아지고, 그에 따라 분기처리하는 로직이 길어지기 때문에 오히려 가독성이 떨어지고 코드가 꼬일 수 있습니다.
+
+만약 신규페이지가 지속적으로 추가될 예정이었다면, 서비스의 메인이 되는 페이지들과 나머지 페이지를 구분하고, 더 세밀한 관심사 분리로 컴포넌트를 관리하지 않았을까 생각이 듭니다.
+
+---
+
+## 참고
+
+- [atomicdesign.bradfrost](https://atomicdesign.bradfrost.com/chapter-2/)
+- [kakaoent](https://fe-developers.kakaoent.com/2022/220505-how-page-part-use-atomic-design-system/)
+- [startupcode](https://www.startupcode.kr/company/blog/archives/15)
