@@ -44,6 +44,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang='ko' className={sans.className}>
+      <meta
+        name='google-site-verification'
+        content='DrXuqvDuhqEVVfKJMO_1BwzoHwMQ7jktZxGV1XOB56c'
+      />
       <body className='w-full flex flex-col overflow-auto antialiased max-w-screen-md mx-auto px-4 dark:bg-gray-900'>
         <Provider>
           <header className='mb-16'>
