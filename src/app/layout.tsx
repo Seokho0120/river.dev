@@ -6,9 +6,11 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Provider from 'src/components/Provider';
 import { AnalyticsContainer } from '../components/analytics';
-import * as gtag from '../libs/gtags';
+// import * as gtag from '../libs/gtags';
 
 const sans = Open_Sans({ subsets: ['latin'] });
+
+export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_MEASUREMENT_ID || '';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://river-dev.vercel.app/'),
@@ -53,14 +55,14 @@ export default function RootLayout({
       />
 
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_MEASUREMENT_ID}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
       />
       <Script id='google-analytics'>
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${gtag.GA_MEASUREMENT_ID}');
+          gtag('config', '${GA_MEASUREMENT_ID}');
         `}
       </Script>
 
