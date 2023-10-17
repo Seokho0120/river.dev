@@ -5,8 +5,8 @@ import { EventProps } from './types';
 export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_MEASUREMENT_ID || '';
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
-export const pageview = (url: string) => {
-  window.gtag('config' as 'config', GA_MEASUREMENT_ID, {
+export const pageview = (url: URL) => {
+  window.gtag('config', GA_MEASUREMENT_ID, {
     page_path: url,
   });
 };
@@ -25,4 +25,21 @@ export const event = ({ action, category, label, value }: EventProps) => {
   } catch (err) {
     console.log(err);
   }
+};
+
+export const useGtag = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = (url: URL) => {
+      pageview(url);
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+    router.events.on('hashChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+      router.events.off('hashChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
 };

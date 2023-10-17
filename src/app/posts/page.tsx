@@ -1,6 +1,7 @@
 import { getAllPosts } from 'src/service/post';
 import FilterablePost from 'src/components/FilterablePost';
 import { Metadata } from 'next';
+import * as gtag from '../../libs/gtags';
 
 export const metadata: Metadata = {
   title: 'All Posts',

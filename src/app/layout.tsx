@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Provider from 'src/components/Provider';
 import { AnalyticsContainer } from '../components/analytics';
+import * as gtag from '../libs/gtags';
 
 const sans = Open_Sans({ subsets: ['latin'] });
 
@@ -39,8 +40,6 @@ export const metadata: Metadata = {
   },
 };
 
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_MEASUREMENT_ID;
-
 export default function RootLayout({
   children,
 }: {
@@ -54,7 +53,8 @@ export default function RootLayout({
       />
 
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_MEASUREMENT_ID}`}
         strategy='afterInteractive'
       />
       <Script
@@ -65,7 +65,7 @@ export default function RootLayout({
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${GA_MEASUREMENT_ID}', {
+          gtag('config', '${gtag.GA_MEASUREMENT_ID}', {
             page_path: window.location.pathname,
           });
         `,
