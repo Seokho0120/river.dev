@@ -24,8 +24,8 @@ const NAV_MENU = [
     clickedIcon: <PostFillIcon />,
   },
   {
-    href: '/me',
-    title: 'Me',
+    href: '/about',
+    title: 'About',
     icon: <MeIcon />,
     clickedIcon: <MeFillIcon />,
   },
