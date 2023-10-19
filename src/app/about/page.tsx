@@ -11,7 +11,7 @@ export default function MePage() {
   return (
     <section>
       <Intro />
-      {/* <Careers /> */}
+      <Careers />
     </section>
   );
 }

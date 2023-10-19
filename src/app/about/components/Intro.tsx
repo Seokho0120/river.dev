@@ -26,10 +26,10 @@ const ContactMenu = [
 
 export default function Intro() {
   return (
-    <section>
+    <section className='mb-10'>
       <h1 className='text-3xl font-extrabold mb-6'>
         안녕하세요,{' '}
-        <span className='hover:text-point cursor-pointer underline underline-offset-4 decoration-wavy decoration-point dark:decoration-orange-400 decoration-2'>
+        <span className='underline underline-offset-4 decoration-wavy decoration-point dark:decoration-orange-400 decoration-2'>
           프론트엔드 개발자 이석호
         </span>{' '}
         입니다.
@@ -75,7 +75,7 @@ export default function Intro() {
 
       <ul>
         {IntroList.map((list, idx) => (
-          <li key={idx} className='flex items-center gap-2 mb-2'>
+          <li key={idx} className='flex items-center gap-2 mb-1'>
             <div className='w-1 h-1 bg-point rounded-full' />
             {list}
           </li>
