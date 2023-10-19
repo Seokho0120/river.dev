@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import MailIcon from '@/src/components/ui/icons/MailIcon';
 import GithubIcon from '@/src/components/ui/icons/GithubIcon';
-import profileImg from '../../../../public/image/profile-main.png';
+import profileImg from '../../../../public/image/profile-main2.png';
 
 const IntroList = [
   'Why? 라는 질문을 자주하며, 충분한 이유를 가진 코드를 작성하려 노력하는',
@@ -42,7 +42,7 @@ export default function Intro() {
           placeholder='blur'
           quality={100}
           priority
-          className='w-32 h-w-32 rounded-full object-cover border-4 border-point dark:border-darkPoint bg-white'
+          className='w-32 h-32 rounded-full object-cover border-4 border-point dark:border-darkPoint bg-white'
         />
         <div className='flex flex-col gap-4'>
           <h2 className='text-2xl font-semibold'>
@@ -52,7 +52,7 @@ export default function Intro() {
           <ul className='flex gap-4 text-sm'>
             {ContactMenu.map(({ href, icon, title }) => (
               <Link
-                className='flex items-center gap-2 font-medium underline'
+                className='flex items-center gap-2 font-medium hover:underline decoration-point underline-offset-2'
                 href={href}
                 key={href}
                 rel='noopener noreferrer'

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import profileImg from '../../public/image/profile-main.png';
+import profileImg from '../../public/image/profile-main2.png';
 import { VscGithubInverted } from 'react-icons/vsc';
 
 export default function MainAboutMe() {
@@ -20,7 +20,7 @@ export default function MainAboutMe() {
             placeholder='blur'
             quality={100}
             priority
-            className='w-24 h-w-24 rounded-full object-cover border-4 border-point dark:border-darkPoint bg-white'
+            className='w-24 h-24 rounded-full object-cover border-4 border-point dark:border-darkPoint bg-white'
           />
           <div>
             <p className='flex gap-2 items-center text-xl font-bold pb-2'>
