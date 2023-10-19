@@ -8,9 +8,9 @@ export default function MainAboutMe() {
     <section className='py-6 px-6 border border-neutral-50 dark:border-neutral-800 shadow-lg dark:shadow-lg rounded-lg dark:shadow-slate-600'>
       <div className='flex flex-col gap-6'>
         <div className='flex gap-2'>
-          <div className='w-3 h-3 bg-red-500 rounded-full' />
-          <div className='w-3 h-3 bg-yellow-400 rounded-full' />
-          <div className='w-3 h-3 bg-green-500 rounded-full' />
+          <circle className='w-3 h-3 bg-red-500 rounded-full' />
+          <circle className='w-3 h-3 bg-yellow-400 rounded-full' />
+          <circle className='w-3 h-3 bg-green-500 rounded-full' />
         </div>
 
         <div className='flex items-center gap-4'>
@@ -30,7 +30,7 @@ export default function MainAboutMe() {
               </Link>
             </p>
             <div className='font-medium text-neutral-700 dark:text-gray-400 italic'>
-              {`Hello! I'm Front-end developer`}
+              {`Hello! I'm Front-end developer.`}
               <p>
                 Why? Starting with a question, I love the process of exploring
                 How.
