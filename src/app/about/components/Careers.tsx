@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-const test = [
+const CARRERS_MENU = [
   {
     title: '알라딘글로벌알앤디센터',
     job: '프론트엔드 개발자',
@@ -36,7 +36,7 @@ export default function Careers() {
         Careers.
       </h1>
 
-      {test.map(({ title, job, date, lists, href }, idx) => (
+      {CARRERS_MENU.map(({ title, job, date, lists, href }, idx) => (
         <div className='flex mb-6' key={idx}>
           <div className='w-1/3'>
             <p className='text-xl font-bold mb-1 cursor-pointer hover:underline decoration-point dark:decoration-darkPoint underline-offset-2'>

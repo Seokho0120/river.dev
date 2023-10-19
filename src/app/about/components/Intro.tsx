@@ -52,7 +52,7 @@ export default function Intro() {
           <ul className='flex gap-4 text-sm'>
             {ContactMenu.map(({ href, icon, title }) => (
               <Link
-                className='flex items-center gap-2 font-medium hover:underline decoration-point dark:decoration-darkPoint underline-offset-2'
+                className='flex items-center gap-2 font-medium underline hover:no-underline decoration-point dark:decoration-darkPoint underline-offset-2'
                 href={href}
                 key={href}
                 rel='noopener noreferrer'

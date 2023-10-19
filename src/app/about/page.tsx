@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Intro from './components/Intro';
 import Careers from './components/Careers';
+import Projects from './components/Projects';
 
 export const metadata: Metadata = {
   title: 'About Me',
@@ -12,6 +13,7 @@ export default function MePage() {
     <section>
       <Intro />
       <Careers />
+      <Projects />
     </section>
   );
 }
