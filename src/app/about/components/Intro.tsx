@@ -5,18 +5,10 @@ import GithubIcon from '@/src/components/ui/icons/GithubIcon';
 import profileImg from '../../../../public/image/profile-main.png';
 
 const IntroList = [
-  {
-    li: 'Why? 라는 질문을 자주하며, 충분한 이유를 가진 코드를 작성하려 노력하는',
-  },
-  {
-    li: '단순히 주어진 개발이 아닌, 주도적으로 문제를 찾아내고 분석하며 솔루션을 제안하는',
-  },
-  {
-    li: '사용자 중심의 UI/UX에 높은 가치를 두고, 불편함을 고민하며 개선하는',
-  },
-  {
-    li: '다양한 직군과 협업에 능숙하고, 경청과 논리에 기반한 커뮤니케이션이 가능하는',
-  },
+  'Why? 라는 질문을 자주하며, 충분한 이유를 가진 코드를 작성하려 노력하는',
+  '단순히 주어진 개발이 아닌, 주도적으로 문제를 찾아내고 분석하며 솔루션을 제안하는',
+  '사용자 중심의 UI/UX에 높은 가치를 두고, 불편함을 고민하며 개선하는',
+  '다양한 직군과 협업에 능숙하고, 경청과 논리에 기반한 커뮤니케이션이 가능하는',
 ];
 
 const ContactMenu = [
@@ -85,7 +77,7 @@ export default function Intro() {
         {IntroList.map((list, idx) => (
           <li key={idx} className='flex items-center gap-2 mb-2'>
             <div className='w-1 h-1 bg-point rounded-full' />
-            {list.li}
+            {list}
           </li>
         ))}
       </ul>
