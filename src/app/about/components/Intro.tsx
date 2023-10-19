@@ -52,7 +52,7 @@ export default function Intro() {
           <ul className='flex gap-4 text-sm'>
             {ContactMenu.map(({ href, icon, title }) => (
               <Link
-                className='flex items-center gap-2 font-medium hover:underline decoration-point underline-offset-2'
+                className='flex items-center gap-2 font-medium hover:underline decoration-point dark:decoration-darkPoint underline-offset-2'
                 href={href}
                 key={href}
                 rel='noopener noreferrer'
@@ -67,7 +67,7 @@ export default function Intro() {
 
       <h3 className='text-lg font-bold mb-2'>
         저는{' '}
-        <span className='inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-point ring-1 ring-inset ring-blue-700/10'>
+        <span className='inline-flex items-center rounded-md bg-blue-50 dark:bg-yellow-50 px-2 py-1 text-xs font-medium text-point dark:text-darkPoint ring-1 ring-inset ring-blue-700/10 dark:ring-yellow-700/10'>
           _ _ _ _ _ _
         </span>{' '}
         하는 개발자 입니다.
@@ -76,7 +76,7 @@ export default function Intro() {
       <ul>
         {IntroList.map((list, idx) => (
           <li key={idx} className='flex items-center gap-2 mb-1'>
-            <div className='w-1 h-1 bg-point rounded-full' />
+            <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full' />
             {list}
           </li>
         ))}
