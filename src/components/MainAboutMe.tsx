@@ -1,38 +1,43 @@
 import Image from 'next/image';
-import profileImage from '../../public/image/my-profile.jpg';
+import Link from 'next/link';
+import profileImg from '../../public/image/profile-main.png';
+import { VscGithubInverted } from 'react-icons/vsc';
 
 export default function MainAboutMe() {
   return (
-    <section className='break-keep'>
-      <div className='my-4 flex items-center gap-8'>
-        <div className='flex h-[100px] w-[100px] flex-shrink-0 md:h-[125px] md:w-[125px]'>
+    <section className='py-6 px-6 border border-neutral-50 dark:border-neutral-800 shadow-lg dark:shadow-lg rounded-lg dark:shadow-slate-600'>
+      <div className='flex flex-col gap-6'>
+        <div className='flex gap-2'>
+          <div className='w-3 h-3 bg-red-500 rounded-full' />
+          <div className='w-3 h-3 bg-yellow-400 rounded-full' />
+          <div className='w-3 h-3 bg-green-500 rounded-full' />
+        </div>
+
+        <div className='flex items-center gap-4'>
           <Image
-            src={profileImage}
+            src={profileImg}
             alt='이석호'
             placeholder='blur'
             quality={100}
             priority
-            className='h-full w-full rounded-full object-cover'
+            className='w-24 h-w-24 rounded-full object-cover border-4 border-point dark:border-darkPoint bg-white'
           />
-        </div>
-        <div className='max-w-sm leading-7'>
-          안녕하세요? 저의 블로그에 찾아와 주셔서 감사합니다. 😊
           <div>
-            저는 프론트엔드 개발자{' '}
-            <h4 className='inline-block text-lg font-semibold'>이석호</h4>
-            입니다.
+            <p className='flex gap-2 items-center text-xl font-bold pb-2'>
+              @River
+              <Link href={'https://github.com/Seokho0120'}>
+                <VscGithubInverted />
+              </Link>
+            </p>
+            <div className='font-medium text-neutral-700 dark:text-gray-400 italic'>
+              {`Hello! I'm Front-end developer`}
+              <p>
+                Why? Starting with a question, I love the process of exploring
+                How.
+              </p>
+            </div>
           </div>
-          <p>앞으로 나아가는 것을 좋아합니다.</p>
         </div>
-      </div>
-      <div className='pt-5 leading-7'>
-        <div>
-          같이의 가치를 믿는 개발자, 이석호 입니다.{' '}
-          <p>
-            개발자의 가치는 비지니스 가치를 구현하는데서 나온다고 생각합니다.
-          </p>
-        </div>
-        <p>앞으로 자주 뵈었으면 좋겠습니다.</p>
       </div>
     </section>
   );

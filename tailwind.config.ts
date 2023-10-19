@@ -9,7 +9,7 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      colors: { point: '#2492ff' },
+      colors: { point: '#2492ff', darkPoint: '#E8871E' },
     },
   },
   plugins: [require('@tailwindcss/typography')],
