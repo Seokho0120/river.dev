@@ -32,9 +32,9 @@ export default function Intro() {
             {ContactMenu.map(({ href, icon, title }) => (
               <Link
                 className='flex items-center gap-2 font-medium hover:text-point'
-                // className='flex items-center gap-2 font-medium underline hover:no-underline decoration-point dark:decoration-darkPoint underline-offset-2'
                 href={href}
                 key={href}
+                target='_blank'
                 rel='noopener noreferrer'
               >
                 {icon}
@@ -55,7 +55,7 @@ export default function Intro() {
 
       <ul>
         {IntroList.map((list, idx) => (
-          <li key={idx} className='flex items-center gap-2 mb-2'>
+          <li key={idx} className='flex items-center gap-2 mb-2 font-medium'>
             <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full' />
             {list}
           </li>
