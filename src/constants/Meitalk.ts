@@ -14,7 +14,8 @@ export const MEITALK_WORKS = [
   {
     title: '비디오 업로드 기능 구현(Web)',
     sub_1: {
-      sub_title: '1gb 이하 비디오 업로드',
+      sub_title: '1GB 이하 비디오 업로드',
+      sub_href: 'https://river-dev.vercel.app/posts/video-upload(web)-1',
       problem: '이슈',
       problem_list: [
         '500mb 이상 업로드 도중 멈춤 및 속도 저하 발생 (700mb 비디오 기준 → 4min 이상 소요)',
@@ -27,7 +28,8 @@ export const MEITALK_WORKS = [
       ],
     },
     sub_2: {
-      sub_title: '1gb 이상 비디오 업로드(기획안 변경)',
+      sub_title: '1GB 이상 비디오 업로드',
+      sub_href: 'https://river-dev.vercel.app/posts/video-upload(web)-2',
       problem: '이슈',
       problem_list: [
         '1gb 이상 비디오 업로드 (제한용량 1gb → 5gb 기획안 변경)',
@@ -48,6 +50,8 @@ export const MEITALK_WORKS = [
     title: '비디오 업로드 기능 구현(App)',
     sub_1: {
       sub_title: 'Client 구현',
+      sub_href:
+        'https://river-dev.vercel.app/posts/video-upload(app)-3#1-uploadapi-%ED%95%A8%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0',
       problem: '이슈',
       problem_list: [
         '클라이언트에서 메모리 문제로 100mb이상 업로드 실패',
@@ -61,6 +65,7 @@ export const MEITALK_WORKS = [
     },
     sub_2: {
       sub_title: 'IOS 대용량 파일 업로드',
+      sub_href: 'https://river-dev.vercel.app/posts/video-upload(app)-4',
       problem: '이슈',
       problem_list: [
         '일정 용량(2.5gb) 이상 업로드 시 offset 값을 읽지 못하고 앱 튕김 현상 발생',
@@ -71,7 +76,8 @@ export const MEITALK_WORKS = [
       ],
     },
     sub_3: {
-      sub_title: 'Image picker 처리',
+      sub_title: 'Picker 개선',
+      sub_href: 'https://river-dev.vercel.app/posts/video-upload(app)-5',
       problem: '이슈',
       problem_list: [
         'IOS에서 대용량 파일을 읽지 못하고 오래 걸리는 이슈 → 4gb기준 20min 이상 소요',
@@ -87,6 +93,7 @@ export const MEITALK_WORKS = [
     title: '구조개선 및 리뉴얼',
     sub_1: {
       problem: '이슈',
+      sub_href: 'https://river-dev.vercel.app/posts/develop-components',
       problem_list: [
         '미비한 컴포넌트 설계 기준과 컴포넌트 파편화로 불필요한 유지보수 발생',
       ],

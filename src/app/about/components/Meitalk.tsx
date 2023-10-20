@@ -14,7 +14,8 @@ export default function Meitalk() {
             <Link
               href={href}
               className='font-bold text-2xl text-point cursor-pointer underline decoration-point hover:no-underline'
-              // className='font-bold text-3xl cursor-pointer underline hover:no-underline decoration-point dark:decoration-darkPoint underline-offset-4'
+              target='_blank'
+              rel='noopener noreferrer'
             >
               {title}
             </Link>
@@ -35,11 +36,37 @@ export default function Meitalk() {
           <h2 className='font-bold text-xl'>{title}</h2>
 
           <div className='mt-1 mb-4'>
-            <h3 className='font-bold text-lg mb-1'>{sub_1.sub_title}</h3>
-            <li className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
+            <h3 className='flex items-center font-bold text-lg mb-1'>
+              {sub_1.sub_title}
+              {sub_1.sub_href && title !== '구조개선 및 리뉴얼' && (
+                <Link
+                  className='text-sm ml-1 text-point underline decoration-point hover:no-underline'
+                  href={sub_1.sub_href}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  [상세보기]
+                </Link>
+              )}
+            </h3>
+            <div className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
               <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
               {sub_1.problem}
-            </li>
+              {title === '구조개선 및 리뉴얼' && (
+                <div className='ml-[-0.5rem]'>
+                  {sub_1.sub_href && (
+                    <Link
+                      className='font-bold text-sm ml-1 text-point underline decoration-point hover:no-underline'
+                      href={sub_1.sub_href}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      [상세보기]
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
             {sub_1.problem_list.map((problem, idx) => (
               <li
                 key={idx}
@@ -65,7 +92,19 @@ export default function Meitalk() {
           </div>
 
           <div className='mt-1 mb-4'>
-            <h3 className='font-bold text-lg mb-1'>{sub_2.sub_title}</h3>
+            <h3 className='flex items-center font-bold text-lg mb-1'>
+              {sub_2.sub_title}
+              {sub_2.sub_href && (
+                <Link
+                  className='text-sm ml-1 text-point underline decoration-point hover:no-underline'
+                  href={sub_2.sub_href}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  [상세보기]
+                </Link>
+              )}
+            </h3>
             <li className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
               <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
               {sub_2.problem}
@@ -96,7 +135,19 @@ export default function Meitalk() {
 
           {sub_3 && (
             <div className='mt-1 mb-4'>
-              <h3 className='font-bold text-lg mb-1'>{sub_3.sub_title}</h3>
+              <h3 className='flex items-center font-bold text-lg mb-1'>
+                {sub_3.sub_title}
+                {sub_3.sub_href && (
+                  <Link
+                    className='text-sm ml-1 text-point underline decoration-point hover:no-underline'
+                    href={sub_3.sub_href}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    [상세보기]
+                  </Link>
+                )}
+              </h3>
               <li className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
                 <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
                 {sub_3.problem}

@@ -19,7 +19,7 @@ export const CARRERS_MENU = [
     date: '2022.01 - 2022.02',
     href: 'https://www.fnf.co.kr/pages/main/main.php',
     lists: [
-      '순수 자바스크립트로 개발된 데이터 대시보드를 React로 전환하는 프로젝트 참여',
+      '순수 자바스크립트로 개발된 데이터 대시보드를 리액트로 전환하는 프로젝트',
       '경쟁사 마켓 검색량 데이터 시각화',
       '재사용 컴포넌트 개발',
       'UI/UX 디자인 및 기획',
