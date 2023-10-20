@@ -94,37 +94,37 @@ export default function Meitalk() {
             ))}
           </div>
 
-          {/* <div className='font-bold text-xl'>{sub_2.sub_title}</div>
-          <div>{sub_2.problem}</div>
-          {sub_2.problem_list.map((problem, idx) => (
-            <li key={idx} className='relative flex items-start gap-2 mb-1 pl-3'>
-              <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
-              {problem}
-            </li>
-          ))}
-          <div>{sub_2.solution}</div>
-          {sub_2.solution_list.map((solution, idx) => (
-            <li key={idx} className='relative flex items-start gap-2 mb-1 pl-3'>
-              <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
-              {solution}
-            </li>
-          ))}
-
-          <div className='font-bold text-xl'>{sub_3?.sub_title}</div>
-          <div>{sub_3?.problem}</div>
-          {sub_3?.problem_list.map((problem, idx) => (
-            <li key={idx} className='relative flex items-start gap-2 mb-1 pl-3'>
-              <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
-              {problem}
-            </li>
-          ))}
-          <div>{sub_3?.solution}</div>
-          {sub_3?.solution_list.map((solution, idx) => (
-            <li key={idx} className='relative flex items-start gap-2 mb-1 pl-3'>
-              <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
-              {solution}
-            </li>
-          ))} */}
+          {sub_3 && (
+            <div className='mt-1 mb-4'>
+              <h3 className='font-bold text-lg mb-1'>{sub_3.sub_title}</h3>
+              <li className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
+                <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+                {sub_3.problem}
+              </li>
+              {sub_3.problem_list.map((problem, idx) => (
+                <li
+                  key={idx}
+                  className='relative flex items-start gap-2 mb-1 pl-7'
+                >
+                  <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
+                  {problem}
+                </li>
+              ))}
+              <div className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
+                <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+                {sub_3.solution}
+              </div>
+              {sub_3.solution_list.map((solution, idx) => (
+                <li
+                  key={idx}
+                  className='relative flex items-start gap-2 mb-1 pl-7'
+                >
+                  <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
+                  {solution}
+                </li>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </section>
