@@ -19,7 +19,7 @@ export default function RiverBlog() {
             <div className='mb-2'>
               <Link
                 href={href}
-                className='font-bold text-2xl text-point cursor-pointer underline decoration-point hover:no-underline'
+                className='font-bold text-2xl text-point dark:text-darkPoint cursor-pointer underline decoration-point dark:decoration-darkPoint hover:no-underline'
                 target='_blank'
                 rel='noopener noreferrer'
               >
@@ -29,7 +29,7 @@ export default function RiverBlog() {
                 {date} |{' '}
                 <Link
                   href={github_href}
-                  className='text-point underline underline-offset-2 decoration-point hover:no-underline'
+                  className='text-point dark:text-darkPoint underline underline-offset-2 decoration-point dark:decoration-darkPoint hover:no-underline'
                   target='_blank'
                   rel='noopener noreferrer'
                 >
