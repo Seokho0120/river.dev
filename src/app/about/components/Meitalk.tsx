@@ -13,7 +13,7 @@ export default function Meitalk() {
           <div className='mb-2'>
             <Link
               href={href}
-              className='font-bold text-2xl text-point cursor-pointer underline decoration-point hover:no-underline'
+              className='font-bold text-2xl text-point dark:text-darkPoint cursor-pointer underline decoration-point dark:decoration-darkPoint hover:no-underline'
               target='_blank'
               rel='noopener noreferrer'
             >
@@ -40,7 +40,7 @@ export default function Meitalk() {
               {sub_1.sub_title}
               {sub_1.sub_href && title !== '구조개선 및 리뉴얼' && (
                 <Link
-                  className='text-sm ml-1 text-point underline decoration-point hover:no-underline'
+                  className='text-sm ml-1 text-point dark:text-darkPoint underline decoration-point dark:decoration-darkPoint hover:no-underline'
                   href={sub_1.sub_href}
                   target='_blank'
                   rel='noopener noreferrer'
@@ -56,7 +56,7 @@ export default function Meitalk() {
                 <div className='ml-[-0.5rem]'>
                   {sub_1.sub_href && (
                     <Link
-                      className='font-bold text-sm ml-1 text-point underline decoration-point hover:no-underline'
+                      className='font-bold text-sm ml-1 text-point dark:text-darkPoint underline decoration-point dark:decoration-darkPoint hover:no-underline'
                       href={sub_1.sub_href}
                       target='_blank'
                       rel='noopener noreferrer'
@@ -96,7 +96,7 @@ export default function Meitalk() {
               {sub_2.sub_title}
               {sub_2.sub_href && (
                 <Link
-                  className='text-sm ml-1 text-point underline decoration-point hover:no-underline'
+                  className='text-sm ml-1 text-point dark:text-darkPoint underline decoration-point dark:decoration-darkPoint hover:no-underline'
                   href={sub_2.sub_href}
                   target='_blank'
                   rel='noopener noreferrer'
@@ -106,7 +106,7 @@ export default function Meitalk() {
               )}
             </h3>
             <li className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
-              <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+              <circle className='w-1 h-1 text-point dark:text-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
               {sub_2.problem}
             </li>
             {sub_2.problem_list.map((problem, idx) => (
@@ -139,7 +139,7 @@ export default function Meitalk() {
                 {sub_3.sub_title}
                 {sub_3.sub_href && (
                   <Link
-                    className='text-sm ml-1 text-point underline decoration-point hover:no-underline'
+                    className='text-sm ml-1 text-point dark:text-darkPoint underline decoration-point dark:decoration-darkPoint hover:no-underline'
                     href={sub_3.sub_href}
                     target='_blank'
                     rel='noopener noreferrer'
