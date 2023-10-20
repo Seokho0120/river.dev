@@ -7,6 +7,7 @@ export const RiverBlog_INFO = [
     skill_list:
       'Next.js, TypeScript, Tailwind CSS, Contentlayer, Vercel, Vercel Analytics, Google Analytics ',
     github: 'Github',
+    github_href: 'https://github.com/Seokho0120/river.dev',
     status: '개인프로젝트',
   },
 ];
