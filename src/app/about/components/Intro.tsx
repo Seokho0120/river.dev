@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import profileImg from '../../../../public/image/profile-main2.png';
-import { ContactMenu, IntroList } from '@/src/constants/Intro';
+import { ContactMenu, IntroList } from '@/src/constants/IntroData';
 
 export default function Intro() {
   return (
