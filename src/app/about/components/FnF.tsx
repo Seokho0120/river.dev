@@ -1,29 +1,60 @@
-import { FNF_INFO, FNF_WORKS } from '@/src/constants/FnF';
 import Link from 'next/link';
+import { FNF_INFO, FNF_WORKS } from '@/src/constants/FnF';
 
 export default function FnF() {
   return (
     <section className='mb-10'>
-      {FNF_INFO.map(({ title, date, href, skills, skill_list, video }) => (
-        <div key={href} className='flex flex-col my-4'>
-          <div className='mb-2'>
-            <Link
-              href={href}
-              className='font-bold text-2xl text-point cursor-pointer underline decoration-point hover:no-underline'
-            >
-              {title}
-            </Link>
-            <p className='mt-2 italic text-neutral-600 dark:text-neutral-400'>
-              {date} | {video}
-            </p>
-          </div>
+      {FNF_INFO.map(
+        ({
+          title,
+          date,
+          href,
+          skills,
+          skill_list,
+          video,
+          video_href,
+          github,
+          github_href,
+        }) => (
+          <div key={href} className='flex flex-col my-4'>
+            <div className='mb-2'>
+              <Link
+                href={href}
+                className='font-bold text-2xl text-point cursor-pointer underline decoration-point hover:no-underline'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                {title}
+              </Link>
+              <p className='mt-2 italic text-neutral-600 dark:text-neutral-400'>
+                {date} |{' '}
+                <Link
+                  href={github_href}
+                  className='text-point underline underline-offset-2 decoration-point hover:no-underline'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {github}
+                </Link>{' '}
+                |{' '}
+                <Link
+                  href={video_href}
+                  className='text-point underline underline-offset-2 decoration-point hover:no-underline'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {video}
+                </Link>
+              </p>
+            </div>
 
-          <div>
-            <p className='text-xl font-bold'>{skills}</p>
-            <p>{skill_list}</p>
+            <div>
+              <p className='text-xl font-bold'>{skills}</p>
+              <p>{skill_list}</p>
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      )}
 
       {FNF_WORKS.map(({ title, contents }, idx) => (
         <div key={idx}>

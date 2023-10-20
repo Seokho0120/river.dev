@@ -5,8 +5,10 @@ export const FNF_INFO = [
     href: 'https://www.youtube.com/watch?v=A85Y6BtZaqw',
     skills: 'Skills',
     skill_list: 'React, TypeScript, Styled-component, Recoil, Recharts, MUI',
-    video: '구현영상',
+    video: '시연영상',
+    video_href: 'https://www.youtube.com/watch?v=A85Y6BtZaqw',
     github: 'Github',
+    github_href: 'https://github.com/Seokho0120/wecode-ojt-fnf-frontend',
   },
 ];
 
