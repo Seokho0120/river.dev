@@ -27,7 +27,7 @@ const ContactMenu = [
 export default function Intro() {
   return (
     <section className='mb-10'>
-      <h1 className='text-3xl font-extrabold mb-6'>
+      <h1 className='text-4xl font-extrabold mb-8'>
         안녕하세요,{' '}
         <span className='underline underline-offset-4 decoration-wavy decoration-point dark:decoration-orange-400 decoration-2'>
           프론트엔드 개발자 이석호
@@ -45,14 +45,15 @@ export default function Intro() {
           className='w-32 h-32 rounded-full object-cover border-4 border-point dark:border-darkPoint bg-white'
         />
         <div className='flex flex-col gap-4'>
-          <h2 className='text-2xl font-semibold'>
+          <h2 className='text-3xl font-semibold'>
             Why? 라는 질문으로 시작해, <br />
             How를 탐구하는 과정을 좋아합니다.
           </h2>
           <ul className='flex gap-4 text-sm'>
             {ContactMenu.map(({ href, icon, title }) => (
               <Link
-                className='flex items-center gap-2 font-medium underline hover:no-underline decoration-point dark:decoration-darkPoint underline-offset-2'
+                className='flex items-center gap-2 font-medium hover:text-point'
+                // className='flex items-center gap-2 font-medium underline hover:no-underline decoration-point dark:decoration-darkPoint underline-offset-2'
                 href={href}
                 key={href}
                 rel='noopener noreferrer'
@@ -65,7 +66,7 @@ export default function Intro() {
         </div>
       </div>
 
-      <h3 className='text-lg font-bold mb-2'>
+      <h3 className='text-2xl font-bold mb-2'>
         저는{' '}
         <span className='inline-flex items-center rounded-md bg-blue-50 dark:bg-yellow-50 px-2 py-1 text-xs font-medium text-point dark:text-darkPoint ring-1 ring-inset ring-blue-700/10 dark:ring-yellow-700/10'>
           _ _ _ _ _ _
@@ -75,7 +76,7 @@ export default function Intro() {
 
       <ul>
         {IntroList.map((list, idx) => (
-          <li key={idx} className='flex items-center gap-2 mb-1'>
+          <li key={idx} className='flex items-center gap-2 mb-2'>
             <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full' />
             {list}
           </li>
