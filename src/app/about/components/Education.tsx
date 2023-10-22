@@ -9,8 +9,8 @@ export default function Education() {
       </h1>
 
       {EDUCATION_MENU.map(({ title, job, date, lists, href }, idx) => (
-        <div className='flex mb-6' key={idx}>
-          <div className='w-1/3'>
+        <div className='flex-col sm:flex-row mb-6' key={idx}>
+          <div className='w-full sm:w-1/3'>
             <p className='text-xl font-bold mb-1 cursor-pointer hover:text-point dark:hover:text-darkPoint'>
               <Link href={href} target='_blank' rel='noopener noreferrer'>
                 {title}
@@ -23,7 +23,7 @@ export default function Education() {
               {date}
             </p>
           </div>
-          <ul className='w-2/3'>
+          <ul className='w-full sm:w-2/3'>
             {lists.map((list, idx) => (
               <li
                 key={idx}
