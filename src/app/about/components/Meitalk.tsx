@@ -116,7 +116,7 @@ export default function Meitalk() {
               )}
             </h3>
             <li className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
-              <circle className='w-1 h-1 text-point dark:text-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+              <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
               {sub_2.problem}
             </li>
             {sub_2.problem_list.map((problem, idx) => (

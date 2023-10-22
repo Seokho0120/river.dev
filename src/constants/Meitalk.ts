@@ -74,7 +74,8 @@ export const MEITALK_WORKS = [
       ],
       solution: '개선 및 성과',
       solution_list: [
-        'Object-C로 구현된 RNFS 라이브러리의 기존 int 타입을 patch-package라이브러리를 활용하여 unsigned long 타입으로 수정 → IOS에서 메모리 문제 해결 및 업로드 성공',
+        `Object-C로 구현된 RNFS 라이브러리의 기존 int 타입을 patch-package라이브러리를 활용하여
+        unsigned long 타입으로 수정 → IOS에서 메모리 문제 해결 및 업로드 성공`,
       ],
     },
     sub_3: {
