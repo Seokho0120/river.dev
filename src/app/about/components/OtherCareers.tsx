@@ -22,12 +22,6 @@ export default function OtherCareers() {
               <span className='sm:hidden'>&nbsp;|&nbsp;</span>
               <p>{date}</p>
             </div>
-
-            {/* <p className='text-sm italic text-neutral-600 dark:text-neutral-400'>
-              {job}
-              <br />
-              {date}
-            </p> */}
           </div>
           <ul className='w-full sm:w-2/3'>
             {lists.map((list, idx) => (
