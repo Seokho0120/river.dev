@@ -6,13 +6,13 @@ import { ContactMenu, IntroList } from '@/src/constants/IntroData';
 export default function Intro() {
   return (
     <section className='mb-10'>
-      <h1 className='text-4xl font-extrabold mb-8'>
-        안녕하세요,{' '}
+      <div className='text-5xl font-extrabold mb-8'>
+        <h1>안녕하세요,</h1>
         <span className='underline underline-offset-4 decoration-wavy decoration-point dark:decoration-orange-400 decoration-2'>
           프론트엔드 개발자 이석호
         </span>{' '}
-        입니다.
-      </h1>
+        <span>입니다.</span>
+      </div>
 
       <div className='flex flex-col sm:flex-row items-center gap-8 mb-6'>
         <Image

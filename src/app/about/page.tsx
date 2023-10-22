@@ -13,13 +13,13 @@ export const metadata: Metadata = {
 
 export default function MePage() {
   return (
-    <section>
+    <>
       <Intro />
       <Careers />
       <Projects />
       <Skills />
       <Education />
       <OtherCareers />
-    </section>
+    </>
   );
 }
