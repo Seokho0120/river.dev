@@ -9,19 +9,25 @@ export default function OtherCareers() {
       </h1>
 
       {OTHERCAREERS_MENU.map(({ title, job, date, lists, href }, idx) => (
-        <div className='flex-col sm:flex-row mb-6' key={idx}>
+        <div className='flex flex-col sm:flex-row mb-6' key={idx}>
           <div className='w-full sm:w-1/3'>
             <p className='text-xl font-bold mb-1 cursor-pointer hover:text-point dark:hover:text-darkPoint'>
               <Link href={href} target='_blank' rel='noopener noreferrer'>
                 {title}
               </Link>
             </p>
-            <p className='text-sm italic text-neutral-600 dark:text-neutral-400'>
+
+            <div className='flex sm:flex-col text-sm italic text-neutral-600 dark:text-neutral-400'>
+              <p>{job}</p>
+              <span className='sm:hidden'>&nbsp;|&nbsp;</span>
+              <p>{date}</p>
+            </div>
+
+            {/* <p className='text-sm italic text-neutral-600 dark:text-neutral-400'>
               {job}
-            </p>
-            <p className='text-sm italic text-neutral-600 dark:text-neutral-400'>
+              <br />
               {date}
-            </p>
+            </p> */}
           </div>
           <ul className='w-full sm:w-2/3'>
             {lists.map((list, idx) => (
