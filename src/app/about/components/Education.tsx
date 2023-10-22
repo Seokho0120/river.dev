@@ -26,7 +26,7 @@ export default function Education() {
             {lists.map((list, idx) => (
               <li
                 key={idx}
-                className='relative flex items-start gap-2 mb-1 pl-3 whitespace-pre-line'
+                className='font-medium relative flex items-start gap-2 mb-1 pl-3 whitespace-pre-line'
               >
                 <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
                 {list}

@@ -51,7 +51,7 @@ export default function RiverBlog() {
           {contents.map((content, idx) => (
             <li
               key={idx}
-              className='relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
+              className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
             >
               <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
               {content}

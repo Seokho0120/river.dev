@@ -70,7 +70,7 @@ export default function Meitalk() {
             {sub_1.problem_list.map((problem, idx) => (
               <li
                 key={idx}
-                className='relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
+                className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
               >
                 <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                 {problem}
@@ -83,7 +83,7 @@ export default function Meitalk() {
             {sub_1.solution_list.map((solution, idx) => (
               <li
                 key={idx}
-                className='relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
+                className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
               >
                 <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                 {solution}
@@ -112,7 +112,7 @@ export default function Meitalk() {
             {sub_2.problem_list.map((problem, idx) => (
               <li
                 key={idx}
-                className='relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
+                className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
               >
                 <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                 {problem}
@@ -125,7 +125,7 @@ export default function Meitalk() {
             {sub_2.solution_list.map((solution, idx) => (
               <li
                 key={idx}
-                className='relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
+                className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
               >
                 <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                 {solution}
@@ -155,7 +155,7 @@ export default function Meitalk() {
               {sub_3.problem_list.map((problem, idx) => (
                 <li
                   key={idx}
-                  className='relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
+                  className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
                 >
                   <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                   {problem}
@@ -168,7 +168,7 @@ export default function Meitalk() {
               {sub_3.solution_list.map((solution, idx) => (
                 <li
                   key={idx}
-                  className='relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
+                  className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
                 >
                   <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                   {solution}
