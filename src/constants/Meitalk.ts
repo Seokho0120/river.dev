@@ -6,7 +6,9 @@ export const MEITALK_INFO = [
     skills: 'Skills',
     skill_list:
       'React, React Native, TypeScript, Styled-component, Redux, Redux-Toolkit',
-    video: '구현영상',
+    video: '시연영상',
+    video_href:
+      'https://auspicious-move-42f.notion.site/Meitalk-c9a6a291c9c442bc9702d728ef985419?pvs=4',
   },
 ];
 

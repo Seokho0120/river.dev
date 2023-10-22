@@ -1,5 +1,5 @@
-import { MEITALK_INFO, MEITALK_WORKS } from '@/src/constants/Meitalk';
 import Link from 'next/link';
+import { MEITALK_INFO, MEITALK_WORKS } from '@/src/constants/Meitalk';
 
 export default function Meitalk() {
   return (
@@ -8,28 +8,38 @@ export default function Meitalk() {
         Projects.
       </h1>
 
-      {MEITALK_INFO.map(({ title, date, href, skills, skill_list, video }) => (
-        <div key={href} className='flex flex-col my-4'>
-          <div className='mb-2'>
-            <Link
-              href={href}
-              className='font-bold text-2xl text-point dark:text-darkPoint cursor-pointer underline decoration-point dark:decoration-darkPoint hover:no-underline'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              {title}
-            </Link>
-            <p className='mt-2 italic text-neutral-600 dark:text-neutral-400'>
-              {date} | {video}
-            </p>
-          </div>
+      {MEITALK_INFO.map(
+        ({ title, date, href, skills, skill_list, video, video_href }) => (
+          <div key={href} className='flex flex-col my-4'>
+            <div className='mb-2'>
+              <Link
+                href={href}
+                className='font-bold text-2xl text-point dark:text-darkPoint cursor-pointer underline decoration-point dark:decoration-darkPoint hover:no-underline'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                {title}
+              </Link>
+              <p className='mt-2 italic text-neutral-600 dark:text-neutral-400'>
+                {date} |{' '}
+                <Link
+                  href={video_href}
+                  className='text-point dark:text-darkPoint underline underline-offset-2 decoration-point dark:decoration-darkPoint hover:no-underline'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {video}
+                </Link>
+              </p>
+            </div>
 
-          <div>
-            <p className='text-xl font-bold'>{skills}</p>
-            <p>{skill_list}</p>
+            <div>
+              <p className='text-xl font-bold'>{skills}</p>
+              <p>{skill_list}</p>
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      )}
 
       {MEITALK_WORKS.map(({ title, sub_1, sub_2, sub_3 }) => (
         <div key={title}>
