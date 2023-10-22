@@ -16,12 +16,11 @@ export default function Education() {
                 {title}
               </Link>
             </p>
-            <p className='text-sm italic text-neutral-600 dark:text-neutral-400'>
-              {job}
-            </p>
-            <p className='text-sm italic text-neutral-600 dark:text-neutral-400'>
-              {date}
-            </p>
+            <div className='flex sm:flex-col text-sm italic text-neutral-600 dark:text-neutral-400'>
+              <p>{job}</p>
+              <span className='sm:hidden'>&nbsp;|&nbsp;</span>
+              <p>{date}</p>
+            </div>
           </div>
           <ul className='w-full sm:w-2/3'>
             {lists.map((list, idx) => (
