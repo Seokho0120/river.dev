@@ -14,7 +14,7 @@ export default function Intro() {
         입니다.
       </h1>
 
-      <div className='flex items-center gap-8 mb-6'>
+      <div className='flex flex-col sm:flex-row items-center gap-8 mb-6'>
         <Image
           src={profileImg}
           alt='이석호'
@@ -28,7 +28,7 @@ export default function Intro() {
             Why? 라는 질문으로 시작해, <br />
             How를 탐구하는 과정을 좋아합니다.
           </h2>
-          <ul className='flex gap-4 text-sm'>
+          <ul className='flex flex-wrap gap-4 text-sm'>
             {ContactMenu.map(({ href, icon, title }) => (
               <Link
                 className='flex items-center gap-2 font-medium hover:text-point'
