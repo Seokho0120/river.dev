@@ -30,11 +30,13 @@ export default function MainAboutMe() {
               </Link>
             </p>
             <div className='font-medium text-neutral-700 dark:text-gray-400 italic'>
-              {`Hello! I'm Front-end developer.`}
-              <p>
-                Why? Starting with a question, I love the process of exploring
-                How.
-              </p>
+              {`Hello! I'm Front-end developer River.`}
+              <div className='whitespace-pre-line'>
+                Starting with a question
+                <span className='text-point font-bold'> Why?</span> I like the
+                process of exploring{' '}
+                <span className='text-point font-bold'>How.</span>
+              </div>
             </div>
           </div>
         </div>
