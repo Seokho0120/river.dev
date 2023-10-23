@@ -7,7 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: post.publishedAt,
   }));
 
-  const routes = ['', '/posts', '/me'].map((route) => ({
+  const routes = ['', '/posts', '/about'].map((route) => ({
     url: `https://river-dev.vercel.app${route}`,
     lastModified: new Date().toISOString().split('T')[0],
   }));
