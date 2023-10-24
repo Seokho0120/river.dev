@@ -33,9 +33,14 @@ export default function MainAboutMe() {
               {`Hello! I'm Front-end developer River.`}
               <div className='whitespace-pre-line'>
                 Starting with a question
-                <span className='text-point font-bold'> Why?</span> I like the
-                process of exploring{' '}
-                <span className='text-point font-bold'>How.</span>
+                <span className='text-point dark:text-darkPoint font-bold'>
+                  {' '}
+                  Why?
+                </span>{' '}
+                I like the process of exploring{' '}
+                <span className='text-point dark:text-darkPoint font-bold'>
+                  How.
+                </span>
               </div>
             </div>
           </div>
