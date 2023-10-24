@@ -20,7 +20,7 @@ category: Dev
 
 이러한 경우 만약 원하는 몇몇의 경로만 미리 만들어두고 싶다면 즉, **SSG**로 렌더링하고 싶다면 `generateStaticParams` 함수를 사용하면 됩니다.
 
-> ✨ Next.js는 기본적으로 SSR로 렌더링되며 모든 페이지를 사전에 렌더링(pre-rendering)합니다.
+> ✨ **Next.js**는 기본적으로 **SSR**로 렌더링되며 모든 페이지를 **사전에 렌더링(pre-rendering)** 합니다.
 
 `generateStaticParams` 함수의 주요 이점은 **데이터를 스마트하게 관리**한다는 점 입니다.
 generateStaticParams 함수 내에서 fetch 요청을 사용해 동일한 컨텐츠를 가져오는 경우 자동으로 중복 제거됩니다.
@@ -34,7 +34,7 @@ export async function generateStaticParams() {
 }
 ```
 
-블로그 포스트 같은 경우 동적으로 데이터가 빈번하게 업데이트 되는게 아니기 때문에 미리 static하게 만들어주었습니다.
+블로그 포스트 같은 경우 동적으로 데이터가 빈번하게 업데이트 되는게 아니기 때문에, **미리 static하게** 만들어주었습니다.
 
 <p align='center'>
   <img src='/blog/img/generateStaticParams.png' width={600} alt='object-null' />
@@ -46,15 +46,13 @@ export async function generateStaticParams() {
 ## 중복된 데이터 요청 개선
 
 `fetch`를 사용해 페이지가 렌더링 될 때 동시다발적으로 동일한 요청을 계속한다면, Next.js가 자동으로 중복요청을 제거해 줘서 **딱 하나의 요청만 수행**합니다.
-
-하지만 `fetch`를 사용하지 않을 때 어떻게 될까요?
+하지만 `fetch`를 사용하지 않는다면 어떻게 될까요?<br/>
+`console.log(getAllPosts)` 를 찍어봤을때 총 3번 호출됩니다. 한번 데이터를 읽는 게 아니라 여러 번 읽게 되기 때문에,
+이러한 중복요청은 **SSR**할 때 큰 문제가 될 수 있습니다.
 
 <p align='center'>
   <img src='/blog/img/nextjs-cache.png' width={400} alt='object-null' />
 </p>
-
-`console.log(getAllPosts)` 를 찍어봤을때 총 3번 호출됩니다. 한번 데이터를 읽는 게 아니라 여러 번 읽게 되기 때문에,
-이러한 중복요청은 **SSR**할 때 큰 문제가 될 수 있습니다.
 
 이러한 중복방지를 해결할 수 있는 방법이 React의 `cache` 함수입니다.<br/>
 [Next 공식문서](https://nextjs.org/docs/app/building-your-application/caching#data-cache)에 따르면,
@@ -62,7 +60,7 @@ React를 사용하면 래핑된 함수 호출의 결과를 메모하면서 캐�
 동일한 인수로 호출된 동일한 함수는 함수를 다시 실행하는 대신 캐시된 값을 재사용한다고 합니다.
 
 정리하자면, 동일한 인수로 중복 호출되면 **캐시된 값**으로 사용하기 때문에 **중복 요청을 방지**할 수 있습니다.
-현재 블로그는 **SSG**이므로 성능에 큰 영향은 없지만, 추후 **SSR**하는 경우에는 `cache`를 사용하는 게 **성능향상** 및 **페이지 로딩속도**에 큰 도움을 줄 수 있습니다.
+현재 블로그는 **SSG**이므로 큰 영향은 없지만, 추후 **SSR**하는 경우에는 `cache`를 사용하는 게 **성능향상** 및 **페이지 로딩속도**에 큰 도움을 줄 수 있습니다.
 
 ```tsx title="post.ts/service" {1, 3}
 import { cache } from 'react';
@@ -74,7 +72,7 @@ export const getAllPosts = cache(async () => {
 // ...
 ```
 
-여기서 주의할 점은, 서버가 동작하는 모든 시간에 걸쳐서 캐시 된 값을 사용하는 게 아니라 **한번 렌더링 되는 사이클**에한에서만 캐시를 해줍니다.
+주의할 점은, 서버가 동작하는 모든 시간에 걸쳐서 캐시 된 값을 사용하는 게 아니라 **한번 렌더링 되는 사이클**에한에서만 캐시를 해줍니다.
 
 예를 들어, 한 페이지 안에서 여러 개의 컴포넌트에서 동일한 캐시 함수를 호출하면 캐시 된 값을 사용합니다.
 하지만, 다시 다른 페이지를 렌더링하면서 캐시 함수를 호출하면 캐시 된 값이 아니라 데이터베이스를 읽어와서 그 값을 캐시 해둡니다.
@@ -103,11 +101,11 @@ SyntaxError: Unexpected token '한', ..."00\\uB2A5\한 \\uB180\"... is not valid
 다른 도구를 사용해볼까도 고민했지만, contentlayer의 편리성을 포기하기 싫었기에 버전을 **다운그레이드**를 하여 이슈를 해결했습니다.
 
 더불어, [Issues](https://github.com/contentlayerdev/contentlayer/issues/554)에
-[제가 해결했던 방식](https://github.com/contentlayerdev/contentlayer/issues/554#issuecomment-174613686)을 공유하며 소소하게 도움을 줄 수 있었습니다 ✨
+제가 해결했던 [방식을 공유](https://github.com/contentlayerdev/contentlayer/issues/554#issuecomment-1746136864)하며 소소하게 도움을 줄 수 있었습니다 ✨
 
 ## 성과 및 배운점
 
-이번 블로그를 만들어 보며 큰 이슈를 만나진 못했지만, Next.js를 보다 깊게 학습할 수 있었습니다.<br/>
+블로그를 만들어 보며 큰 이슈를 만나진 못했지만, Next.js를 보다 깊게 학습할 수 있었습니다.<br/>
 누구나 다 쓰니까라는 생각에 무지성으로 사용하는 것이 아니라, **왜 사용하는지 다시 한번 고민**하며 개발할 수 있었습니다.
 
 그리고.. **Next.js** 너무 재미있습니다! 추후에도 **Next.js**를 사용해 더 멋진 프로젝트를 진행할 생각입니다.😀
