@@ -1,16 +1,89 @@
 ---
-title: Next.js 블로그 만들기(폴더 구조, 포스팅 관리)
-publishedAt: '2023-10-13'
-summary: 폴더 구조와 Contentlayer를 활용한 포스팅 관리
+title: Next.js 블로그 만들기 1탄 (기술 선택과 이유)
+publishedAt: '2023-10-11'
+summary: Next.js를 이용해서 블로그를 만들어보장!
 category: Dev
 ---
 
 ## 개요
 
-## 폴더 구조
+블로그를 만드는데 생각보다 고려해야할 사항이 많습니다.
+그중 가장 중요한 기술 스택을 왜 채택하고 적용했는지에 대한 내용을 다룹니다.
 
-## 배운점 및 성과
+사실 1년전 `Gastby`로 블로그를 만들어봤지만 미완성으로 버리는 프로젝트가 되었는데,
+부지런하지 못했던 제 자신을 반성하고 이후 취업에 도움이 될 수 있는 역량을 갖추기 위해 블로그 프로젝트를 진행했습니다.
 
----
+## 기술 스택
+
+### Next.js
+
+`Next.js`를 선택한 이유는 여러가지 있습니다.
+
+#### SSR, CSR, SSG, ISR
+
+`Next.js`를 시작할때 학습하는 개념이며, 간단한 프로젝트를 만들어보며 SSR, CSR, SSG, ISR까지 전부 다뤄봤습니다.
+하지만 조금 더 익숙해질 필요를 느꼈고, 블로그 프로젝트는 `SSG`를 경험하기에 매우 적합한 사이드 프로젝트라고 판단했습니다.
+
+#### 강력한 SEO 최적화 제공
+
+`Next.js`는 블로그에서 제일 중요한 `SEO(Search Engine Optimization)` 최적화를 쉽고 빠르게 설정할 수 있습니다.
+정적 및 동적 메타데이터를 생성하고 처리하는 과정이 간단할 뿐만 아니라 이미지와 폰트 등등 최적화까지 제공하기 때문에 사용하지 않을 이유가 없습니다.
+
+#### 라우팅
+
+리액트를 사용할 때 `react-router-dom`과 같은 라이브러리를 필수로 사용했고 세팅하는 것도 귀찮은 일입니다.
+Next.js는 자체적으로 파일 시스템 기반 라우팅을 제공하기 때문에 효율적으로 작업할 수 있습니다.
+
+## typescript
+
+사실 `typescript`는 이유를 설명할 필요가 없습니다.
+간단한 기능만 구현한다면 사용하지 않겠지만, 추후에 여러 기능을 추가하고 조금 복합한 UI를 구현할 것이기 때문에 `typescript`를 사용했습니다.
+
+## Tailwindcss
+
+저는 지금까지 `CSS-in-JS` 선호하기에 `Styled-components`를 좋아하고 익숙합니다.
+하지만 프로젝트 규모가 커지면 JS 런타임 작업이 들어가야하기 때문에 속도가 느려집니다.
+실제로 회사에서 속도 저하를 경험해봤고, 이러한 단점으로 요즘 회사들은 `Styled-components`를 지양한다고 합니다.
+
+그래서 `Next.js`를 사용할때 가장 많이 사용하는 `Tailwind CSS`를 사용해봤는데, 적응만 한다면 쉽고 빠르게 스타일링이 가능해서 유용했습니다.
+
+장점
+
+- 순수 CSS로 파일을 생성해주기 때문에 JS에 의존하지 않아도 됩니다. (서버사이드 렌더링의 장점을 살릴 수 있음)
+- 클래스명을 고민하지 않아도 됩니다.
+
+단점
+
+- 코드가 길어저 가독성이 떨어질 수 있습니다.
+- 미세한 스타일링 작업이 귀찮을 수 있습니다.
+
+제가 느낀 장단점을 간단하게 정리해봤습니다.
+단점을 고민하긴 했지만, `tailwind.congig`를 설정하거나 변수, 함수를 사용하는 등 보완할 방법이 많기 때문에 단점이라고 하기에 주관적일 수 있습니다.
+
+## Contentlayer
+
+`Contentlayer`는 **Vercel**의 **Lee Robinson**의 개인 블로그 코드를 다루는 [영상](https://www.youtube.com/watch?v=jeBy4vIBqw0&t=2714s)을 통해 알게 되었습니다.
+`Contentlayer`는 `Next.js`와 함께 사용할 수 있는 컨텐츠 관리 도구이며, 다른 컨텐츠 관리 시스템(CMS)와 비교했을 때 상대적으로 경량화되어 있고 `Next.js`와의 통합이 간편합니다.
+
+사실 요즘 `Headless CMS`에 관심이 생겨 `sanity`를 적용할까 생각해봤지만, 일단 빠르게 블로그를 구현하는게 우선이었기에 추후에 적용할 예정입니다. (`sanity` 강추..✨)
+
+## 기본 레이아웃(+디자인)
+
+다양한 블로그를 서칭하고 참고하기 좋은 레퍼런스를 저장했습니다.
+디자이너 출신이지만, 지금 디자인 포트폴리오를 만드는게 아니기 때문에 심플한 디자인과 UI를 목표로 작업을 진행했으며
+Vercel의 Lee Robinson의 [개인 블로그](https://leerob.io/)를 참고했습니다.
+
+## 추가 기능
+
+댓글과 다크모드, sns 공유 등 생각보다 블로그를 만들때 여러가지 기능을 추가할 수 있습니다.
+하지만 저는 MVP를 기준으로 필수 기능을 위주로 먼저 개발하고 추후 천천히 재미있는 기능을 추가하려고 합니다.
 
 ## 참고
+
+- [nextjs](https://nextjs.org/)
+- [tailwindcss](https://tailwindcss.com/)
+- [contentlayer](https://contentlayer.dev/)
+- [https://leerob.io/](https://leerob.io/)
+- [Code Walkthrough for Next.js 13 / Tailwind CSS / MySQL App!](https://www.youtube.com/watch?v=jeBy4vIBqw0&t=2714s)
+- [Contentlayer란? next.js 13에서 활용하기](https://velog.io/@boyeon_jeong/Nest.js-getStaticPaths)
+- [Next.js + TypeScript + Tailwind CSS 시작하기 / Tailwind CSS 장단점](https://babycoder05.tistory.com/entry/Nextjs-TypeScript-Tailwind-CSS-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-Tailwind-CSS-%EC%9E%A5%EB%8B%A8%EC%A0%90)
