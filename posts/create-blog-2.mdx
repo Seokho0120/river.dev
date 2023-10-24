@@ -5,9 +5,13 @@ summary: 폴더 구조와 Contentlayer를 활용한 포스팅 관리
 category: Dev
 ---
 
+<p align='center'>
+  <img src='/blog/img/blog-main.png' width={500} alt='object-null' />
+</p>
+
 ## 개요
 
-앞선 포스트에서는 블로그를 만들 때 채택한 기술과 이유에 대해 다뤘습니다. 그 글을 토대로 개발 과정을 공유합니다.
+앞선 포스트에서는 블로그를 만들 때 채택한 기술과 이유에 대해 다뤘으며, 그 글을 토대로 개발 과정을 공유합니다.
 
 ## 폴더 구조
 
@@ -19,33 +23,83 @@ category: Dev
 **View**와 **로직**을 명확하게 분리했고, 로직은 `service`폴더 안에서 전부 처리했습니다.
 관심사 분리를 통해 View와 로직 각각에 집중해서 개발할 수 있기 때문에, 유지보수 비용을 낮추고 가독성까지 잡을 수 있습니다.
 
-```tsx title="post.ts/service"
-import { cache } from 'react';
-import { Post, allPosts } from 'contentlayer/generated';
+```tsx title="page.tsx/[slug]" {4, 13, 35, 65}
+import { Metadata } from 'next';
+import PostNavigator from '@/src/components/PostNavigator';
+import Mdx from 'src/components/Mdx';
+import { getAllPosts, getPostData } from 'src/service/post';
 
-export const getAllPosts = cache(async () => {
-  return allPosts.sort((a, b) => (a.publishedAt > b.publishedAt ? -1 : 1));
-});
+export async function generateMetadata({
+  params: { slug },
+}: Props): Promise<Metadata> {
+  const {
+    title,
+    summary: description,
+    publishedAt: publishedTime,
+  } = await getPostData(slug);
 
-export async function getPostData(fileName: string) {
+  return {
+    title,
+    description,
+    openGraph: {
+      title: { absolute: title },
+      description,
+      type: 'article',
+      publishedTime,
+      url: `https://river-dev.vercel.app/posts/${slug}`,
+    },
+  };
+}
+
+type Props = {
+  params: {
+    slug: string;
+  };
+};
+
+export default async function PostPage({ params: { slug } }: Props) {
+  const post = await getPostData(slug);
+  const { title, summary, publishedAt, body, next, prev } = post;
+
+  return (
+    <article>
+      <div className='flex flex-col border-b mb-6'>
+        <h1 className='text-3xl font-bold tracking-tighter max-w-full'>
+          {title}
+        </h1>
+        <div className='flex justify-between items-center mt-2 mb-6 text-sm max-w-full'>
+          <p className='text-xl text-neutral-600 dark:text-neutral-400'>
+            {summary}
+          </p>
+          <p className='text-neutral-600 dark:text-neutral-400'>
+            {publishedAt}
+          </p>
+        </div>
+      </div>
+
+      <Mdx code={body.code} />
+
+      <section className='hidden sm:flex items-center justify-between mt-16'>
+        {prev && <PostNavigator post={prev} type='prev' />}
+        {next && <PostNavigator post={next} type='next' />}
+      </section>
+    </article>
+  );
+}
+
+export async function generateStaticParams() {
   const posts = await getAllPosts();
-  const post = posts.find((post) => post.slug === fileName) as Post;
-
-  if (!post) throw new Error(`${fileName}에 해당하는 포스트를 찾을 수 없음 🥲`);
-
-  const index = posts.indexOf(post);
-  const next = index > 0 ? posts[index - 1] : null;
-  const prev = index < posts.length - 1 ? posts[index + 1] : null;
-
-  return { ...post, next, prev };
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
 }
 ```
 
 ### Components 관리
 
-서칭하면서 이력서 내용은 하드코딩한 블로그가 많이 보였는데, 저는 효율적인 관리를 위해 `about` 폴더내에 about 페이지에서만 사용하는 `component`를 따로 관리했습니다.
-그 안에 주제별로(Intro, Careers..) 구분해 컴포넌트를 구성했고,
-이력서 관련 **상수데이터**는 `constants` 폴더에서 따로 관리하기 때문에 효율적인 수정 및 관리가 가능해졌습니다.
+보통 기술 이력서 내용은 하드코딩한 블로그가 많이 보였는데, 저는 효율적인 관리를 위해 `about` 폴더내에 about 페이지에서만 사용하는 `component`를 따로 관리했습니다.<br/>
+
+그 안에 주제 별로(Intro, Careers..) 구분해 컴포넌트를 구성했고, 이력서 관련 **상수데이터**는 `constants` 폴더에서 따로 관리하기 때문에 효율적인 수정 및 관리가 가능해졌습니다.
 
 ```tsx
 📦src
@@ -111,9 +165,9 @@ export async function getPostData(fileName: string) {
  ┗ 📜analytics.tsx
 ```
 
-블로그에서 다양한 **icon**들을 사용하게 되는데, 화면과 기능마다 미세하게 디자인이 다르고 기능이 달라질 수 있기 때문에 `ui`폴더에서 함수로 관리했습니다.
+블로그에서 다양한 **icon**들을 사용하는데, 화면마다 디자인과 기능이 달라지므로 `ui` 폴더에서 함수로 관리했습니다.
 
-```tsx title="GithubIcon.tsx"
+```tsx title="GithubIcon.tsx/ui"
 import { VscGithubInverted } from 'react-icons/vsc';
 
 export default function GithubIcon({ type }: { type?: string }) {
@@ -141,7 +195,7 @@ npm install next-contentlayer
 
 2. **next.config.js** 수정
 
-`Next.js`용 contentlayer 플로그인 등록
+`Next.js` 전용 contentlayer 플로그인을 등록합니다.
 
 ```tsx
 const { withContentlayer } = require('next-contentlayer');
@@ -151,3 +205,306 @@ const nextConfig = {};
 
 module.exports = withContentlayer(nextConfig);
 ```
+
+3. **tsconfig.json**수정
+
+`import` 경로의 alias를 설정합니다.
+
+> ✨ **.contentlayer**폴더는 개발 서버 실행 혹은 재실행 할 경우 폴더가 생성됩니다.
+
+```tsx title="tsconfig.json"
+{
+  "compilerOptions": {
+    // ...
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "contentlayer/generated": ["./.contentlayer/generated"]
+    }
+  },
+  "include": [
+    // ...
+    ".contentlayer/generated"
+  ],
+  "exclude": ["node_modules"]
+}
+```
+
+4. **contentlayer.config.ts** 생성
+
+프로젝트 Root 경로에 `contentlayer.config.ts` 파일을 만들고 `schema`를 설정합니다.
+설정 된 schema에 따라 포스트들이 개별 데이터로 변환되며, 이 데이터들을 컴포넌트 안에서 사용할 수 있습니다.
+
+`defineDocumentType` API를 이용해 mdx 파일의 속성과 필드를 정의합니다.
+
+```tsx title="contentlayer.config.ts"
+import {
+  ComputedFields,
+  defineDocumentType,
+  makeSource,
+} from 'contentlayer/source-files';
+
+export const Post = defineDocumentType(() => ({
+  name: 'Post',
+  filePathPattern: `**/*.mdx`,
+  contentType: 'mdx',
+  fields: {
+    title: {
+      type: 'string',
+      required: true,
+    },
+    publishedAt: {
+      type: 'string',
+      required: true,
+    },
+    summary: {
+      type: 'string',
+      required: true,
+    },
+    category: {
+      type: 'string',
+      required: true,
+    },
+    image: {
+      type: 'string',
+    },
+  },
+  computedFields,
+}));
+```
+
+- **name**: 필수 옵션으로 정의된 name으로 타입과 데이터를 나타냅니다.
+- **filePathPattern**: mdx 파일경로 패턴입니다.
+- **contentType**: 포스트의 타입을 지정합니다.
+- **computedFields**: content source로부터 직접 읽는대신 미리 계산된 작업들을 처리합니다.
+- **fields**: fields 객체에 작성된 데이터 필드가 핵심입니다. 아래의 예시와 같이 마크다운 글 최상단에 글에대한 정보를 `---`블록에 필드를 적어줘야 합니다.
+
+```tsx
+---
+title: 비디오 업로드 기능 만들기(App) 4탄
+publishedAt: '2023-07-09'
+summary: Objective-C? int? long? 음? 예?
+category: Dev
+---
+```
+
+`makeSource` API를 이용해 contentlayer에 schema와 속성을 제공합니다. 마크다운 파일이 저장되어있는 Root 폴더 입니다.
+
+```tsx title="contentlayer.config.ts"
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeSlug from 'rehype-slug';
+import remarkGfm from 'remark-gfm';
+import rehypePrettyCode from 'rehype-pretty-code';
+
+export default makeSource({
+  contentDirPath: 'posts',
+  documentTypes: [Post],
+  mdx: {
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [
+      rehypeSlug,
+      [
+        rehypePrettyCode,
+        {
+          theme: 'material-theme-darker',
+          onVisitHighlightedLine(node: any) {
+            node.properties.className.push('line-highlighted');
+          },
+          onVisitHighlightedWord(node: any) {
+            node.properties.className = ['word-highlighted'];
+          },
+        },
+      ],
+      [
+        rehypeAutolinkHeadings,
+        {
+          properties: {
+            className: ['anchor'],
+          },
+        },
+      ],
+    ],
+  },
+});
+```
+
+- **contentDirPath**: 포스트가 존재하는 루트 디렉터리입니다.
+- **documentTypes**: 프로젝트에 필요한 schema 정의로, defineDocumentType으로 만든 `Post`를 적용합니다.
+- **mdx**: `mdx파일`을 `HTML`로 변환하기 위한 플로그인들을 추가합니다.
+  - **rehypeAutolinkHeadings**: `h1 - h6`에 해당하는 태그에 자동으로 링크를 주입시켜줍니다.
+  - **remarkGfm**: 깃허브 마크다운 문법에 맞게 변환해줍니다.
+  - **rehypeSlug**: 해당 태그에 자동으로 `id`를 추가해줍니다.
+  - **rehypePrettyCode**: Syntax highlighting을 위한 플러그인입니다.
+
+이러한 과정으로 `contentlayer`는 자동으로 build, dev 과정에서 데이터를 `.contentlayer/generated` 디렉토리안에 JSON 형태로 생성합니다.
+
+5.  **작성한 마크다운 웹페이지에 보여주기**
+
+<p align='center'>
+  <img src='/blog/img/contentlayer-layout.png' width={400} alt='object-null' />
+</p>
+
+개발서버를 실행하면 프로젝트 Root 경로에 `.contentlayer` 폴더가 생기며, 하위 폴더와 파일들을 볼 수 있습니다.
+`generated` 폴더의 `index.d.ts` 파일을 확인하면 아래와 같은 코드를 확인할 수 있습니다.
+
+> ✨ `allPosts: Post[]`가 핵심입니다.
+
+**allPosts**는 `posts` 디렉토리안에 등록된 mdx파일들을 가져오는 배열입니다.
+
+```tsx title="index.d.ts" {9}
+import { Post, DocumentTypes, DataExports } from './types';
+import {
+  SourceProvideSchemaErrorJSON,
+  SourceFetchDataErrorJSON,
+} from 'contentlayer/core';
+
+export * from './types';
+
+export declare const allPosts: Post[];
+
+export declare const allDocuments: DocumentTypes[];
+```
+
+**Post**는 `contentlayer.config.ts` 에서 등록한 필드들을 타입스크립트의 타입으로 쓸수 있는 타입입니다.
+
+`allPosts`는 `Post[]`로 타입이 지정된 [type-safe](https://contentlayer.dev/docs/concepts/type-safety-e764dcd5)한 데이터 입니다.
+contentlayer가 post의 타입을 자동으로 선언하며, 타입에 대한 걱정을 덜어주기 때문에 편리성이 극대화됩니다. <br/>
+
+```tsx title="types.d.ts"
+/** Document types */
+export type Post = {
+  /** File path relative to `contentDirPath` */
+  _id: string;
+  _raw: Local.RawDocumentData;
+  type: 'Post';
+  title: string;
+  publishedAt: string;
+  summary: string;
+  category: string;
+  image?: string | undefined;
+  /** MDX file body */
+  body: MDX;
+  slug: string;
+};
+```
+
+이제 끝난 거나 다름없습니다. `allPosts`를 필요에 맞게 가공해도 되고, 그대로 사용해도 됩니다.
+
+```tsx title="post.ts/service"
+import { cache } from 'react';
+import { Post, allPosts } from 'contentlayer/generated';
+
+export const getAllPosts = cache(async () => {
+  return allPosts.sort((a, b) => (a.publishedAt > b.publishedAt ? -1 : 1));
+});
+
+export async function getPostData(fileName: string) {
+  const posts = await getAllPosts();
+  const post = posts.find((post) => post.slug === fileName) as Post;
+
+  if (!post) throw new Error(`${fileName}에 해당하는 포스트를 찾을 수 없음 🥲`);
+
+  const index = posts.indexOf(post);
+  const next = index > 0 ? posts[index - 1] : null;
+  const prev = index < posts.length - 1 ? posts[index + 1] : null;
+
+  return { ...post, next, prev };
+}
+```
+
+#### useMDXComponent
+
+mdx를 렌더링하기 위해 contentlayer가 제공하는 `useMDXComponent` hooks를 이용해야합니다.<br/>
+저는 Vercel의 Lee Robinson의 블로그 코드를 설명해주는 [영상](https://www.youtube.com/watch?v=jeBy4vIBqw0)을
+참고하여, `useMDXComponent` hooks로 마크다운 코드를 HTML형식으로 렌더링하는 로직을 커스텀했습니다.
+
+```tsx title="Mdx.tsx"
+import { useMDXComponent } from 'next-contentlayer/hooks';
+import Image from 'next/image';
+import Link from 'next/link';
+
+type Props = {
+  code: string;
+};
+
+const CustomLink = (props: any) => {
+  const href = props.href;
+
+  if (href.startsWith('/')) {
+    return (
+      <Link href={href} {...props}>
+        {props.children}
+      </Link>
+    );
+  }
+
+  if (href.startsWith('#')) {
+    return <a {...props} />;
+  }
+
+  return <a target='_blank' rel='noopener noreferrer' {...props} />;
+};
+
+const RoundedImage = (props: any) => {
+  return (
+    <Image alt={props.alt} {...props} className='mx-auto rounded-lg' priority />
+  );
+};
+
+const components = {
+  Image: RoundedImage,
+  a: CustomLink,
+};
+
+export default function Mdx({ code }: Props) {
+  const Component = useMDXComponent(code);
+
+  return (
+    <article className='prose max-w-3xl break-keep dark:prose-invert prose-h1:text-2xl prose-a:break-all'>
+      <Component componets={{ ...components }} />
+    </article>
+  );
+}
+```
+
+#### 로직 분리
+
+포스트 관련 로직을 `service` 폴더에서 따로 분리하여 관리했습니다.
+모든 포스트를 시간순으로 가져오는 `getAllPosts`와 선택한 포스트의 내용과 이전, 이후 포스트 정보를 처리하는 `getPostData` 함수를 만들어 필요에 따라 사용했습니다.
+
+```tsx title="post.ts/service"
+import { cache } from 'react';
+import { Post, allPosts } from 'contentlayer/generated';
+
+export const getAllPosts = cache(async () => {
+  return allPosts.sort((a, b) => (a.publishedAt > b.publishedAt ? -1 : 1));
+});
+
+export async function getPostData(fileName: string) {
+  const posts = await getAllPosts();
+  const post = posts.find((post) => post.slug === fileName) as Post;
+
+  if (!post) throw new Error(`${fileName}에 해당하는 포스트를 찾을 수 없음 🥲`);
+
+  const index = posts.indexOf(post);
+  const next = index > 0 ? posts[index - 1] : null;
+  const prev = index < posts.length - 1 ? posts[index + 1] : null;
+
+  return { ...post, next, prev };
+}
+```
+
+## 배운점 및 성과
+
+여기까지 왔다면 대충 블로그의 구색은 갖춰졌다고 볼 수 있습니다.
+**contentlayer**의 [공식문서](https://contentlayer.dev/docs/environments/nextjs-dcf8e39e)와  
+**Lee Robinson**의 [코드](https://github.com/leerob/leerob.io)를 참고하면서 작은 이슈들도 해결해왔습니다.
+다만, 이제 더 중요한 **SEO 최적화** 과정이 남았습니다. `Next.js`를 사용하는 이유와도 같은 SEO 최적화는 다음 포스팅에서 다루겠습니다.
+
+---
+
+## 참고
+
+- [contentlayer](https://contentlayer.dev/docs/environments/nextjs-dcf8e39e)
+- [github.com/leerob/leerob.io](https://github.com/leerob/leerob.io)
+- [Code Walkthrough for Next.js 13 / Tailwind CSS / MySQL App!](https://www.youtube.com/watch?v=jeBy4vIBqw0)
