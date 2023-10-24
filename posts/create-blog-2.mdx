@@ -15,12 +15,12 @@ category: Dev
 
 ## 폴더 구조
 
-회사에서 컴포넌트 재사용과 분기처리 관련해서 다양한 이슈를 경험했기 때문에, 처음 설계과정에 시간을 많이 투자했습니다.
+회사에서 컴포넌트 재사용과 분기 처리 관련해서 다양한 이슈를 경험했기 때문에, 처음 설계과정에 시간을 많이 투자했습니다.
 
 ### View(UI)와 로직 분리
 
 이제는 너무나 자연스럽고 당연한 습관입니다.
-**View**와 **로직**을 명확하게 분리했고, 로직은 `service`폴더 안에서 전부 처리했습니다.
+**View**와 **로직**을 명확하게 분리했고, 로직은 `service` 폴더 안에서 전부 처리했습니다.
 관심사 분리를 통해 View와 로직 각각에 집중해서 개발할 수 있기 때문에, 유지보수 비용을 낮추고 가독성까지 잡을 수 있습니다.
 
 ```tsx title="page.tsx/[slug]" {4, 13, 35, 65}
@@ -97,9 +97,10 @@ export async function generateStaticParams() {
 
 ### Components 관리
 
-보통 기술 이력서 내용은 하드코딩한 블로그가 많이 보였는데, 저는 효율적인 관리를 위해 `about` 폴더내에 about 페이지에서만 사용하는 `component`를 따로 관리했습니다.<br/>
+블로그 레퍼런스를 찾아볼 때 하드코딩으로 이력서 내용을 작성한 블로그가 많이 보였지만,
+저는 효율적인 관리를 위해 `about` 폴더내에 `about` 페이지에서만 사용하는 `component`를 따로 관리했습니다.<br/>
 
-그 안에 주제 별로(Intro, Careers..) 구분해 컴포넌트를 구성했고, 이력서 관련 **상수데이터**는 `constants` 폴더에서 따로 관리하기 때문에 효율적인 수정 및 관리가 가능해졌습니다.
+그 안에 주제 별로(Intro, Careers..) 구분해 컴포넌트를 구성했고, 이력서 관련 **상수데이터**는 `constants` 폴더에서 따로 관리했기에 효율적으로 수정이 가능합니다.
 
 ```tsx
 📦src
@@ -127,7 +128,7 @@ export async function generateStaticParams() {
  ┃ ┗ 📜RiverBlog.ts
 ```
 
-`about` 페이지 외 나머지 페이지에서 사용하는 컴포넌트는 src폴더의 `components`폴더에서 관리하며, 파일명에 맞는 명확한 역할만 수행할 수 있도록 개발했습니다.
+`about` 페이지 외 나머지 페이지에서 사용하는 컴포넌트는 src폴더의 `components` 폴더에서 관리하며, 파일명과 같이 **명확한 역할을 수행**하도록 개발했습니다.
 
 ```tsx
 📦components
@@ -181,9 +182,9 @@ export default function GithubIcon({ type }: { type?: string }) {
 
 ## Contentlayer를 활용한 포스팅 관리
 
-로컬의 **mdx 파일**을 효율적으로 관리하기 위해 `Contentlayer`를 활용했습니다.<br/>
+**mdx 파일**을 효율적으로 관리하기 위해 `Contentlayer`를 활용했습니다.<br/>
 `Contentlayer`는 마크다운 파일이나 다른 데이터 소스에서 컨텐츠를 가져와 `Next.js` 애플리케이션에 쉽게 통합할 수 있으며,
-**type-safe**한 JSON 데이터로 변환해 주고 content를 관리해 주는 SDK입니다.
+**type-safe**한 JSON 데이터로 변환해 주고 컨텐츠를 관리해 주는 SDK입니다.
 
 `contentlayer`를 사용하기 위해 몇가지 설정이 필요합니다.
 
@@ -212,7 +213,7 @@ module.exports = withContentlayer(nextConfig);
 
 > ✨ **.contentlayer**폴더는 개발 서버 실행 혹은 재실행 할 경우 폴더가 생성됩니다.
 
-```tsx title="tsconfig.json"
+```tsx title="tsconfig.json" {7, 12}
 {
   "compilerOptions": {
     // ...
@@ -338,7 +339,7 @@ export default makeSource({
 
 이러한 과정으로 `contentlayer`는 자동으로 build, dev 과정에서 데이터를 `.contentlayer/generated` 디렉토리안에 JSON 형태로 생성합니다.
 
-5.  **작성한 마크다운 웹페이지에 보여주기**
+5. **작성한 마크다운 웹페이지에 보여주기**
 
 <p align='center'>
   <img src='/blog/img/contentlayer-layout.png' width={400} alt='object-null' />
@@ -347,7 +348,7 @@ export default makeSource({
 개발서버를 실행하면 프로젝트 Root 경로에 `.contentlayer` 폴더가 생기며, 하위 폴더와 파일들을 볼 수 있습니다.
 `generated` 폴더의 `index.d.ts` 파일을 확인하면 아래와 같은 코드를 확인할 수 있습니다.
 
-> ✨ `allPosts: Post[]`가 핵심입니다.
+> ✨ `index.d.ts`파일의 `allPosts: Post[]`가 핵심입니다.
 
 **allPosts**는 `posts` 디렉토리안에 등록된 mdx파일들을 가져오는 배열입니다.
 
@@ -397,19 +398,7 @@ import { Post, allPosts } from 'contentlayer/generated';
 export const getAllPosts = cache(async () => {
   return allPosts.sort((a, b) => (a.publishedAt > b.publishedAt ? -1 : 1));
 });
-
-export async function getPostData(fileName: string) {
-  const posts = await getAllPosts();
-  const post = posts.find((post) => post.slug === fileName) as Post;
-
-  if (!post) throw new Error(`${fileName}에 해당하는 포스트를 찾을 수 없음 🥲`);
-
-  const index = posts.indexOf(post);
-  const next = index > 0 ? posts[index - 1] : null;
-  const prev = index < posts.length - 1 ? posts[index + 1] : null;
-
-  return { ...post, next, prev };
-}
+// ...
 ```
 
 #### useMDXComponent
