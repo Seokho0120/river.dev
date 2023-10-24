@@ -1,0 +1,364 @@
+---
+title: Next.js 블로그 만들기 3탄 (SEO최적화, 다크모드, 캐러셀)
+publishedAt: '2023-10-14'
+summary: SEO 최적화 / 다크모드 / 캐러셀 쉽게 만들고 적용하자!
+category: Dev
+---
+
+## 개요
+
+`Next.js`를 활용한 SEO최적화 및 다크모드와 캐러셀을 구현하는 내용을 다룹니다.
+
+## SEO
+
+> ✨ **SEO**는 Search Engine Optimization의 약자로 검색 엔진 최적화라는 뜻입니다.
+
+유저의 검색 의도를 이해하고, 의도에 맞게 웹페이지의 콘텐츠를 제작하는 과정입니다.
+더불어, 페이지가 검색 결과 페이지 상단에 노출될 수 있게, 시멘틱 태그와 구조를 개선해 트래픽을 늘리는 방법론입니다.
+
+## Next.js의 SEO최적화
+
+**메타태그**는 검색엔진에 페이지에 대한 추가정보를 제공하는데 사용되는 `HTML` 태그 입니다.<br/>
+`meta` 태그는 HTML의 `<head>` 태그 안에 추가됩니다. HTML 문서가 어떤 내용인지, 키워드와 만든사람 등의 메타데이터를 제공합니다.
+
+### Static Metadata(정적 메타데이터)
+
+> ✨ **Next.js**를 이용하면, 2가지 방법으로 metadata를 생성할 수 있습니다.
+
+페이지 내부에 `metadata`를 `export`하여 메타데이터 객체를 생성합니다.
+metadata객체의 속성인 [template](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#template)를 활용하면, 페이지 별로 타이틀이 바뀌게 됩니다.
+
+```tsx title="layout.tsx"
+export const metadata: Metadata = {
+  metadataBase: new URL('https://river-dev.vercel.app/'),
+  title: {
+    default: 'River Blog',
+    template: 'River Blog | %s',
+  },
+  description: '공부하고 기록하며 공유하는 이석호의 개인 기술 블로그',
+  icons: {
+    icon: '/favicon.ico',
+  },
+  openGraph: {
+    title: '이석호',
+    description: '공부하고 기록하며 공유하는 이석호의 개인 기술 블로그',
+    url: 'https://river-dev.vercel.app/',
+    locale: 'ko_KR',
+    type: 'website',
+    siteName: '이석호',
+  },
+  // ...
+};
+```
+
+### Dynamic Metadata(동적 메타데이터)
+
+`[slug]`와 같이 동적 라우팅을 하는 경우 동적인 값을 받아오기 위해 `generateMetadata` 함수를 사용합니다.
+메타데이터를 `generateMetadata` 함수를 사용해 `fetch`하여 동적으로 생성합니다.
+
+> ✨ [OpenGraph](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#opengraph)은 sns나 메신저에 링크를 공유할때, 컨텐츠의 미리보기를 지원해줍니다.
+
+```tsx title="page.tsx/slug"
+export async function generateMetadata({
+  params: { slug },
+}: Props): Promise<Metadata> {
+  const {
+    title,
+    summary: description,
+    publishedAt: publishedTime,
+  } = await getPostData(slug);
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: { absolute: title },
+      description,
+      type: 'article',
+      publishedTime,
+      url: `https://river-dev.vercel.app/posts/${slug}`,
+    },
+  };
+}
+
+type Props = {
+  params: {
+    slug: string;
+  };
+};
+```
+
+### robots.txt
+
+> ✨ **robots.txt**은 봇들에게 우리 블로그에 어떤 페이지가 있는지 알려주는, 크롤러에게 사이트 및 웹페이지를 수집할 수 있도록 허용하거나 제한하는 파일입니다.
+
+Next에서 제공하는 방법은 2가지(정적, 동적) 입니다.
+
+#### 정적 robots.txt
+
+```tsx
+User-Agent: *
+Allow: /
+Disallow: /private/
+
+Sitemap: https://acme.com/sitemap.xml
+```
+
+#### 동적 robots.txt
+
+Robots을 생성하기 위해 `robots.js`혹은 `robots.ts`파일을 추가하여 robots 객체를 반환하는 함수를 사용합니다.
+
+```tsx title="robots.ts";
+import { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+    },
+    sitemap: 'https://river-dev.vercel.app/sitemap.xml',
+    host: 'https://river-dev.vercel.app/',
+  };
+}
+```
+
+### sitemap.xml
+
+> ✨ **sitemap**은 사이트에 있는 페이지, 동영상 및 기타 파일과 그 관계에 관한 정보를 제공하는 파일입니다.
+> Google과 같은 검색엔진은 이 파일을 읽고 사이트를 더 효율적으로 크롤링합니다.
+
+사이트 페이지가 제대로 링크되었다면 대개 Google에서 대부분의 사이트를 찾을 수 있습니다.
+하지만 사이트맵을 사용하면 크고 복잡한 사이트나 전문화된 파일의 크롤링을 개선할 수 있습니다.
+
+sitemap역시 Next에서 제공하는 방법은 2가지(정적, 동적) 입니다.
+
+#### 정적 sitemap.xml
+
+정적으로 생성하는 방법의 단점은 페이지가 새로 **생성될 때마다 추가**해 줘야 하는 번거로움이 있습니다.
+
+- **urlset**: 파일을 캡슐화하고 현재 프로토콜 표준을 참조합니다.
+- **url**: 각 url 항목의 상위 태그입니다.
+- **loc**: 페이지의 url
+- **lastmod**: 파일을 마지막으로 수정한 날짜입니다.
+
+```tsx
+<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
+  <url>
+    <loc>https://acme.com</loc>
+    <lastmod>2023-04-06T15:02:24.021Z</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>1</priority>
+  </url>
+  <url>
+    <loc>https://acme.com/about</loc>
+    <lastmod>2023-04-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://acme.com/blog</loc>
+    <lastmod>2023-04-06T15:02:24.021Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>
+```
+
+#### 동적 sitemap.xml
+
+`sitemap.js` 혹은 `sitemap.ts`파일을 추가해 Sitemap을 반환하는 함수를 사용하여 매번 추가하지 않고 동적으로 생성합니다.
+
+`Sitemap`의 타입을 확인하고, 그에 맞게 배열을 만들어주면됩니다.
+
+```tsx title = 'metadata-interface.d.ts';
+type SitemapFile = Array<{
+  url: string;
+  lastModified?: string | Date;
+  changeFrequency?:
+    | 'always'
+    | 'hourly'
+    | 'daily'
+    | 'weekly'
+    | 'monthly'
+    | 'yearly'
+    | 'never';
+  priority?: number;
+}>;
+```
+
+먼저 모든 포스트를 불러온 후 `Sitemap` 타입에 맞는 배열(`posts`)을 만들고,
+각 라우트에 맞는 sitemap도 필요하기 때문에 각각의 라우트를 map함수로 순회하여 새로운 배열(`routes`)를 생성합니다.
+이후 스프레드 연산자를 통해 하나의 배열로 합친 후 반환해 줍니다.
+
+```tsx title="sitemap.ts"
+import { allPosts } from 'contentlayer/generated';
+import { MetadataRoute } from 'next';
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const posts = allPosts.map((post) => ({
+    url: `https://river-dev.vercel.app/posts/${post.slug}`,
+    lastModified: post.publishedAt,
+  }));
+
+  const routes = ['', '/posts', '/about'].map((route) => ({
+    url: `https://river-dev.vercel.app${route}`,
+    lastModified: new Date().toISOString().split('T')[0],
+  }));
+
+  return [...routes, ...posts];
+}
+```
+
+이와 같이 Next에서 제공하는 API를 사용해 쉽고 간단하게 검색 엔진 최적화에 필요한 파일들을 생성할 수 있습니다.
+
+> ✨ 아래의 링크에서 확인할 수 있습니다.
+
+- [https://river-dev.vercel.app/sitemap.xml](https://river-dev.vercel.app/sitemap.xml)
+- [https://river-dev.vercel.app/robots.txt](https://river-dev.vercel.app/robots.txt)
+
+## 다크모드
+
+`next-themes`은 Next에서 다크모드를 손쉽게 구현할 수 있습니다.
+
+> ✨ **next-themes**은 \_document파일의 Html 태그의 className을 "light"와 "dark"로 바꿔주는 패키지입니다.
+
+사용법은 아주 간단합니다. `next-themes`은 프로바이더 기능을 사용하며, 프로바이더 파일을 만들어 사용할곳을 감싸주면 끝입니다.
+
+```tsx title="Provider.tsx"
+'use client';
+import { ThemeProvider } from 'next-themes';
+
+export default function Provider({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider attribute='class' enableSystem={true}>
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+- **enableSystem** 을 true로 설정하면 사용자 시스템 설정에 따라 theme이 설정됩니다.
+- tailwndCSS의 클래스로 다크모드를 설정하기 위해, **attribute**는 "class"로 지정합니다.
+
+```tsx title="layout.tsx" {10, 16}
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang='ko' className={sans.className}>
+      <GoogleAnalytics GA_TRACKING_ID={GA_MEASUREMENT_ID} />
+      <body className='w-full flex flex-col overflow-auto antialiased max-w-screen-md mx-auto px-4 dark:bg-gray-900'>
+        <Provider>
+          <header className='mb-16'>
+            <Navbar />
+          </header>
+          <main className='grow'>{children}</main>
+          <Footer />
+        </Provider>
+        <AnalyticsContainer />
+      </body>
+    </html>
+  );
+}
+```
+
+`<body className='... dark:bg-gray-900'>` 와 같이 `dark: 속성`만 넣어주면 다크모드에서의 디자인을 추가할 수 있습니다.
+
+## 캐러셀
+
+캐러셀은 부트캠프 시절부터 직접 혹은 다양한 라이브러리로 구현해본 경험이 있습니다.
+이번 블로그에서는 회사에서 자주 사용해서 익숙한 `react-multi-carousel`라이브러리를 사용해 캐러셀을 구현했습니다.
+
+모바일부터 데스크탑까지 반응형으로 개발했으며, `CustomArrow` 화살표 버튼의 기능과 스타일링을 커스텀하여 적용했습니다.
+
+```tsx title="MultiCarousel.tsx"
+'use client';
+
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
+import { CustomArrow } from './CustomArrow';
+
+const responsive = {
+  superLargeDesktop: {
+    breakpoint: { max: 4000, min: 3000 },
+    items: 4,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 4,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 3,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 2,
+  },
+};
+
+type Props = {
+  children: React.ReactNode;
+};
+
+export default function MultiCarousel({ children }: Props) {
+  return (
+    <Carousel
+      infinite
+      autoPlay
+      responsive={responsive}
+      itemClass='m-12 sm:m-10 '
+      removeArrowOnDeviceType={['mobile']}
+      customLeftArrow={<CustomArrow type='left' onClick={() => {}} />}
+      customRightArrow={<CustomArrow type='right' onClick={() => {}} />}
+    >
+      {children}
+    </Carousel>
+  );
+}
+```
+
+`MultiCarousel`을 import해와 그 안에 들어갈 item들, `CarouselCard`컴포넌트를 감싸주며 구현했습니다.
+
+```tsx title="CarouselPosts.tsx"
+import { getAllPosts } from 'src/service/post';
+import MultiCarousel from './MultiCarousel';
+import CarouselCard from './CarouselCard';
+
+export default async function CarouselPosts() {
+  const posts = await getAllPosts();
+
+  return (
+    <section className='mt-5 relative'>
+      <h2 className='absolute top-2 text-lg font-semibold'>All Posts</h2>
+      <MultiCarousel>
+        <CarouselCard posts={posts} />
+      </MultiCarousel>
+    </section>
+  );
+}
+```
+
+## 성과 및 배운점
+
+항상 미뤄놨던 숙제를 끝낸 기분입니다. 평소 고민만 하고 간과했던 SEO를 이번 블로그를 만들어 보며 중요성을 다시 한번 깨달았습니다.
+
+더불어 `Next.js`를 공부하고 개발하면서, 개발에 다시 한번 너무 재미있다고 느끼며 시간 가는 줄 모르고 개발했습니다.
+아직 부족한 점이 많지만, 전반적인 최적화를 기반으로 리팩토링 예정이며 추후 더 재미있는 기능을 추가할 예정입니다.
+
+> ✨ 다음 포스팅은 **간단한 이슈**에 관한 내용을 다룹니다.
+
+---
+
+## 참고
+
+- [metadata/nextjs](https://nextjs.org/docs/app/building-your-application/optimizing/metadata)
+- [robots/nextjs](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots)
+- [sitemap/nextjs](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap)
+- [next-themes](https://github.com/pacocoursey/next-themes)
+- [react-multi-carousel](https://github.com/YIZHUANG/react-multi-carousel)
+- [NextJS 블로그 다크모드 적용하기](https://kagrin97-blog.vercel.app/next/darkmode)
+- [1분만에 Nextjs에서 다크모드 구현하기 (next-themes + tailwindCSS)](https://www.ha0.work/detail/64c775a4928a9db1c0500700)
