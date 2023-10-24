@@ -60,7 +60,7 @@ export default function Meitalk() {
               )}
             </h3>
             <div className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
-              <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+              <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
               {sub_1.problem}
               {title === '구조개선 및 리뉴얼' && (
                 <div className='ml-[-0.5rem]'>
@@ -82,12 +82,12 @@ export default function Meitalk() {
                 key={idx}
                 className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
               >
-                <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
+                <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                 {problem}
               </li>
             ))}
             <div className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
-              <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+              <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
               {sub_1.solution}
             </div>
             {sub_1.solution_list.map((solution, idx) => (
@@ -95,7 +95,7 @@ export default function Meitalk() {
                 key={idx}
                 className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
               >
-                <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
+                <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                 {solution}
               </li>
             ))}
@@ -116,7 +116,7 @@ export default function Meitalk() {
               )}
             </h3>
             <li className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
-              <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+              <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
               {sub_2.problem}
             </li>
             {sub_2.problem_list.map((problem, idx) => (
@@ -124,12 +124,12 @@ export default function Meitalk() {
                 key={idx}
                 className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
               >
-                <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
+                <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                 {problem}
               </li>
             ))}
             <div className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
-              <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+              <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
               {sub_2.solution}
             </div>
             {sub_2.solution_list.map((solution, idx) => (
@@ -137,7 +137,7 @@ export default function Meitalk() {
                 key={idx}
                 className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
               >
-                <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
+                <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                 {solution}
               </li>
             ))}
@@ -159,7 +159,7 @@ export default function Meitalk() {
                 )}
               </h3>
               <li className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
-                <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+                <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
                 {sub_3.problem}
               </li>
               {sub_3.problem_list.map((problem, idx) => (
@@ -167,12 +167,12 @@ export default function Meitalk() {
                   key={idx}
                   className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
                 >
-                  <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
+                  <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                   {problem}
                 </li>
               ))}
               <div className='font-bold relative flex items-start gap-2 mb-1 pl-3'>
-                <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+                <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
                 {sub_3.solution}
               </div>
               {sub_3.solution_list.map((solution, idx) => (
@@ -180,7 +180,7 @@ export default function Meitalk() {
                   key={idx}
                   className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
                 >
-                  <circle className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
+                  <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
                   {solution}
                 </li>
               ))}
