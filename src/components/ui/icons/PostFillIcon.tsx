@@ -3,7 +3,7 @@ import { PiFilesFill } from 'react-icons/pi';
 
 export default function PostFillIcon() {
   const { theme } = useTheme();
-  const iconColor = theme === 'dark' ? '#E8871E' : '#2492ff';
+  const iconColor = theme === 'dark' ? 'text-darkPoint' : 'text-point';
 
-  return <PiFilesFill className='w-6 h-6' style={{ color: iconColor }} />;
+  return <PiFilesFill className={`w-6 h-6 ${iconColor}`} />;
 }
