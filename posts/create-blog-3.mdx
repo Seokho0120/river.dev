@@ -21,14 +21,23 @@ category: Dev
 **메타태그**는 검색엔진에 페이지에 대한 추가정보를 제공하는데 사용되는 `HTML` 태그 입니다.<br/>
 `meta` 태그는 HTML의 `<head>` 태그 안에 추가됩니다. HTML 문서가 어떤 내용인지, 키워드와 만든사람 등의 메타데이터를 제공합니다.
 
+> ✨ `charset` 과 `viewport`는 기본으로 적용됩니다.
+
+```tsx
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+```
+
 ### Static Metadata(정적 메타데이터)
 
-> ✨ **Next.js**를 이용하면, 2가지 방법으로 metadata를 생성할 수 있습니다.
+**Next.js**를 이용하면, 2가지 방법으로 metadata를 생성할 수 있습니다.
 
 페이지 내부에 `metadata`를 `export`하여 메타데이터 객체를 생성합니다.
 metadata객체의 속성인 [template](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#template)를 활용하면, 페이지 별로 타이틀이 바뀌게 됩니다.
 
-```tsx title="layout.tsx"
+> ✨ [OpenGraph](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#opengraph)은 sns나 메신저에 링크를 공유할때, 컨텐츠의 미리보기를 지원해줍니다.
+
+```tsx title="layout.tsx" {5, 11}
 export const metadata: Metadata = {
   metadataBase: new URL('https://river-dev.vercel.app/'),
   title: {
@@ -55,8 +64,6 @@ export const metadata: Metadata = {
 
 `[slug]`와 같이 동적 라우팅을 하는 경우 동적인 값을 받아오기 위해 `generateMetadata` 함수를 사용합니다.
 메타데이터를 `generateMetadata` 함수를 사용해 `fetch`하여 동적으로 생성합니다.
-
-> ✨ [OpenGraph](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#opengraph)은 sns나 메신저에 링크를 공유할때, 컨텐츠의 미리보기를 지원해줍니다.
 
 ```tsx title="page.tsx/slug"
 export async function generateMetadata({
@@ -88,13 +95,19 @@ type Props = {
 };
 ```
 
+이러한 과정을 거치면, Next가 메타데이터를 생성해줍니다.
+
+<p align='center'>
+  <img src='/blog/img/metadata-result.png' width={600} alt='object-null' />
+</p>
+
 ### robots.txt
 
 > ✨ **robots.txt**은 봇들에게 우리 블로그에 어떤 페이지가 있는지 알려주는, 크롤러에게 사이트 및 웹페이지를 수집할 수 있도록 허용하거나 제한하는 파일입니다.
 
 Next에서 제공하는 방법은 2가지(정적, 동적) 입니다.
 
-#### 정적 robots.txt
+### robots.txt (정적)
 
 ```tsx
 User-Agent: *
@@ -104,7 +117,7 @@ Disallow: /private/
 Sitemap: https://acme.com/sitemap.xml
 ```
 
-#### 동적 robots.txt
+### robots.txt (동적)
 
 Robots을 생성하기 위해 `robots.js`혹은 `robots.ts`파일을 추가하여 robots 객체를 반환하는 함수를 사용합니다.
 
@@ -133,7 +146,7 @@ export default function robots(): MetadataRoute.Robots {
 
 sitemap역시 Next에서 제공하는 방법은 2가지(정적, 동적) 입니다.
 
-#### 정적 sitemap.xml
+### sitemap.xml (정적)
 
 정적으로 생성하는 방법의 단점은 페이지가 새로 **생성될 때마다 추가**해 줘야 하는 번거로움이 있습니다.
 
@@ -165,7 +178,7 @@ sitemap역시 Next에서 제공하는 방법은 2가지(정적, 동적) 입니�
 </urlset>
 ```
 
-#### 동적 sitemap.xml
+### sitemap.xml (동적)
 
 `sitemap.js` 혹은 `sitemap.ts`파일을 추가해 Sitemap을 반환하는 함수를 사용하여 매번 추가하지 않고 동적으로 생성합니다.
 
@@ -216,6 +229,50 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
 - [https://river-dev.vercel.app/sitemap.xml](https://river-dev.vercel.app/sitemap.xml)
 - [https://river-dev.vercel.app/robots.txt](https://river-dev.vercel.app/robots.txt)
+
+### 검색엔진 등록
+
+sitemap을 만든다고해서 끝이 나는 것은 아닙니다.
+크롤러, 봇이 블로그 글들을 수집하기 위해선 검색엔진에 사이트를 등록해줘야 합니다.
+
+### Google Search Console
+
+Google은 [Google Search Console](https://search.google.com/search-console/welcome?utm_source=about-page)에 등록하면 됩니다.
+
+URL 접두어에 블로그 도메인 주소를 입력해줍니다. `https://river-dev.vercel.app/`
+
+<p align='center'>
+  <img src='/blog/img/google-console.first.png' width={700} alt='object-null' />
+</p>
+
+<p align='center'>
+  <img
+    src='/blog/img/google-console.sitemap.png'
+    width={700}
+    alt='object-null'
+  />
+</p>
+
+정상으로 인식되기까지 시간이 좀 걸립니다. 기다리면 됩니다.😎
+
+> ✨ **Naver**는 [네이버 웹마스터](https://searchadvisor.naver.com/console/board)로 똑같이 진행하면 됩니다.
+> 네이버에서 개발 관련 검색을 잘 하지 않기 때문에 필요성을 느끼지 못해 등록하지 않았습니다.
+
+### Google Analytics / Vercel Analytics 연동
+
+> ✨ **Google Analytics**, **Vercel Analytics** 2개 모두 웹 사이트 및 애플리케이션 분석을 위한 도구입니다.
+
+- **Vercel Analytics**는 Vercel 플랫폼 사용자에게 간단하고 실시간 분석을 제공하는 것을 중점
+- **Google Analytics**는 더 일반적인 웹 분석 및 다양한 웹사이트 유형에 유용
+
+#### Google Analytics
+
+Google Analytics는 2020년도에 공식 릴리즈된 `web-based` 사용자 행동 분석 서비스로, 사용자의 유입, 스크롤, 검색, 클릭 등 이벤트를 자동으로 분석 및 수집해줍니다.
+
+#### Vercel Analytics
+
+Vercel Analytics는 Vercel 플랫폼에서 호스팅되는 웹 애플리케이션 및 사이트를 위한 통합적인 분석 도구 입니다.
+Vercel은 정적 웹사이트 및 서버리스 함수 호스팅에 특화되어 있으며, Vercel Analytics는 이 환경에서의 성능 및 사용자 동작을 추적하고 분석하는 데 사용됩니다.
 
 ## 다크모드
 
@@ -362,3 +419,5 @@ export default async function CarouselPosts() {
 - [react-multi-carousel](https://github.com/YIZHUANG/react-multi-carousel)
 - [NextJS 블로그 다크모드 적용하기](https://kagrin97-blog.vercel.app/next/darkmode)
 - [1분만에 Nextjs에서 다크모드 구현하기 (next-themes + tailwindCSS)](https://www.ha0.work/detail/64c775a4928a9db1c0500700)
+- [analytics.google](https://marketingplatform.google.com/about/analytics/)
+- [vercel.com/analytics](https://vercel.com/analytics)
