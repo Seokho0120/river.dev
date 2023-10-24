@@ -1,0 +1,153 @@
+---
+title: Next.js 블로그 만들기 2탄 (폴더 구조, 포스팅 관리)
+publishedAt: '2023-10-13'
+summary: 폴더 구조와 Contentlayer를 활용한 포스팅 관리
+category: Dev
+---
+
+## 개요
+
+앞선 포스트에서는 블로그를 만들 때 채택한 기술과 이유에 대해 다뤘습니다. 그 글을 토대로 개발 과정을 공유합니다.
+
+## 폴더 구조
+
+회사에서 컴포넌트 재사용과 분기처리 관련해서 다양한 이슈를 경험했기 때문에, 처음 설계과정에 시간을 많이 투자했습니다.
+
+### View(UI)와 로직 분리
+
+이제는 너무나 자연스럽고 당연한 습관입니다.
+**View**와 **로직**을 명확하게 분리했고, 로직은 `service`폴더 안에서 전부 처리했습니다.
+관심사 분리를 통해 View와 로직 각각에 집중해서 개발할 수 있기 때문에, 유지보수 비용을 낮추고 가독성까지 잡을 수 있습니다.
+
+```tsx title="post.ts/service"
+import { cache } from 'react';
+import { Post, allPosts } from 'contentlayer/generated';
+
+export const getAllPosts = cache(async () => {
+  return allPosts.sort((a, b) => (a.publishedAt > b.publishedAt ? -1 : 1));
+});
+
+export async function getPostData(fileName: string) {
+  const posts = await getAllPosts();
+  const post = posts.find((post) => post.slug === fileName) as Post;
+
+  if (!post) throw new Error(`${fileName}에 해당하는 포스트를 찾을 수 없음 🥲`);
+
+  const index = posts.indexOf(post);
+  const next = index > 0 ? posts[index - 1] : null;
+  const prev = index < posts.length - 1 ? posts[index + 1] : null;
+
+  return { ...post, next, prev };
+}
+```
+
+### Components 관리
+
+서칭하면서 이력서 내용은 하드코딩한 블로그가 많이 보였는데, 저는 효율적인 관리를 위해 `about` 폴더내에 about 페이지에서만 사용하는 `component`를 따로 관리했습니다.
+그 안에 주제별로(Intro, Careers..) 구분해 컴포넌트를 구성했고,
+이력서 관련 **상수데이터**는 `constants` 폴더에서 따로 관리하기 때문에 효율적인 수정 및 관리가 가능해졌습니다.
+
+```tsx
+📦src
+ ┣ 📂app
+ ┃ ┣ 📂about
+ ┃ ┃ ┣ 📂components
+ ┃ ┃ ┃ ┣ 📜Careers.tsx
+ ┃ ┃ ┃ ┣ 📜Education.tsx
+ ┃ ┃ ┃ ┣ 📜FnF.tsx
+ ┃ ┃ ┃ ┣ 📜Intro.tsx
+ ┃ ┃ ┃ ┣ 📜Meitalk.tsx
+ ┃ ┃ ┃ ┣ 📜OtherCareers.tsx
+ ┃ ┃ ┃ ┣ 📜Projects.tsx
+ ┃ ┃ ┃ ┣ 📜RiverBlog.tsx
+ ┃ ┃ ┃ ┗ 📜Skills.tsx
+ ┃ ┃ ┗ 📜page.tsx
+ // ...
+  ┣ 📂constants
+ ┃ ┣ 📜CareersData.ts
+ ┃ ┣ 📜EducationData.ts
+ ┃ ┣ 📜FnF.ts
+ ┃ ┣ 📜IntroData.tsx
+ ┃ ┣ 📜Meitalk.ts
+ ┃ ┣ 📜OtherCareersData.ts
+ ┃ ┗ 📜RiverBlog.ts
+```
+
+`about` 페이지 외 나머지 페이지에서 사용하는 컴포넌트는 src폴더의 `components`폴더에서 관리하며, 파일명에 맞는 명확한 역할만 수행할 수 있도록 개발했습니다.
+
+```tsx
+📦components
+ ┣ 📂ui
+ ┃ ┗ 📂icons
+ ┃ ┃ ┣ 📜ArrowLeftIcon.tsx
+ ┃ ┃ ┣ 📜ArrowRightIcon.tsx
+ ┃ ┃ ┣ 📜GithubFillIcon.tsx
+ ┃ ┃ ┣ 📜GithubIcon.tsx
+ ┃ ┃ ┣ 📜HomeFillIcon.tsx
+ ┃ ┃ ┣ 📜HomeIcon.tsx
+ ┃ ┃ ┣ 📜MailFillIcon.tsx
+ ┃ ┃ ┣ 📜MailIcon.tsx
+ ┃ ┃ ┣ 📜MeFillIcon.tsx
+ ┃ ┃ ┣ 📜MeIcon.tsx
+ ┃ ┃ ┣ 📜MoonIcon.tsx
+ ┃ ┃ ┣ 📜PostFillIcon.tsx
+ ┃ ┃ ┣ 📜PostIcon.tsx
+ ┃ ┃ ┗ 📜SunIcon.tsx
+ ┣ 📜CarouselCard.tsx
+ ┣ 📜CarouselPosts.tsx
+ ┣ 📜Categories.tsx
+ ┣ 📜CustomArrow.tsx
+ ┣ 📜FilterablePost.tsx
+ ┣ 📜Footer.tsx
+ ┣ 📜GoogleAnalytics.tsx
+ ┣ 📜MainAboutMe.tsx
+ ┣ 📜Mdx.tsx
+ ┣ 📜MultiCarousel.tsx
+ ┣ 📜Navbar.tsx
+ ┣ 📜PostCard.tsx
+ ┣ 📜PostNavigator.tsx
+ ┣ 📜Provider.tsx
+ ┣ 📜ThemeSwitch.tsx
+ ┗ 📜analytics.tsx
+```
+
+블로그에서 다양한 **icon**들을 사용하게 되는데, 화면과 기능마다 미세하게 디자인이 다르고 기능이 달라질 수 있기 때문에 `ui`폴더에서 함수로 관리했습니다.
+
+```tsx title="GithubIcon.tsx"
+import { VscGithubInverted } from 'react-icons/vsc';
+
+export default function GithubIcon({ type }: { type?: string }) {
+  return type === 'me' ? (
+    <VscGithubInverted className='w-5 h-5' />
+  ) : (
+    <VscGithubInverted className='w-6 h-6' />
+  );
+}
+```
+
+## Contentlayer를 활용한 포스팅 관리
+
+로컬의 **mdx 파일**을 효율적으로 관리하기 위해 `Contentlayer`를 활용했습니다.<br/>
+`Contentlayer`는 마크다운 파일이나 다른 데이터 소스에서 컨텐츠를 가져와 `Next.js` 애플리케이션에 쉽게 통합할 수 있으며,
+**type-safe**한 JSON 데이터로 변환해 주고 content를 관리해 주는 SDK입니다.
+
+`contentlayer`를 사용하기 위해 몇가지 설정이 필요합니다.
+
+1. **contnetlayer** 설치
+
+```tsx
+npm install next-contentlayer
+```
+
+2. **next.config.js** 수정
+
+`Next.js`용 contentlayer 플로그인 등록
+
+```tsx
+const { withContentlayer } = require('next-contentlayer');
+/** @type {import('next').NextConfig} */
+
+const nextConfig = {};
+
+module.exports = withContentlayer(nextConfig);
+```
