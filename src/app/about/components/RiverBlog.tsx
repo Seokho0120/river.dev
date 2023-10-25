@@ -47,9 +47,22 @@ export default function RiverBlog() {
         )
       )}
 
-      {RiverBlog_WORKS.map(({ title, contents }, idx) => (
+      {RiverBlog_WORKS.map(({ title, contents, href }, idx) => (
         <div key={idx}>
-          <h2 className='font-bold text-xl'>{title}</h2>
+          <h2 className='flex items-center font-bold text-xl'>
+            {title}
+            {href && (
+              <Link
+                className='text-sm ml-1 text-point dark:text-darkPoint underline decoration-point dark:decoration-darkPoint hover:no-underline'
+                href={href}
+                target='_blank'
+                rel='noopener noreferrer'
+                aria-label={href}
+              >
+                [상세보기]
+              </Link>
+            )}
+          </h2>
           {contents.map((content, idx) => (
             <li
               key={idx}

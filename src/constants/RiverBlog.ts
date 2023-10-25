@@ -15,18 +15,21 @@ export const RiverBlog_INFO = [
 export const RiverBlog_WORKS = [
   {
     title: '중복된 데이터 요청 개선',
+    href: 'https://river-dev.vercel.app/posts/create-blog-4#%EC%A4%91%EB%B3%B5%EB%90%9C-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%9A%94%EC%B2%AD-%EA%B0%9C%EC%84%A0',
     contents: [
       'cache함수를 사용해 동일한 인자로 호출되는 경우 캐시된 값으로 중복 처리',
     ],
   },
   {
     title: '빌드 타임 단축',
+    href: 'https://river-dev.vercel.app/posts/create-blog-4#%EB%B9%8C%EB%93%9C-%ED%83%80%EC%9E%84-%EB%8B%A8%EC%B6%95',
     contents: [
       'generateStaticParams를 활용해 게시물을 미리 static하게 만들어 빌드 타임 단축',
     ],
   },
   {
     title: 'SEO 최적화',
+    href: 'https://river-dev.vercel.app/posts/create-blog-3#nextjs%EC%9D%98-seo%EC%B5%9C%EC%A0%81%ED%99%94',
     contents: [
       `정적 페이지는 metadata객체를 활용해 metadata를 생성하고, 
       동적 라우팅 페이지는 generateMetadata를 활용해 동적으로 metadata를 생성`,
@@ -37,6 +40,7 @@ export const RiverBlog_WORKS = [
   },
   {
     title: '포스팅 구현 및 관리',
+    href: 'https://river-dev.vercel.app/posts/create-blog-2#contentlayer%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%ED%8F%AC%EC%8A%A4%ED%8C%85-%EA%B4%80%EB%A6%AC',
     contents: [
       '데이터베이스 혹은 Headless CMS가 아닌 로컬 환경에서 mdx 파일 관리',
       'contentlayer를 활용해 mdx 파일의 type-safe한 JSON 데이터 형태로 변환 및 관리',
@@ -44,16 +48,19 @@ export const RiverBlog_WORKS = [
   },
   {
     title: '배포',
+    href: '',
     contents: ['Vercel을 이용해 CI/CD 구축 및 배포'],
   },
   {
     title: '다크모드 구현',
+    href: 'https://river-dev.vercel.app/posts/create-blog-3#%EB%8B%A4%ED%81%AC%EB%AA%A8%EB%93%9C',
     contents: [
       'Next.js 13환경에서 최고의 효율을 보여주는 next-themes와 tawilwind 조합으로 다크모드 개발',
     ],
   },
   {
     title: '캐러셀 구현',
+    href: 'https://river-dev.vercel.app/posts/create-blog-3#%EC%BA%90%EB%9F%AC%EC%85%80',
     contents: ['react-multi-carousel을 이용해 캐러셀 개발'],
   },
 ];
