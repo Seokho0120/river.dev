@@ -12,7 +12,7 @@ export default function PostNavigator({ post, type }: Props) {
   const { slug, title, summary } = post;
 
   return (
-    <Link href={`/posts/${slug}`}>
+    <Link href={`/posts/${slug}`} aria-label={title}>
       <div className='flex items-center gap-4 py-4 rounded-md overflow-hidden border-t border-neutral-50 dark:border-neutral-800 shadow-md hover:shadow-lg dark:shadow-slate-700'>
         <div className='text-point dark:text-orange-400'>
           {type === 'prev' && <ArrowLeftIcon />}

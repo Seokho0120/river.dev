@@ -12,7 +12,12 @@ export default function OtherCareers() {
         <div className='flex flex-col sm:flex-row mb-6' key={idx}>
           <div className='w-full sm:w-1/3'>
             <p className='text-xl font-bold mb-1 cursor-pointer hover:text-point dark:hover:text-darkPoint'>
-              <Link href={href} target='_blank' rel='noopener noreferrer'>
+              <Link
+                href={href}
+                target='_blank'
+                rel='noopener noreferrer'
+                aria-label={title}
+              >
                 {title}
               </Link>
             </p>

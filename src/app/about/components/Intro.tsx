@@ -36,6 +36,7 @@ export default function Intro() {
                 key={href}
                 target='_blank'
                 rel='noopener noreferrer'
+                aria-label={title}
               >
                 {icon}
                 <p>{title}</p>

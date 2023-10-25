@@ -17,6 +17,7 @@ export default function Meitalk() {
                 className='font-bold text-2xl text-point dark:text-darkPoint cursor-pointer underline decoration-point dark:decoration-darkPoint hover:no-underline'
                 target='_blank'
                 rel='noopener noreferrer'
+                aria-label={title}
               >
                 {title}
               </Link>
@@ -27,6 +28,7 @@ export default function Meitalk() {
                   className='text-point dark:text-darkPoint underline underline-offset-2 decoration-point dark:decoration-darkPoint hover:no-underline'
                   target='_blank'
                   rel='noopener noreferrer'
+                  aria-label={video_href}
                 >
                   {video}
                 </Link>
@@ -54,6 +56,7 @@ export default function Meitalk() {
                   href={sub_1.sub_href}
                   target='_blank'
                   rel='noopener noreferrer'
+                  aria-label={sub_1.sub_href}
                 >
                   [상세보기]
                 </Link>
@@ -70,6 +73,7 @@ export default function Meitalk() {
                       href={sub_1.sub_href}
                       target='_blank'
                       rel='noopener noreferrer'
+                      aria-label={sub_1.sub_href}
                     >
                       [상세보기]
                     </Link>
@@ -110,6 +114,7 @@ export default function Meitalk() {
                   href={sub_2.sub_href}
                   target='_blank'
                   rel='noopener noreferrer'
+                  aria-label={sub_2.sub_href}
                 >
                   [상세보기]
                 </Link>
@@ -153,6 +158,7 @@ export default function Meitalk() {
                     href={sub_3.sub_href}
                     target='_blank'
                     rel='noopener noreferrer'
+                    aria-label={sub_3.sub_href}
                   >
                     [상세보기]
                   </Link>

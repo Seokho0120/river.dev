@@ -25,7 +25,10 @@ export default function MainAboutMe() {
           <div>
             <p className='flex gap-2 items-center text-xl font-bold pb-2'>
               @River
-              <Link href={'https://github.com/Seokho0120'}>
+              <Link
+                href={'https://github.com/Seokho0120'}
+                aria-label='Github adress'
+              >
                 <VscGithubInverted />
               </Link>
             </p>

@@ -36,7 +36,7 @@ export default function Navbar() {
 
   return (
     <div className='flex justify-between items-center w-full mt-20'>
-      <Link href='/'>
+      <Link href='/' aria-label='Home'>
         <p className='text-3xl underline decoration-wavy decoration-point dark:decoration-orange-400 decoration-2 font-bold hover:text-point dark:hover:text-orange-400'>
           River
         </p>
@@ -46,7 +46,9 @@ export default function Navbar() {
         <ul className='flex gap-4 items-center'>
           {NAV_MENU.map(({ icon, href, clickedIcon }) => (
             <li key={href}>
-              <Link href={href}>{pathName === href ? clickedIcon : icon}</Link>
+              <Link href={href} aria-label='Nav Menu'>
+                {pathName === href ? clickedIcon : icon}
+              </Link>
             </li>
           ))}
           <li>

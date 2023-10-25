@@ -23,6 +23,7 @@ export default function FnF() {
                 className='font-bold text-2xl text-point dark:text-darkPoint cursor-pointer underline decoration-point dark:decoration-darkPoint hover:no-underline'
                 target='_blank'
                 rel='noopener noreferrer'
+                aria-label={title}
               >
                 {title}
               </Link>
@@ -33,6 +34,7 @@ export default function FnF() {
                   className='text-point dark:text-darkPoint underline underline-offset-2 decoration-point dark:decoration-darkPoint hover:no-underline'
                   target='_blank'
                   rel='noopener noreferrer'
+                  aria-label={github_href}
                 >
                   {github}
                 </Link>{' '}
@@ -42,6 +44,7 @@ export default function FnF() {
                   className='text-point dark:text-darkPoint underline underline-offset-2 decoration-point dark:decoration-darkPoint hover:no-underline'
                   target='_blank'
                   rel='noopener noreferrer'
+                  aria-label={video_href}
                 >
                   {video}
                 </Link>

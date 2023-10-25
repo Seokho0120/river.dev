@@ -11,7 +11,7 @@ const CustomLink = (props: any) => {
 
   if (href.startsWith('/')) {
     return (
-      <Link href={href} {...props}>
+      <Link href={href} {...props} aria-label='Custom Link'>
         {props.children}
       </Link>
     );
