@@ -19,7 +19,7 @@ export default function CarouselCard({ posts }: Props) {
             aria-label={slug}
           >
             <h2 className='text-2xl font-bold mb-2 truncate'>{title}</h2>
-            <h6 className='my-1 text-sm text-gray-500 truncate'>{summary}</h6>
+            <h2 className='my-1 text-sm text-gray-500 truncate'>{summary}</h2>
             <p className='text-xs text-gray-300'>{publishedAt}</p>
           </Link>
         </article>
