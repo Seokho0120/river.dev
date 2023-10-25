@@ -63,6 +63,7 @@ export default function RiverBlog() {
               </Link>
             )}
           </h2>
+
           {contents.map((content, idx) => (
             <li
               key={idx}

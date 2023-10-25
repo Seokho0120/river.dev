@@ -47,11 +47,6 @@ export const RiverBlog_WORKS = [
     ],
   },
   {
-    title: '배포',
-    href: '',
-    contents: ['Vercel을 이용해 CI/CD 구축 및 배포'],
-  },
-  {
     title: '다크모드 구현',
     href: 'https://river-dev.vercel.app/posts/create-blog-3#%EB%8B%A4%ED%81%AC%EB%AA%A8%EB%93%9C',
     contents: [
@@ -62,5 +57,10 @@ export const RiverBlog_WORKS = [
     title: '캐러셀 구현',
     href: 'https://river-dev.vercel.app/posts/create-blog-3#%EC%BA%90%EB%9F%AC%EC%85%80',
     contents: ['react-multi-carousel을 이용해 캐러셀 개발'],
+  },
+  {
+    title: '배포',
+    href: '',
+    contents: ['Vercel을 이용해 CI/CD 구축 및 배포'],
   },
 ];
