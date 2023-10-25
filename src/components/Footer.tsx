@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import GithubIcon from './ui/icons/GithubIcon';
 import MailIcon from './ui/icons/MailIcon';
 
@@ -19,9 +20,14 @@ export default function Footer() {
     <footer className='mx-auto mt-auto w-full flex flex-col justify-center items-center py-6 text-sm'>
       <div className='flex gap-4 items-center hover:cursor-pointer py-2 mt-10'>
         {menu.map(({ href, icon }) => (
-          <a href={href} key={href} rel='noopener noreferrer'>
+          <Link
+            href={href}
+            key={href}
+            rel='noopener noreferrer'
+            aria-label='mail and github'
+          >
             {icon}
-          </a>
+          </Link>
         ))}
       </div>
       <p>© {new Date().getFullYear()} River All Rights Reserved.</p>
