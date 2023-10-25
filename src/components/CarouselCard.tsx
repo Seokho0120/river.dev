@@ -17,6 +17,7 @@ export default function CarouselCard({ posts }: Props) {
             href={`/posts/${slug}`}
             className='flex flex-col p-4'
             aria-label={slug}
+            aria-hidden='true'
           >
             <h2 className='text-2xl font-bold mb-2 truncate'>{title}</h2>
             <h2 className='my-1 text-sm text-gray-500 truncate'>{summary}</h2>

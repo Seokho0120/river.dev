@@ -37,6 +37,7 @@ export default function MultiCarousel({ children }: Props) {
       removeArrowOnDeviceType={['mobile']}
       customLeftArrow={<CustomArrow type='left' onClick={() => {}} />}
       customRightArrow={<CustomArrow type='right' onClick={() => {}} />}
+      aria-hidden='true'
     >
       {children}
     </Carousel>
