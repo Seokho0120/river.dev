@@ -2,14 +2,15 @@
 
 프론트엔드 개발자 이석호의 기술 블로그 입니다.
 
-<p align='center'>
-  <img src='/blog/img/blog-main.png' width={800} alt='blog-main' />
-</p>
+  <img width="500" alt="blog-main" src="https://github.com/Seokho0120/river.dev/assets/93597794/dbef6b16-aa03-42f3-87a5-1003742519d3">
 
 ## Link
 
-> ✨ **Blog** https://river-dev.vercel.app/
-> ✨ **Resume** https://river-dev.vercel.app/about
+✨ **Blog**
+https://river-dev.vercel.app/
+
+✨ **Resume**
+https://river-dev.vercel.app/about
 
 ## SKills
 
@@ -17,7 +18,7 @@ Next.js, TypeScript, TailwindCSS, Contentlayer, Vercel, Vercel Analytics, Google
 
 ## What did I do
 
-> ✨ 자세한 구현과정은 블로그 포스팅을 참고해주세요
+✨ 자세한 구현과정은 블로그 포스팅을 참고해주세요
 
 - [Next.js 블로그 만들기 1탄 (기술 선택의 이유)](https://river-dev.vercel.app/posts/create-blog-1)
 - [Next.js 블로그 만들기 2탄 (폴더 구조, 포스팅 관리)](https://river-dev.vercel.app/posts/create-blog-2)
