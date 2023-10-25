@@ -6,11 +6,9 @@
 
 ## Link
 
-✨ **Blog**
-https://river-dev.vercel.app/
+✨ **블로그:** https://river-dev.vercel.app/
 
-✨ **Resume**
-https://river-dev.vercel.app/about
+✨ **이력서:** https://river-dev.vercel.app/about
 
 ## SKills
 
@@ -56,3 +54,11 @@ Next.js, TypeScript, TailwindCSS, Contentlayer, Vercel, Vercel Analytics, Google
 #### 배포
 
 - Vercel을 이용해 CI/CD 구축 및 배포
+
+## To be added
+
+- 페이지네이션
+- sns 공유
+- 좋아요
+- 댓글
+- ...
