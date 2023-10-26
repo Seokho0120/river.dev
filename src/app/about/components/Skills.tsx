@@ -6,7 +6,7 @@ export default function Skills() {
       </h1>
       <p className='font-medium'>
         Next.JS, React, React Native, TypeScript, JavaScript, Styled-Components,
-        Tailwind CSS, Vercel
+        TailwindCSS
       </p>
     </section>
   );
