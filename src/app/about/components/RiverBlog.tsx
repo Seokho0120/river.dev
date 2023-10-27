@@ -48,7 +48,7 @@ export default function RiverBlog() {
       )}
 
       {RiverBlog_WORKS.map(({ title, contents, href }, idx) => (
-        <div key={idx}>
+        <div key={idx} className='mb-2'>
           <h2 className='flex items-center font-bold text-xl'>
             {title}
             {href && (

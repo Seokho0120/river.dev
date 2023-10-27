@@ -4,7 +4,7 @@ import { CARRERS_MENU } from '@/src/constants/CareersData';
 export default function Careers() {
   return (
     <section className='mb-10'>
-      <h1 className='text-4xl font-bold mb-4 underline underline-offset-2 decoration-wavy decoration-point dark:decoration-orange-400 decoration-2'>
+      <h1 className='text-4xl font-bold mb-6 underline underline-offset-2 decoration-wavy decoration-point dark:decoration-orange-400 decoration-2'>
         Careers.
       </h1>
 

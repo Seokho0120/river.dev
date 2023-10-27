@@ -72,7 +72,7 @@ export default function FnF() {
       )}
 
       {FNF_WORKS.map(({ title, contents, title_href, sub_href }, idx) => (
-        <div key={idx}>
+        <div key={idx} className='mb-2'>
           <h2 className='flex items-center font-bold text-xl'>
             {title}
             {title_href && (
