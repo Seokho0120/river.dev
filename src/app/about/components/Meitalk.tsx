@@ -46,7 +46,6 @@ export default function Meitalk() {
       {MEITALK_WORKS.map(({ title, sub_1, sub_2, sub_3 }) => (
         <div key={title}>
           <h2 className='font-bold text-xl'>{title}</h2>
-
           <div className='mt-1 mb-4'>
             <h3 className='flex items-center font-bold text-lg mb-1'>
               {sub_1.sub_title}

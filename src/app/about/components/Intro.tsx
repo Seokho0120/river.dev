@@ -7,26 +7,26 @@ export default function Intro() {
   return (
     <section className='mb-10'>
       <div className='text-5xl font-extrabold mb-8'>
-        <h1>안녕하세요,</h1>
+        <h1 className='leading-snug'>안녕하세요,</h1>
         <span className='underline underline-offset-4 decoration-wavy decoration-point dark:decoration-orange-400 decoration-2'>
           프론트엔드 개발자 이석호
-        </span>{' '}
+        </span>
         <span>입니다.</span>
       </div>
 
-      <div className='flex flex-col sm:flex-row items-center gap-8 mb-6'>
+      <div className='flex flex-col sm:flex-row items-center gap-8 mb-8'>
         <Image
           src={profileImg}
           alt='이석호'
           placeholder='blur'
           quality={100}
           priority
-          className='w-32 h-32 rounded-full object-cover border-4 border-point dark:border-darkPoint bg-white'
+          className='w-28 h-28 rounded-full object-cover border-4 border-point dark:border-darkPoint bg-white'
         />
         <div className='flex flex-col gap-4'>
-          <h2 className='text-3xl font-semibold'>
-            Why? 라는 질문으로 시작해, <br />
-            How를 탐구하는 과정을 좋아합니다.
+          <h2 className='text-3xl font-bold'>
+            <p className='leading-snug'>Why? 라는 질문으로 시작해,</p>
+            <p>How를 탐구하는 과정을 좋아합니다.</p>
           </h2>
           <ul className='flex flex-wrap gap-4 text-sm'>
             {ContactMenu.map(({ href, icon, title }) => (
