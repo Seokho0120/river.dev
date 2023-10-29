@@ -91,8 +91,9 @@ MIME 타입을 알 수 없는 경우 빈 문자열 `''`이 할당됩니다.
 
 ### Blob URL
 
-Blob 객체를 가리키는 URL을 생성을 위해 URL 객체의 메서드(Static Method)로 `createObjectURL`과 `revokeObjectURL`를 사용할 수 있습니다.
+Blob 객체를 가리키는 URL을 생성을 위해, URL 객체의 메서드(Static Method)로 `createObjectURL`과 `revokeObjectURL`를 사용할 수 있습니다.
 변환된 URL은 해당 Blob 또는 File 객체를 가리키는 유효한 주소로 사용될 수 있습니다.<br/>
+
 저는 비디오 파일을 `URL.createObjectURL` 메서드를 활용해 실행 `URL`로 변환하여 사용했습니다.
 
 ```tsx
@@ -109,6 +110,7 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 ```
 
 하지만 이와 관련한 **메모리 이슈**가 존재합니다. <br/>
+
 `blob` 객체가 URL로 변환되어 매핑이 이루어지며 메모리에 저장되면, 명시적으로 해당 URL이 해제되기 전까지 브라우저는 해당 URL이
 유효하다고 판단하기 때문에 자바스크립트 엔진에서 **가비지 컬렉션(GC)이 이루어지지 않습니다.** 따라서 이러한 사이드 이펙트를 방지하지 위해
 변환이 일어나고 해당 URL을 사용 후 더 이상 **사용하지 않을 시점에 명시적으로 해제** 시켜 줘야 합니다.
@@ -126,13 +128,36 @@ useEffect(() => {
 
 ## ArrayBuffer
 
+**ArrayBuffer 객체**는 이미지, 동영상과 같은 멀티미디어 데이터 덩어리를 표준 자바스크립트(브라우저)에서 다루기 위해 도입되었습니다.
+일반적으로 실시간 방송과 같이 영상 내용을 송출할때 영상이라고 하는 실시간 데이터를 계속 전달해줘야 유저들이 볼 수 있습니다. 즉, 어떤 식으로든 커다란 데이터를
+쪼개서 전송해야 하는 상황이 발생합니다.
+
+<p align='center'>
+  <img src='/blog/img/buffer.png' width={500} alt='base64-process' />
+</p>
+
+**Buffer**란, 일정 구획만큼 데이터를 쪼개서 전달되는 `stream`을 저장한 후 일정 크기가 도달하면 출력장치나 동영상 플레이어로 전달해주는
+**중개자 역할**을 하는 객체로 이해하면 쉽습니다.
+
+예를 들면 인터넷이 느린 곳에서 영상을 재생하려고 하면 최소 재생 길이가 될 때까지 하염없이 로딩을 도는 장면을 볼 수 있는데,
+그 로딩을 도는 동작이 버퍼링 즉, `Buffer` 데이터를 보내고 있는 동작입니다.
+
+> ✨ **Stream**은 작게 자른 Buffer를 전송하는 방식이며, 작게 자른 Buffer를 **Chunk**라고 합니다.
+
+**ArrayBuffer**는 자바스크립트에서 원시 데이터(바이너리 데이터)를 직접 다루는 수단으로 사용되며,
+메모리를 개발자가 수동으로 관리할 수 있게 해줍니다. base64와 blob은 사람이 읽고 다루기 편하게 가공된 데이터 타입이라면,
+ArrayBuffer는 보다 오리지널에 가깝다고 보면 됩니다.
+
+정리하자면 **ArrayBuffer**는 일련의 바이너리 데이터를 나타내는 고정 크기 버퍼 입니다. 일반적으로 바이너리 데이터를 처리하고 다루는 데 사용됩니다.
+주로 TypedArray 및 DataView와 함께 사용되며, 데이터를 다양한 형식으로 읽고 쓸 수 있는 메모리 버퍼로 동작합니다.
+
 ---
 
 ## 참고
 
-- [](https://velog.io/@longroadhome/%EB%AA%A8%EB%8D%98JS-%EC%8B%AC%ED%99%94-%EB%B0%94%EC%9D%B4%EB%84%88%EB%A6%AC-%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%99%80-%ED%8C%8C%EC%9D%BC)
-- [](https://creatordev.tistory.com/97)
-- [Base64 인코딩](https://www.csharpstudy.com/Tip/Tip-base64.aspx)
-- [](https://inpa.tistory.com/entry/JS-%F0%9F%93%9A-Base64-Blob-ArrayBuffer-File-%EB%8B%A4%EB%A3%A8%EA%B8%B0-%EC%A0%95%EB%A7%90-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-%EC%89%BD%EA%B2%8C-%EC%84%A4%EB%AA%85)
-- [](https://www.jeong-min.com/39-file-blob-url-arraybuffer/)
 - [Base64 간단정리 + Base64 이미지 html,css,JS로 사용하기](https://im-designloper.tistory.com/57)
+- [Base64 인코딩](https://www.csharpstudy.com/Tip/Tip-base64.aspx)
+- [ㅆ](https://velog.io/@longroadhome/%EB%AA%A8%EB%8D%98JS-%EC%8B%AC%ED%99%94-%EB%B0%94%EC%9D%B4%EB%84%88%EB%A6%AC-%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%99%80-%ED%8C%8C%EC%9D%BC)
+- [ㅁㅁ](https://creatordev.tistory.com/97)
+- [ㅇㅇ](https://inpa.tistory.com/entry/JS-%F0%9F%93%9A-Base64-Blob-ArrayBuffer-File-%EB%8B%A4%EB%A3%A8%EA%B8%B0-%EC%A0%95%EB%A7%90-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-%EC%89%BD%EA%B2%8C-%EC%84%A4%EB%AA%85)
+- [ㅎㅎ](https://www.jeong-min.com/39-file-blob-url-arraybuffer/)
