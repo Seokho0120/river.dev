@@ -109,7 +109,7 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 // ...
 useEffect(() => {
   if (videoPreview) {
-    return () => URL.revokeObjectURL(videoPreview);
+    URL.revokeObjectURL(videoPreview);
   }
 }, [videoPreview]);
 ```

@@ -68,14 +68,71 @@ A-Z,a-z,0–9,/+ 만을 사용하기 때문에, 문자 포맷이 달라 데이�
 
 ## Blob
 
+BLOB은 Binary Large OBject의 약자로 주로 이미지, 비디오와 같은 **멀티미디어 파일 바이너리를 객체 형태로 저장**한 것을 의미합니다.
+멀티미디어 파일들은 대다수 용량이 큰 경우가 많기 때문에 데이터베이스에 효과적으로 저장하기 위해 고안된 자료형입니다.(멀티미디어 파일 그 자체를 데이터베이스에 그대로 저장하기는 어렵기 때문!)
+
+> ✨ string 타입, number 타입과 같이 **blob**타입이 있다고 이해하면 됩니다.
+
+다음은 약 43KB의 PNG 이미지로 생성한 Blob 객체 입니다.<br/>
+생성자를 통해 만들어진 Blob객체는 `size`, `type` 속성을 가집니다. `size`은 Blob객체의 바이트(Byte)단위 크기를 의미하고 `type`은 객체의 MIME타입을 의미합니다.
+MIME 타입을 알 수 없는 경우 빈 문자열 `''`이 할당됩니다.
+
+<p align='center'>
+  <img src='/blog/img/blob-object.jpeg' width={500} alt='base64-process' />
+</p>
+
+**base64**와 **Blob**을 비교하자면, <br/>
+
+- base6는 바이너리 데이터를 **텍스트(문자열)** 형태로 저장
+- blob은 바이너리 데이터를 **객체(object)** 형태로 저장
+
+정리하자면, 용량이 크고 많은 파일을 **base64**로 사용한다면, **용량이 커지면서 성능 저하**가 발생할 수 있습니다. 따라서 이런 문제를 해결하기 위해 blob 객체로 바꾸고
+**blob URL을 사용**해 파일을 바인딩한다면, **성능 저하 문제를 해결**할 수 있습니다.
+
+### Blob URL
+
+Blob 객체를 가리키는 URL을 생성을 위해 URL 객체의 메서드(Static Method)로 `createObjectURL`과 `revokeObjectURL`를 사용할 수 있습니다.
+변환된 URL은 해당 Blob 또는 File 객체를 가리키는 유효한 주소로 사용될 수 있습니다.<br/>
+저는 비디오 파일을 `URL.createObjectURL` 메서드를 활용해 실행 `URL`로 변환하여 사용했습니다.
+
+```tsx
+const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  if (e.target.files && e.target.files.length > 0) {
+    const video = event.target.files?.[0];
+
+    if (video) {
+      const videoUrl = URL.createObjectURL(video);
+      setVideoPreview(videoUrl);
+    }
+  }
+};
+```
+
+하지만 이와 관련한 **메모리 이슈**가 존재합니다. <br/>
+`blob` 객체가 URL로 변환되어 매핑이 이루어지며 메모리에 저장되면, 명시적으로 해당 URL이 해제되기 전까지 브라우저는 해당 URL이
+유효하다고 판단하기 때문에 자바스크립트 엔진에서 **가비지 컬렉션(GC)이 이루어지지 않습니다.** 따라서 이러한 사이드 이펙트를 방지하지 위해
+변환이 일어나고 해당 URL을 사용 후 더 이상 **사용하지 않을 시점에 명시적으로 해제** 시켜 줘야 합니다.
+
+그 방법이 `URL.revokeObjectURL` 메서드 입니다.
+내부적으로 매핑되어 있는 참조를 지우는 메서드로, 메모리에 상주하고 있는 `blob`객체를 지울 수 있으며 **메모리 누수를 방지**할 수 있습니다.
+
+```tsx
+useEffect(() => {
+  if (videoPreview) {
+    URL.revokeObjectURL(videoPreview);
+  }
+}, [videoPreview]);
+```
+
 ## ArrayBuffer
 
 ---
 
 ## 참고
 
+- [](https://velog.io/@longroadhome/%EB%AA%A8%EB%8D%98JS-%EC%8B%AC%ED%99%94-%EB%B0%94%EC%9D%B4%EB%84%88%EB%A6%AC-%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%99%80-%ED%8C%8C%EC%9D%BC)
 - [](https://creatordev.tistory.com/97)
-- [](https://www.csharpstudy.com/Tip/Tip-base64.aspx)
+- [Base64 인코딩](https://www.csharpstudy.com/Tip/Tip-base64.aspx)
 - [](https://inpa.tistory.com/entry/JS-%F0%9F%93%9A-Base64-Blob-ArrayBuffer-File-%EB%8B%A4%EB%A3%A8%EA%B8%B0-%EC%A0%95%EB%A7%90-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-%EC%89%BD%EA%B2%8C-%EC%84%A4%EB%AA%85)
 - [](https://www.jeong-min.com/39-file-blob-url-arraybuffer/)
 - [Base64 간단정리 + Base64 이미지 html,css,JS로 사용하기](https://im-designloper.tistory.com/57)
