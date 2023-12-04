@@ -63,7 +63,9 @@ export default async function PostPage({ params: { slug } }: Props) {
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
-  return posts.map((post) => ({
+  const recentPosts = posts.slice(0, 10);
+
+  return recentPosts.map((post) => ({
     slug: post.slug,
   }));
 }
