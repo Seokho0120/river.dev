@@ -1,0 +1,352 @@
+---
+title: 쇼핑몰 프로젝트 (Debounce / Infinite Scroll)
+publishedAt: '2023-12-04'
+summary: Debounce를 적용하고, Infinite Scroll을 개발했어요.
+category: Dev
+---
+
+## 개요
+
+프로젝트 개발 과정에서 꼭 필요한 기능들을 개선하고, 마주한 이슈를 해결하는 내용을 다룹니다.
+
+## Debounce와 Throttle
+
+1년전 회사에서 검색 기능을 개발하며 검색 키워드가 한자씩 입력될 때마다 api 호출을 하게 되고 이는 서버 리소스 낭비와 과부하로 이어지는 것을 알게되었습니다.
+그 당시 해결 방법을 찾다가 결국, 검색 버튼 클릭 시 결과가 보여지도록 기획을 변경했던 경험이 있습니다.
+
+이번 프로젝트에서도 같은 문제를 직면했고, 이를 해결하기 위해 `Debounce`와 `Throttle`의 개념을 이해하고 커스텀훅을 만들어 사용했습니다.
+
+### Debounce
+
+특정 시간이 지난 뒤에 하나의 이벤트만 발생시킵니다. 즉, 여러번 발생하는 이벤트에서 가장 마지막 이벤트만 실행됩니다.
+
+### Throttle
+
+일정한 주기마다 이벤트를 발생시킵니다. 즉, 일정시간 동안 이벤트가 한번만 실행됩니다.
+
+> ✨ [Debounce vs Throttle: Definitive Visual Guide](https://kettanaito.com/blog/debounce-vs-throttle) - Debounce와 Throttle가 어떻게 동작하는지, 개념을 쉽게 이해하는데 도움 받은 링크입니다.
+
+아래는 `Debounce` 적용 전 영상입니다. 키워드 한자씩 입력될때마다 api 호출을 하게 되고, 더불어 Firebase도 함께 실시간으로 호출되는 현상이 발생합니다.
+
+<p align='center'>
+  <img src='/blog/gif/debounce-pre.gif' width={800} alt='debounce-pre' />
+</p>
+
+저는 `Debounce`를 커스텀훅으로 개발했습니다.<br/>
+`useDebounce`를 사용하면 `delay`는 기본값으로 **0.4초**로 설정했습니다.
+`value`가 변경이 되면, 바로 `setDebounced` 상태를 업데이트 하는게 아니라 `delay`만큼 기다렸다가 설정됩니다.
+`Timeout`이 끝나지 않았는데, 또 `value`가 변경되면 `clearTimeout`이 호출되면서 예전 `Timeout`은 취소됩니다.
+
+```tsx title="useDebounce.ts"
+'use client';
+
+import { useEffect, useState } from 'react';
+
+export default function useDebounce(value: string, delay: number = 400) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debounced;
+}
+```
+
+실제로 사용되는 `SearchBar` 컴포넌트에서는 `router.push`를 이용해 `debouncedKeyword`에 해당하는 검색 페이지로 이동하게되며,
+`debouncedKeyword`가 없으면 메인화면으로 이동합니다.
+
+```tsx title="SearchBar.tsx"
+export default function SearchBar() {
+  const router = useRouter();
+  const [searchText, setSearchText] = useState<string>('');
+  const debouncedKeyword = useDebounce(searchText);
+
+  useEffect(() => {
+    if (debouncedKeyword.length > 0) {
+      router.push(`/search/${encodeURIComponent(debouncedKeyword)}`);
+    } else if (debouncedKeyword.length === 0) {
+      router.push('/');
+    }
+  }, [router, debouncedKeyword]);
+
+  return (
+    <form>
+      <input
+        type='text'
+        name='search'
+        value={searchText}
+        onChange={(e) => setSearchText(e.target.value)}
+        className='rounded-3xl w-48 sm:w-64 text-xs p-2 box-border'
+        placeholder={`검색어 입력 후 엔터를 눌러주세요.`}
+      />
+    </form>
+  );
+}
+```
+
+### 성과
+
+아래는 `Debounce` 적용 후 영상입니다. 키워드를 전부 입력하고 0.4초 후 한번만 api를 호출합니다.
+`Debounce`를 적용하여 **api 호출 및 서버 과부화 방지**할 수 있고 **사용자에게 더 좋은 UX를 제공**할 수 있게 되었습니다.
+
+<p align='center'>
+  <img src='/blog/gif/debounce-after.gif' width={800} alt='debounce-after' />
+</p>
+
+## 무한 스크롤
+
+**무한 스크롤(Infinite Scroll)** 이란 사용자가 특정 페이지 하단에 도달했을 때, API가 호출되며 컨텐츠가 끊기지 않고 계속 로드되는 사용자 경험 방식입니다.
+페이지를 클릭해 다음 페이지 주소로 이동하는 **페이지네이션(Pagination)** 과 달리, 한 페이지에서 스크롤만으로 새로운 컨텐츠를 보여주게 되므로, 많은 양의 컨텐츠를 스크롤하여 볼 수 있는 장점이 있습니다.
+
+제품 카테고리 중 'ALL'을 클릭하면 모든 카테고리의 제품 목록이 표시됩니다. 제품의 수가 많아 한 번에 모두 로드하기에는 비효율적이기 때문에,
+무한 스크롤 기능을 도입했습니다. 또한, 이번 프로젝트에서 `React-query`에 익숙해지는 과정에서, `React-query`가 제공하는 `useInfiniteQuery`훅을
+활용하여 무한 스크롤을 구현했습니다.
+
+`useInfiniteQuery`훅은 다양한 **options** 과 **return** 값이 있지만, 제가 사용한 옵션만 소개해드리겠습니다.
+
+```tsx
+const {
+  data,
+  fetchNextPage,
+  hasNextPage,
+} = useInfiniteQuery(
+  queryKey,
+  queryFn: ({ pageParam }) => fetchPage(pageParam),
+  getNextPageParam: (lastPage) => lastPage.nextCursor,
+  staleTime: 100,
+  initialPageParam: 1,
+  retry: false,
+  refetchOnWindowFocus: false,
+  enabled: false,
+ )
+```
+
+- **data**
+
+  서버에 요청해서 받아온 데이터입니다.
+
+- **fetchNextPage**
+
+  다음 페이지를 요청할 때 사용되는 메서드입니다.
+
+- **hasNextPage**
+
+  다음 페이지가 있는지 판별하는 boolean 값입니다.
+
+- **getNextPageParam**
+
+  새 데이터를 받아올 때 마지막 페이지(lastPage)와 전체 페이지(allPages) 배열을 함께 받아옵니다. 더 불러올 데이터가 있는지 여부를 결정하는데 사용되고,
+  반환값이 다음 API 호출할때의 pageParam으로 들어갑니다. 흔히 마지막 페이지일 경우 undefined를 리턴하여 hasNextPage값을 false로 설정합니다.
+
+- **queryKey**
+
+  쿼리를 구별하여 캐시를 관리하기위한 이름, key입니다.
+
+- **queryFn**
+
+  쿼리가 데이터를 요청하는 데 사용할 함수, API입니다.
+
+- **refetchOnWindowFocus**
+
+  기본값은 true 입니다. 사용자가 브라우저 창에 다시 포커스를 맞추었을 때 자동으로 쿼리가 `refetch`가 되는데,
+  이는 불필요한 네트워크 요청을 발생시키기 때문에 false로 설정했습니다.
+
+- **initialPageParam**
+
+  이전 버전에서는 queryFn의 pageParam이 undefined값을 가져서 0 또는 초기 값을 정의했었는데, undefined는 직렬화되지 않아
+  `initialPageParam` 옵션이 필수값으로 추가되었습니다.
+
+### 적용 코드
+
+`getProductsList` 함수를 호출해 8개씩 가져온 `productsList`를 필요에 맞게 가공합니다.<br/>
+할인 상품은 할인 가격을 계산하여 업데이트하고, 카테고리를 구분하여 'ALL'인 경우 모든 제품을 불러오며, 'ALL'이 아닌 특정 카테고리를 선택한 경우
+해당 카테고리의 데이터만 불러옵니다.
+
+```tsx title="useProducts.ts"
+export function useGetProductList(category: string) {
+  const setProductList = useSetRecoilState(productsListAtom);
+  const setInitialProductList = useSetRecoilState(initialProductsListAtom);
+
+  const {
+    data: productsList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    isFetching,
+  } = useInfiniteQuery<ProductsResponse, Error>({
+    queryKey: ['products', category],
+    queryFn: (context) => getProductsList(category, context.pageParam),
+    getNextPageParam: (lastPage) => lastPage?.lastDoc || null,
+    staleTime: 1000 * 60 * 5, // 5분
+    refetchOnWindowFocus: false,
+    retry: false,
+    initialPageParam: undefined,
+    enabled: !!category,
+  });
+
+  useEffect(() => {
+    if (productsList && category) {
+      const allProductList = productsList.pages.flatMap((p) => p.products);
+
+      // 리스트에 할인된 가격 추가 -> 할인된 가격으로 필터링
+      const updatedProductsList = allProductList.map((product) => {
+        const { price, saleRate, isSale } = product;
+        const discountedPrice = isSale
+          ? price - (price * (saleRate || 0)) / 100
+          : price;
+
+        return { ...product, discountedPrice };
+      });
+
+      // 카테고리에 해당하는 상품 정렬
+      const filteredProductList = updatedProductsList.filter((product) => {
+        if (category === 'all') {
+          return updatedProductsList;
+        }
+        return product.category === category;
+      });
+
+      setProductList(filteredProductList);
+      setInitialProductList(filteredProductList);
+    }
+  }, [category, productsList, setInitialProductList, setProductList]);
+
+  return {
+    isLoading,
+    isError,
+    productsList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    getProductsList,
+  };
+}
+```
+
+`getProductsList`는 Firestore 데이터베이스에서 상품 목록을 가져오는 함수 입니다.<br/>
+카테고리를 구분하고 특정 카테고리의 상품을 페이지 별로 조회하며, 한 페이지당 최대 8개의 제품이 포함됩니다.
+
+```tsx title="firestore.ts"
+export async function getProductsList(
+  category?: string,
+  pageParam?: DocumentData | unknown
+): Promise<{
+  products: ProductListType[];
+  lastDoc: DocumentSnapshot | undefined;
+}> {
+  const baseQuery = collection(db, 'products');
+  const categoryConstraint =
+    category !== 'all' && category ? where('category', '==', category) : null;
+  const pageConstraint = pageParam ? startAfter(pageParam) : null;
+
+  const queries: QueryConstraint[] = [
+    categoryConstraint,
+    orderBy('saleRank'),
+    limit(8),
+    pageConstraint,
+  ].filter(Boolean) as QueryConstraint[]; // 배열의 null값들 제거
+
+  const productQuery = query(baseQuery, ...queries);
+  const snapshot = await getDocs(productQuery);
+  const lastDoc = snapshot.docs[snapshot.docs.length - 1]; // 마지막 문서
+
+  return {
+    products: snapshot.docs.map((doc) => doc.data() as ProductListType),
+    lastDoc,
+  };
+}
+```
+
+화면에서 적용된 코드 입니다.<br/>
+**'더 보기'** 버튼을 클릭하면, `fetchNextPage` 함수가 호출되어 다음 페이지의 상품 목록을 불러옵니다.
+이 과정에서 `isFetchingNextPage`의 상태를 확인하여, 상품 데이터를 불러오는 동안 **'로딩 중...'** 텍스트를 보여줍니다.<br/>
+또한, `hasNextPage`를 통해 추가로 불러올 상품 데이터가 있는지 여부를 판단합니다.
+
+```tsx title="ProductList.tsx"
+export default function ProductsList({ category }: Props) {
+  const { fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } =
+    useGetProductList(category);
+  const productsList = useRecoilValue(productsListAtom);
+
+  return (
+    <article className='flex flex-col items-center gap-20'>
+      {isLoading && (
+        <div className='absolute inset-0 z-50 text-center pt-[30%] bg-slate-500/20'>
+          <GridSpinner />
+        </div>
+      )}
+      {isError && (
+        <p className='w-full bg-red-100 text-red-600 text-center p-4 mb-4 font-bold'>
+          Error loading data.
+        </p>
+      )}
+      <ul className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
+        {productsList &&
+          productsList.map((product) => (
+            <li key={product.productId}>
+              <ProductCard product={product} />
+            </li>
+          ))}
+      </ul>
+      {!hasNextPage ? (
+        <ScrollToTopBtn />
+      ) : (
+        <button
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage}
+          className='flex justify-center p-1 rounded-lg font-semibold bg-navypoint hover:bg-pinkpoint text-white w-1/3'
+          aria-label='NextPage Button'
+        >
+          {isFetchingNextPage ? '로딩 중...' : hasNextPage && '더 보기'}
+        </button>
+      )}
+    </article>
+  );
+}
+```
+
+### 스크롤 복원(Scroll Restoration)
+
+무한 스크롤 기능은 UX를 향상시키는 데 중요한 역할을 하지만, 스크롤 복원 기능이 없다면 오히려 좋지 않은 UX를 초래할 수 있습니다.
+그렇기에 저는 **Next.js**가 제공하는 `scroll option`을 활용해 스크롤 복원 기능을 적용했습니다. 현재는 문제 없이 정상 작동하지만,
+`experimental` 즉, 실험적인 기능이기 때문에 언제든지 변경되거나 사라질 수 있기 때문에 수동으로 처리할 수 있게 추후 개발 예정입니다.
+
+```tsx title="next.config.js"
+const nextConfig = {
+  reactStrictMode: true,
+  experimental: {
+    scrollRestoration: true,
+  },
+  ...
+}
+```
+
+### 성과
+
+무한 스크롤과 스크롤 복원 기능을 개발하여 보다 좋은 UX를 제공할 수 있게 되었습니다.<br/>
+프론트엔드 개발을 처음 시작했을 당시 무한 스크롤은 마치 퀘스트의 마지막 보스몹과 같이 어렵고 부담스러운 주제처럼 다가왔었습니다.
+하지만 이제는 생각보다(?) 쉡게 구현하면서 예전보다 성장했구나 라는 생각이 들었습니다.
+
+<p align='center'>
+  <img src='/blog/gif/infinitiscroll.gif' width={800} alt='infinitiscroll' />
+</p>
+
+---
+
+## 참고
+
+- [Debounce vs Throttle: Definitive Visual Guide](https://kettanaito.com/blog/debounce-vs-throttle)
+- [Debounce? Throttle requests?](https://github.com/vercel/swr/issues/110)
+- [(Android) Debounce와 Throttle 이해하기](https://medium.com/jaesung-dev/android-debounce%EC%99%80-throttle-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-e6da12d18d26)
+- [tanstack.com/useInfiniteQuery](https://tanstack.com/query/v4/docs/react/reference/useInfiniteQuery)
+- [React-TanStack-Query-v5](<https://www.moonkorea.dev/React-TanStack-Query-v5-%EC%82%B4%ED%8E%B4%EB%B3%B4%EA%B8%B0-(%EB%A6%AC%EC%95%A1%ED%8A%B8%EC%BF%BC%EB%A6%AC)#infinite-query%EC%97%90%EC%84%9C%EB%8F%84-prefetch>)
+- [아기상어 키즈 월드 앱에서 웹뷰 사용성 개선하기 — Scroll Restoration](https://medium.com/pinkfong/%EC%95%84%EA%B8%B0%EC%83%81%EC%96%B4-%ED%82%A4%EC%A6%88-%EC%9B%94%EB%93%9C-%EC%95%B1-%EC%97%90%EC%84%9C-%EC%9B%B9%EB%B7%B0-%EC%82%AC%EC%9A%A9%EC%84%B1-%EA%B0%9C%EC%84%A0%ED%95%98%EA%B8%B0-scroll-restoration-50ab8c7b4ced)
+- [oliveyoung/tech](https://oliveyoung.tech/blog/2023-10-04/useInfiniteQuery-scroll/)
+- [kakaoenterprise/Infinite Scroll with React](https://tech.kakaoenterprise.com/149)
+- [React Query - useInfiniteQuery & 이미지 최적화 적용하기](https://velog.io/@seul06/React-Query-2)
+- [React-query 사용하는 이유, useInfiniteQuery 로 무한 스크롤 구현하기 (+ react-infinite-scroller)](https://velog.io/@leemember/React-query-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0-useInfiniteQuery-%EB%A1%9C-%EB%AC%B4%ED%95%9C-%EC%8A%A4%ED%81%AC%EB%A1%A4-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0-react-infinite-scroller#3-infinite-scroll-%EB%AC%B4%ED%95%9C%EC%8A%A4%ED%81%AC%EB%A1%A4)
+- [Next.js에서 스크롤 위치 유지하기 (Scroll Restoration)](https://velog.io/@seesaw/Next.js%EC%97%90%EC%84%9C-%EC%8A%A4%ED%81%AC%EB%A1%A4-%EC%9C%84%EC%B9%98-%EC%9C%A0%EC%A7%80%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95-Scroll-Restoration#scrollrestoration-%EA%B8%B0%EB%B3%B8-%EA%B0%92)
