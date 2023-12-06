@@ -26,6 +26,8 @@ category: Dev
 
 > ✨ [Debounce vs Throttle: Definitive Visual Guide](https://kettanaito.com/blog/debounce-vs-throttle) - Debounce와 Throttle가 어떻게 동작하는지, 개념을 쉽게 이해하는데 도움 받은 링크입니다.
 
+### 적용하기
+
 아래는 `Debounce` 적용 전 영상입니다. 키워드 한자씩 입력될때마다 api 호출을 하게 되고, 더불어 Firebase도 함께 실시간으로 호출되는 현상이 발생합니다.
 
 <p align='center'>
@@ -86,7 +88,7 @@ export default function SearchBar() {
 }
 ```
 
-### 성과
+### 결과
 
 아래는 `Debounce` 적용 후 영상입니다. 키워드를 전부 입력하고 0.4초 후 한번만 api를 호출합니다.
 `Debounce`를 적용하여 **api 호출 및 서버 과부화 방지**할 수 있고 **사용자에게 더 좋은 UX를 제공**할 수 있게 되었습니다.
@@ -158,7 +160,7 @@ const {
   이전 버전에서는 queryFn의 pageParam이 undefined값을 가져서 0 또는 초기 값을 정의했었는데, undefined는 직렬화되지 않아
   `initialPageParam` 옵션이 필수값으로 추가되었습니다.
 
-### 적용 코드
+### 적용하기
 
 `getProductsList` 함수를 호출해 8개씩 가져온 `productsList`를 필요에 맞게 가공합니다.<br/>
 할인 상품은 할인 가격을 계산하여 업데이트하고, 카테고리를 구분하여 'ALL'인 경우 모든 제품을 불러오며, 'ALL'이 아닌 특정 카테고리를 선택한 경우
@@ -325,14 +327,18 @@ const nextConfig = {
 }
 ```
 
-### 성과
+### 결과
 
 무한 스크롤과 스크롤 복원 기능을 개발하여 보다 좋은 UX를 제공할 수 있게 되었습니다.<br/>
 프론트엔드 개발을 처음 시작했을 당시 무한 스크롤은 마치 퀘스트의 마지막 보스몹과 같이 어렵고 부담스러운 주제처럼 다가왔었습니다.
 하지만 이제는 생각보다(?) 쉡게 구현하면서 예전보다 성장했구나 라는 생각이 들었습니다.
 
 <p align='center'>
-  <img src='/blog/gif/infinitiscroll.gif' width={800} alt='infinitiscroll' />
+  <img
+    src='/blog/gif/infinitescroll-restoration.gif'
+    width={800}
+    alt='infinitescroll-restoration'
+  />
 </p>
 
 ---
