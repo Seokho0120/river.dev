@@ -1,7 +1,7 @@
 ---
-title: 쇼핑몰 프로젝트 (???)
+title: 쇼핑몰 프로젝트 (NextAuth Type / React Portals / ISR과 SEO)
 publishedAt: '2023-12-05'
-summary: ???
+summary: NextAuth Type 커스텀, React Portals, ISR과 SEO
 category: Dev
 ---
 
@@ -9,26 +9,500 @@ category: Dev
 
 이전 포스팅에 이어서 개발 과정에서 꼭 필요한 기능과 이슈를 개선하는 내용을 다룹니다.
 
-## NextAuth 커스텀
+## NextAuth Module Augmentation
 
-- NextAuth의 기본 session 타입을 커스터마이징하여 닉네임과 관리자 권한 부여
+평소 온라인 쇼핑을 자주하는데 매번 아이디와 비밀번호, 주소 등을 일일이 입력해야 하는 기존의 회원가입 방식을 정말 싫어하고 불편함을 느낍니다.
+소셜 로그인이라는 편리한 기술이 등장한 지금, 기존의 회원가입 방식을 고수하는 사이트는 유저에게 불편함을 준다고 생각합니다.
+
+따라서 저는 사용자 친화적인 서비스를 제공하기 위해 기존 로그인 방식 대신 소셜 로그인 방식을 도입했고, 일반적으로 가장 많이 사용되는
+네이버와 카카오, 구글 기반의 소셜 로그인을 개발했습니다.
+
+### NextAuth.js
+
+`NextAuth`는 `Next` 애플리케이션에서 사용자 인증을 손쉽게 구현할 수 있도록 도와주는 라이브러리로,
+Oauth 인증 방식의 다양한 인증공급자(Provider)를 지원하며, 자체 로그인 또한 구현할 수 있도록 도와줍니다.
+
+- 다양한 인증 공급자 지원
+
+  NextAuth는 다양한 인증 공급자(예: Google, Facebook, GitHub, Twitter 등)와 함께 사용할 수 있습니다.
+  이를 통해 사용자는 웹 애플리케이션에 다양한 방법으로 로그인하거나 가입할 수 있습니다.
+
+- 세션 관리
+
+  사용자 세션을 관리하고 보안적으로 유지합니다. 사용자 로그인 상태를 추적하고 세션을 관리하여 애플리케이션 내에서 사용자 인증을 유지합니다.
+
+- 간단한 설정
+
+  NextAuth를 설정하는 것은 상대적으로 간단하며, 대부분의 설정은 설정 파일을 통해 수행됩니다.
+  이를 통해 빠르게 인증 시스템을 설정할 수 있습니다.
+
+- TypeScript 지원
+
+  TypeScript를 사용하여 NextAuth를 구현할 수 있으며, 타입 안정성을 확보할 수 있습니다.
+
+- 확장성
+
+  확장 가능한 아키텍처를 제공하여 사용자 지정 로직 및 필요한 기능을 추가하거나 수정할 수 있습니다.
+
+### 적용하기
+
+각 Provider에 입력할 **Client Id**와 **Secret Key**는 구글, 카카오, 네이버 개발자 센터에서
+등록한 앱의 ID와 Secret을 넣으면 되고, `env` 파일을 생성해 환경변수로 관리하면 됩니다.
+
+```tsx title="auth.ts"
+export const authOptions: NextAuthOptions = {
+  providers: [
+    GoogleProvider({
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ID || '',
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_SECRET || '',
+    }),
+    KakaoProvider({
+      clientId: process.env.KAKAO_CLIENT_ID || '',
+      clientSecret: process.env.KAKAO_CLIENT_SECRET || '',
+    }),
+    NaverProvider({
+      clientId: process.env.NAVER_CLIENT_ID || '',
+      clientSecret: process.env.NAVER_CLIENT_SECRET || '',
+    }),
+  ],
+  ...
+}
+```
+
+### Type 커스텀하기
+
+사용자의 마이페이지에서 프로필 사진과 유저 이름, 닉네임, 계정 정보를 보여주고자 하였습니다. 하지만 `useSession` 메서드로
+`session` 값을 불러올때 **`user` 객체에 원하는 정보가 들어있지 않았고 기본 정보 외 데이터가 필요**했으며, 아래 코드는 각 로그인 시 user 정보 입니다.
+
+```tsx
+// 구글
+user {
+  id: '102694937968612745404',
+  name: 'Seokho Lee',
+  email: 'seokho0120@gmail.com',
+  image: 'https://lh3.googleusercontent.com/a/ACg8ocJa7VvOOo8OU5r9Os5qBArioaomoXbBv4dyyP32DOim=s96-c'
+}
+
+// 카카오
+user {
+  id: '3165573281',
+  name: 'SH',
+  email: 'seokho0120@naver.com',
+  image: 'http://k.kakaocdn.net/dn/9Os9B/btrUyCE9Hqh/9MmTkF7YIz8w5c9GT06VKk/img_640x640.jpg'
+}
+
+// 네이버
+user {
+  id: 'dZ0GPuYforBfuRD4F8Qo2gHcW_xCiETOzJ9Cogrg1Ds',
+  name: '이석호',
+  email: 'seokho0120@naver.com',
+  image: 'https://ssl.pstatic.net/static/pwe/address/img_profile.png'
+}
+```
+
+추가적으로 불러오고 싶은 데이터는 `username`과 `isAdmin` 입니다. `username`은 메일의 **@** 앞 부분만 가져와 닉네임으로 사용되며, `isAdmin`은 특정 계정에 관리자 권한을 부여하기 위해 필요합니다.
+
+[next-auth/typescript](https://next-auth.js.org/getting-started/typescript#module-augmentation)
+공식문서를 확인하면 `module augmentation` 모듈 확장이 가능합니다.<br/>
+`next-auth.d.ts`이라는 type 정의 파일을 만들어, 원하는 속성을 추가하면 기존 속성을 덮어씌우게 된다는 것을 알 수 있습니다.
+아래의 코드와 같이 필요한 속성 `username`과 `isAdmin`을 추가했습니다.
+
+```tsx title="next-auth.d.ts"
+import { AuthUser } from './AuthUserType';
+
+declare module 'next-auth' {
+  interface Session {
+    user: AuthUser;
+  }
+}
+
+export type AuthUser = {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  image?: string;
+  isAdmin: boolean;
+};
+```
+
+jwt 콜백은 JWT가 생성되거나, 업데이트 되었을 때 실행됩니다. 더불어 `userId`는 로그인이 필요한 곳에서 전부 사용되며,
+대표적으로 **좋아요 기능과 장바구니**가 있습니다. 하지만 이 과정에서 `userId` **타입 관련 이슈**가 발생했습니다.
+
+```tsx
+// 네이버 로그인 user
+user {
+  id: 'dZ0GPuYforBfuRD4F8Qo2gHcW_xCiETOzJ9Cogrg1Ds',
+  ...
+}
+```
+
+네이버로 로그인 시 **user의 id**는 항상 **텍스트와 숫자가 합쳐진 문자열**로 들어오는데, 구글과 카카오는 **항상 숫자로 이루어진 문자열**로 들어옵니다.
+userId가 필요한 로직에서 항상 **number 타입**으로 필요하기에, **네이버로 로그인 시 정규 표현식을 사용해 문자열에서 숫자만 추출**하여 `userId`로 설정해주었습니다.
+
+```tsx title="auth.ts"
+export const authOptions: NextAuthOptions = {
+  providers: [
+    ...
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        const isNaver = user.email?.includes('naver');
+        const userId = isNaver
+          ? Number(user.id.match(/\d+/g)?.join(''))
+          : user.id;
+
+        token.id = userId;
+        token.name = user.name;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      const user = session?.user;
+
+      if (session.user) {
+        session.user = {
+          ...user,
+          username: user.email?.split('@')[0] || user.name,
+          isAdmin: token.sub === process.env.NEXT_PUBLIC_ADMIN_UID,
+          id: token.id as number,
+        };
+      }
+      return session;
+    },
+  },
+  pages: {
+    signIn: '/auth/signIn',
+  },
+};
+```
+
+### 결과
+
+이렇게 NextAuth의 기본 `Session` 타입을 커스터마이징하여 구글, 카카오, 네이버 소셜 로그인을 개발했습니다.
+로그인은 NextAuth에서 제공하는 로그인 화면을 사용하지 않고, `/auth/signIn` 화면에서 로그인할 수 있도록 구현했습니다.
+
+<p align='center'>
+  <img src='/blog/img/LoginPage.png' width='auto' alt='LoginPage' />
+</p>
 
 ## React Portal
 
-- React Portal을 사용해 Modal을 구현하여 부모 컴포넌트의 CSS 영향을 받지 않고, 불필요한 렌더링 최소화
+**모달(Modal)** 은 원하는 내용을 화면 상에 띄워 표현하는 방식으로, 프로젝트 혹은 실무에서 자주 사용됩니다.
+현업에서 모달을 만들 때 부모 컴포넌트의 CSS 영향을 받아 `z-index`와 같은 옵션을 조정하는 일이 불편했던 경험이 있습니다.
+
+이러한 이슈를 해결하기 위해 React 18의 `Portals`를 이용해 모달을 구현하게되었습니다.<br/>
+`Portals`은 부모 컴포넌트의 내부 DOM이 아닌 **미리 지정해준 DOM**에서 렌더링을 할 수 있습니다.
+또한, **이벤트 버블링이 DOM 내부에서 가능**합니다.
+이벤트 버블링은 중첩된 자식 요소에서 이벤트가 발생하면 부모로 이벤트가 전달되는 것을 말하는데,
+이때 부모 DOM 밖에서 아래의 예시와 같이 구현해도 DOM 트리 위치와 상관없이 protal은 React트리 내부에 존재하기 때문에, React의 가상돔에 따른 이벤트 버블링이 됩니다.
+
+```tsx {13}
+import React from 'react';
+
+const Modal = ({ open, onClose, children }) => {
+  if (!open) return null;
+  return ReactDOM.createPortal(
+    <>
+      <div style={overlayStyle} />
+      <div style={modalStyle}>
+        <button onClick={onClose}>모달 닫기</button>
+        {children}
+      </div>
+    </>,
+    document.getElementById('portal')
+  );
+};
+```
+
+**Portal의 장점**은 아래와 같이 정리할 수 있습니다.
+
+- `<div id='root'>가 아닌, <div id='global-modal'>`에서 마운트되므로 부모 컴포넌트의 CSS영향을 받지 않습니다.
+  따라서 `z-index`와 `overflow:hidden`과 같은 옵션으로 조정이 필요가 없습니다.
+
+- 이벤트 버블링이 DOM 트리 부모의 컴포넌트가 아닌, React 트리의 Protal의 부모 컴포넌트로 전달되기 때문에 버블링에 대한 걱정없이 사용 가능합니다.
+
+#### 적용하기
+
+`createPortal`메서드를 이용해 Modal 컴포넌트를 만들고,
+상위 HTML에 Modal 컴포넌트에서 적은 id 값을 가진 div 요소를 추가하면 됩니다.
+
+```tsx title="Modal.tsx"
+export default function Modal({
+  text,
+  modalText,
+  isModalOpen,
+  setIsModalOpen,
+  onClick,
+  goToCart,
+}: Props) {
+  if (!isModalOpen) return null;
+
+  return ReactDOM.createPortal(
+    <>
+      <div className='fixed inset-0 bg-gray-950 opacity-20'></div>
+      <div className='fixed inset-0 flex items-center justify-center'>
+        <div className='relative flex flex-col items-center bg-white w-96 p-10 rounded-lg'>
+          <button
+            className='absolute top-3 right-3'
+            onClick={() => setIsModalOpen(false)}
+            aria-label='Cancel Button'
+          >
+            <CancelIcon />
+          </button>
+          <p className='mt-4'>{text}</p>
+          <button
+            className='px-4 py-2 mt-10 rounded bg-navypoint hover:bg-pinkpoint text-white'
+            onClick={goToCart}
+            aria-label='Modal Button'
+          >
+            {modalText}
+          </button>
+        </div>
+      </div>
+    </>,
+    document.getElementById('global-modal') as HTMLElement
+  );
+}
+```
+
+Next.js의 루트 HTML 위치에 `<div id='global-modal'></div>`를 추가하여 모달이 마운트할 위치를 지정합니다.
+
+```tsx title="layout.tsx" {13}
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang='ko' className={`${pretendardFont.variable} font-sans`}>
+      <body className='w-full'>
+        <AuthSession>
+          <Provider>
+            <Navbar />
+            <main className='grow min-h-screen'>{children}</main>
+            <div id='global-modal'></div>
+            <Footer />
+          </Provider>
+        </AuthSession>
+        <VercelAnalytics />
+      </body>
+    </html>
+  );
+}
+```
+
+### 결과
+
+결과적으로 `Portal`을 활용하여 **Modal**을 보다 **더 유연하게 개발하고 불필요한 렌더링을 최소화**할 수 있었습니다.
+
+<p align='center'>
+  <img src='/blog/gif/modal.gif' width={800} alt='modal' />
+</p>
+
+## ISR
+
+제품 상세 페이지는 자주 업데이트하지 않아도 되기 때문에, 빠른 로딩 시간과 SEO 최적화를 위해 정적 페이지로 구현했습니다.
+또한, 오픈 그래프와 트위터 카드에 제품 사진과 정보를 포함하기 위한 목적도 있습니다.
+
+`generateStaticParams` 함수를 통해 Firestore의 `productDetail` 컬렉션에서
+productId에 해당하는 데이터를 정적으로 생성했습니다.
+
+```tsx title="detail/[productId]"
+export async function generateStaticParams() {
+  const snapshot = await getDocs(collection(db, 'productDetail'));
+  const productDetails = snapshot.docs.map(
+    (doc) => doc.data() as ProductDetailType
+  );
+
+  return productDetails.map((product) => ({
+    params: { productId: product.productId },
+  }));
+}
+```
+
+### SSG, ISR
+
+`SSG`와 `ISR`은 `CSR`과 다르게, **빌드 시점에 페이지를 미리 생성하여 정적인 HTML 파일을 제공**합니다.
+이미 생성된 HTML을 가져오기 때문에 **SEO최적화에 유리**하고, **페이지 로딩 시간(TTV)**이 빠르며, **보안성**이 뛰어나고 **CDN에 캐싱**되는 장점이 있습니다.
+
+하지만, `SSG`로 구현된 제품 상세페이지는 다시 빌드를 하지 않는 이상 데이터가 업데이트되지 않습니다. 이를 위해 매번 다시 빌드할 수 없으므로
+`revalidate`를 사용해 페이지의 재생성을 요청하는 방식을 사용했으며, **주기적으로 정적 페이지를 업데이트하는 방식**이 `ISR`입니다.
+
+적용 방법은 아주 간단합니다. 페이지 컴포넌트 상단에 `export const revalidate = 60 * 60 * 6`을 선언하면,
+해당 페이지는 6시간 간격으로 업데이트 됩니다.
+
+```tsx
+export const revalidate = 60 * 60 * 6;
+
+type Props = {
+  params: {
+    productId: number;
+  };
+};
+
+export default function ProductDetailPage({ params: { productId } }: Props) {
+  return (
+    <section className='mx-6 md:mx-36 lg:mx-52 flex justify-center'>
+      <ProductDetail productId={productId} />
+    </section>
+  );
+}
+```
+
+### 결과
+
+제품 상세 페이지를 `SSG`가 아닌 `ISR`로 구현하여 **주기적인 데이터 업데이트를 통해 최신 정보를 제공**하면서도
+**SEO 최적화**에 유리한 환경을 구축하였습니다.
 
 ## SEO
 
-- 제품 상세페이지는 ISR로 구현하여 SEO 최적화 및 주기적인 데이터 업데이트
-- 정적, 동적 Metadata 생성 및 sitemap.xml 파일과 robots.txt를 추가하여 검색 엔진 최적화
+Next.js를 이용하면 정적 메타데이터(Static Metadata)와 동적 메타데이터(Dynamic Metadata),
+2가지 방법으로 metadata를 생성할 수 있습니다.
 
-## 반응형 디자인
+페이지 내부에 metadata를 export하여 메타데이터 객체를 생성합니다.
+metadata객체의 속성인 `template`를 활용하면, 페이지 별로 타이틀이 바뀌게 됩니다.
 
-- 다양한 디바이스를 고려한 반응형 디자인 적용
+### 정적 메타데이터(Static Metadata)
 
-## ???
+```tsx title="layout.tsx"
+export const metadata: Metadata = {
+  metadataBase: new URL('https://peach-bloom.vercel.app/'),
+  title: {
+    default: 'Peach Bloom',
+    template: 'Peach Bloom | %s',
+  },
+  description: '화장품을 판매하는 뷰티 종합 쇼핑몰 입니다.',
+  icons: {
+    icon: '/favicon.ico',
+  },
+  openGraph: {
+    title: 'Peach Bloom',
+    description: '화장품을 판매하는 뷰티 종합 쇼핑몰 입니다.',
+    url: 'https://peach-bloom.vercel.app/',
+    locale: 'ko_KR',
+    type: 'website',
+    siteName: 'Peach Bloom',
+  },
+  twitter: {
+    title: 'Peach Bloom',
+    description: '화장품을 판매하는 뷰티 종합 쇼핑몰 입니다.',
+    creator: '@River',
+    images: {
+      url: 'https://peach-bloom.vercel.app/',
+      alt: 'peach-bloom',
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'standard',
+      'max-snippet': -1,
+    },
+  },
+};
+```
 
-- Firestore의 DB를 사용해 CRUD 개발
+### 동적 메타데이터(Dynamic Metadata)
+
+**[slug]** 와 같이 동적 라우팅을 하는 경우 동적인 값을 받아오기 위해 `generateMetadata` 함수를 사용합니다.
+메타데이터를 `generateMetadata` 함수를 사용해 `fetch`하여 동적으로 생성합니다.
+
+```tsx title="products/[categories]"
+export async function generateMetadata({
+  params: { categories },
+}: Props): Promise<Metadata> {
+  const { products } = await getProductsList(categories);
+
+  return products
+    ? {
+        title: `${categories} 의 제품 리스트`,
+        description: `${categories} 에 해당하는 제품들을 확인할 수 있습니다.`,
+        openGraph: {
+          title: `${categories} 의 제품 리스트`,
+          description: `${categories}에 해당하는 제품들을 확인할 수 있습니다.`,
+          images: [products[0].imageUrl],
+          type: 'website',
+          url: `https://peach-bloom.vercel.app/detail/${categories}`,
+          emails: 'seokho0120@gmail.com',
+        },
+      }
+    : {};
+}
+```
+
+### robots.txt
+
+`robots.txt`은 봇들에게 사이트에 어떤 페이지가 있는지 알려주는,
+크롤러에게 웹페이지를 수집할 수 있도록 허용하거나 제한하는 파일입니다.
+
+```tsx title="robots.ts"
+import { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+    },
+    sitemap: 'https://peach-bloom.vercel.app/sitemap.xml',
+    host: 'https://peach-bloom.vercel.app/',
+  };
+}
+```
+
+### sitemap.xml
+
+`sitemap`은 사이트에 있는 페이지, 동영상 및 기타 파일과 그 관계에 관한 정보를 제공하는 파일입니다.
+Google과 같은 검색엔진은 이 파일을 읽고 사이트를 더 효율적으로 크롤링합니다.
+
+```tsx title="robots.ts"
+import { MetadataRoute } from 'next';
+import { getProductsList } from './api/firesotre';
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const CATEGORIES = [
+    'all',
+    'exclusive',
+    'skincare',
+    'haircare',
+    'bodycare',
+    'makeup',
+    'mens',
+  ];
+
+  const categoryPages = CATEGORIES.map((category) => ({
+    url: `https://peach-bloom.vercel.app/products/${category}`,
+    lastModified: new Date().toISOString().split('T')[0],
+  }));
+
+  const productLists = await Promise.all(
+    CATEGORIES.map((category) => getProductsList(category))
+  );
+
+  const productPages = productLists.flat().flatMap((productList) =>
+    productList.products.map((product) => ({
+      url: `https://peach-bloom.vercel.app/products/${product.productId}`,
+      lastModified: new Date().toISOString().split('T')[0],
+    }))
+  );
+
+  return [...categoryPages, ...productPages];
+}
+```
+
+### 결과
+
+이와 같이 Next에서 제공하는 API를 사용해 쉽고 간단하게 검색 엔진 최적화를 구현했습니다.
+
+> ✨ 아래의 링크에서 확인할 수 있습니다.
+
+- [peach-bloom.vercel.app/sitemap.xml](https://peach-bloom.vercel.app/sitemap.xml)
+- [peach-bloom.vercel.app/robots.txt](https://peach-bloom.vercel.app/robots.txt)
 
 ---
 
@@ -36,14 +510,12 @@ category: Dev
 
 - [next-auth/typescript](https://next-auth.js.org/getting-started/typescript)
 - [session.user의 type정보 업데이트하기](https://mycodings.fly.dev/blog/2023-06-03-nextauth-nextjs-tutorial-protected-route-and-jwt-token#sessionuser-%EC%9D%98-type-%EC%A0%95%EB%B3%B4-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8%ED%95%98%EA%B8%B0)
+- [Next-auth 를 이용한 로그인 구현](https://velog.io/@dosomething/Next-auth-%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84#-next-auth-%EC%82%AC%EC%9A%A9-%EB%B0%A9%EB%B2%95)
+- [NextAuth 모듈 augmentation(feat. 타입스크립트)](https://velog.io/@jason_kim/next-auth-module-augmentationwith-typescript)
 - [react.dev/createPortal](https://react.dev/reference/react-dom/createPortal)
 - [[Nextjs] 모달(Modal) 만들기](https://han-py.tistory.com/598)
 - [Web: React Portal 알아보기](https://medium.com/hcleedev/web-react-portal-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0-f00a48157862)
-- [React Portal](https://yoonhu.vercel.app/react/Portal#%EC%A0%95%EB%A6%AC)
+- [React Portal](https://yoonhu.vercel.app/react/Portal)
 - [React Portal이란?](https://hyebeen2658.tistory.com/16)
-- [nextjs/time-based-revalidation](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#time-based-revalidation)
-- []()
-- []()
-- []()
-- []()
-- []()
+- [nextjs/generateStaticParams](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes#generating-static-params)
+- [nextjs/revalidating](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating)
