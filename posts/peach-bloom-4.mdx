@@ -491,7 +491,7 @@ Next/Image 컴포넌트에서 제공하는 대표적인 기능은 다음의 3가
 
 ### Next/Image 적용하기
 
-#### srcSet 개선
+#### srcSet 재설정
 
 Next/Image를 사용할 경우 이미지에 대한 초기 요청 시 서버에서 사이즈, 포맷 등이 최적화된 이미지 파일들을 생성합니다. 그렇기 때문에
 최초로 페이지를 로드하게 되는 사용자는 Next.js 서버에서 이미지 생성이 완료될 때까지 기다려야 하기 때문에 오랜 시간 대기해야 할 수 있습니다.
@@ -501,6 +501,7 @@ Next/Image를 사용할 경우 이미지에 대한 초기 요청 시 서버에�
 이미지 후보들을 생성하고, 뷰포트 너비에 따라 로드될 이미지 후보들 중에서 선택하여 로드합니다.
 
 아래의 코드는 재설정을 하지 않을 시 default 값입니다.
+재설정 하는 방법은 `next.config.js`의 `images.imageSizes`와 `images.deviceSizes`를 수정하면 됩니다.
 
 ```tsx title="next.config.js"
 module.module.exports = {
@@ -511,14 +512,12 @@ module.module.exports = {
 };
 ```
 
-재설정 하는 방법은 `next.config.js`의 `images.imageSizes`와 `images.deviceSizes`를 수정하면 됩니다.
 웹사이트의 반응형 디자인을 고려하여 필요에 맞는 사이즈로 재설정하여 불필요한 이미지 생성을 개선했습니다.
 
 ```tsx title="next.config.js"
 const nextConfig = {
   ...
   images: {
-    formats: ['image/avif', 'image/webp'],
     imageSizes: [100, 200, 300, 400, 500],
     deviceSizes: [580, 1024, 1284, 1400, 1600, 1800],
   },
@@ -536,15 +535,16 @@ srcSet을 개선하여 필요에 맞게 이미지를 로드하여 효율적으�
 
 #### Priority
 
-priority는 우선순위라는 뜻으로, 이 속성을 설정하면 브라우저가 미리 렌더링을 합니다. <br/>
-그래서 랜딩 페이지에서 제일 처음 보이는 이미지에는 priority을 지정하는게 성능면에서 당연히 유리합니다.
+`priority`는 우선순위라는 뜻으로, 이 속성을 설정하면 **브라우저가 미리 렌더링**을 합니다. <br/>
+그래서 랜딩 페이지에서 제일 처음 보이는 이미지에는 `priority`을 지정하는게 **성능면에서 당연히 유리**합니다.
 
-사실 처음에는 모든 Image에 priority를 설정하면 LCP 성능이 개선되는줄 알았습니다.
-하지만 모든 Image에 priority를 설정하면, 웹 브라우저는 모든 이미지를 동시에 불러오려고 시도하고, 이는 네트워크에 부담을 주기에 LCP를 느리게 만들 수 있습니다.
-또한, 중요하지 않은 이미지가 먼저 로드되어 중요한 이미지의 로드를 지연시키는 이슈가 발생할 수도 있습니다.
+사실 처음에는 모든 Image에 `priority`를 설정하면 LCP 성능이 개선되는줄 알았습니다.
+하지만 모든 Image에 `priority`를 설정하면, 웹 브라우저는 모든 이미지를 동시에 불러오려고 시도하고, 이는 **네트워크에 부담을 주기에 LCP를 느리게** 만들 수 있습니다.
+또한, 중요하지 않은 이미지가 먼저 로드되어 **중요한 이미지의 로드를 지연시키는 이슈**가 발생할 수도 있습니다.
 
-priority 속성은 대표적으로 메인 화면에서 유용하게 사용했습니다. 화면 로드 시 처음에 보이는 이미지의 개수만 priority 속성을 적용
-시키기 위해 `priorityIndices` prop을 `CarouselSwiper`컴포넌트에 전달해주며 type 별로 초기 로드되는 이미지의 개수를 다르게 설정했습니다.
+`priority` 속성은 대표적으로 메인 화면에서 유용하게 사용되었습니다.<br/>
+화면 로드 시 처음에 보이는 이미지의 개수만 `priority` 속성을 적용 시키기 위해 `priorityIndices` prop을
+`CarouselSwiper`컴포넌트에 전달해주며 **type 별로 초기 로드되는 이미지의 개수를 다르게 설정**했습니다.
 
 ```tsx title="Carousel.tsx" {9, 17 ,25}
 export default function Carousel() {
@@ -618,7 +618,8 @@ export default function CarouselSwiper(...) {
 
 #### 결과
 
-priority를 적절하게 설정하여 메인 화면에서 BEST 상품은 1개, 나머지는 각 3개씩 총 7개의 이미지가 미리 렌더링 됩니다.
+`priority`를 적절하게 설정하여 메인 화면에서 BEST 상품은 1개, 나머지는 각 3개씩
+총 7개의 이미지가 **미리 렌더링되어 LCP 성능을 개선**했습니다.
 
 <p align='center'>
   <img src='/blog/img/priority.png' width='auto' alt='priority' />
@@ -626,7 +627,7 @@ priority를 적절하게 설정하여 메인 화면에서 BEST 상품은 1개, �
 
 #### placeholder
 
-사용자가 예상하지 못한 순간 레이아웃이 흔들리는 현상을 CLS(Cumulative Layout Shift)라고 합니다<br/>
+사용자가 **예상하지 못한 순간 레이아웃이 흔들리는 현상을 CLS(Cumulative Layout Shift)**라고 합니다<br/>
 만약 이미지 로드되기 전까지 영역의 높이가 0이었다가, 로드된 후 이미지만큼 영역이 확장된다면 CLS 성능에 안 좋은 영향을 줍니다.
 
 `next/image`는 `placeholder` 속성을 통해 **빈 영역 또는 blur 이미지를 제공하여, 레이아웃이 흔들리지 않게 합니다.**
@@ -657,7 +658,7 @@ export default function Signin({ providers, callbackUrl }: Props) {
 
 #### 결과
 
-로컬에서 사용하는 이미지인 `Symbol`과 `Logo`에 blur 처리가 되어 CLS를 개선했습니다.
+**로컬**에서 사용하는 이미지인 **`Symbol`과 `Logo`에 blur 처리가 되어 CLS를 개선**했습니다.
 
 <p align='center'>
   <img src='/blog/gif/placeholder.gif' width='auto' alt='placeholder' />
@@ -665,18 +666,20 @@ export default function Signin({ providers, callbackUrl }: Props) {
 
 ### ✨ 폰트 최적화
 
-- **swap 속성**
-  CSS의 `@font-face` 부분에 `font-display: swap` 를 적용하면 폰트가 로딩되지 않았을 때 시스템 폰트를 보여줍니다.
-  따라서 화면이 비어있는 시간이 줄어들어 FP(First Content Paint) 시간을 단축할 수 있습니다.
+**swap 속성**
 
-- **@next/font**
-  구글 폰트를 사용한다면 폰트를 다운받기 위해 구글에 네트워크 요청을 보냅니다.
+- CSS의 `@font-face` 부분에 `font-display: swap` 를 적용하면 폰트가 로딩되지 않았을 때 시스템 폰트를 보여줍니다.
+  따라서 **화면이 비어있는 시간이 줄어들어 FP(First Content Paint) 시간을 단축**할 수 있습니다.
+
+**@next/font**
+
+- 구글 폰트를 사용한다면 폰트를 다운받기 위해 구글에 네트워크 요청을 보냅니다.
   하지만 `@next/font`를 사용한다면, 네트워크 요청 없이 폰트를 바로 사용할 수 있기에 네트워크 페이로드를 줄일 수 있습니다.
 
 #### 적용하기
 
-[Next.js의 가이드](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts#local-fonts)에 따라 최적화를 진행했습니다.<br/>
-next/font/local의 로컬 폰트를 로드하고 **swap 설정**을 해줬고, layout의 **html에 적용**했습니다.
+[Next.js의 가이드](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts#local-fonts)에 따라 **최적화를 진행**했습니다.<br/>
+`next/font/local`의 로컬 폰트를 로드하고 **swap 설정**을 해줬고, `layout`의 **html에 적용**했습니다.
 
 ```tsx title="fontUtil" {22, 23}
 import localFont from 'next/font/local';
@@ -723,7 +726,7 @@ export default function RootLayout({
 
 #### 결과
 
-폰트가 google이 아닌 next에서 로드되는 것을 확인할 수 있으며 CLS 점수도 0점으로 최적화할 수 있었습니다.
+폰트가 google이 아닌 **next에서 로드**되는 것을 확인할 수 있으며 **CLS 점수도 0점으로 최적화**할 수 있었습니다.
 
 <p align='center'>
   <img src='/blog/img/font-optimizing.png' width='auto' alt='font-optimizing' />
@@ -731,9 +734,10 @@ export default function RootLayout({
 
 ## 성능 개선 결과 및 회고
 
-Lighthouse를 통해 이미지와 폰트 등 다양한 리소스의 최적화 방법과 번들 사이즈 측정 등 다양한 방식으로 개선해볼 수 있었습니다.
+Lighthouse를 통해 이미지와 폰트 등 다양한 리소스의 최적화 방법과 번들 사이즈 측정 등 다양한 방식으로 개선할 수 있었습니다.
 
-✨ **최적화 이전** Lighthouse의 Performance 점수는 **67점**입니다.
+✨ **최적화 이전** <br/>
+Lighthouse의 Performance 점수는 **67점**입니다.
 
 <p align='center'>
   <img
@@ -743,8 +747,9 @@ Lighthouse를 통해 이미지와 폰트 등 다양한 리소스의 최적화 �
   />
 </p>
 
-✨ **최적화 이후** Lighthouse의 Performance 점수는 **97점**으로, 총 **57% 향상에 성공**했습니다.<br/>
-특히 LCP와 Speed Index가 가장 많이 개선되었고, 개선 전 보다 실제로 웹사이트의 UX가 유연함을 느꼈습니다.
+✨ **최적화 이후** <br/>
+Lighthouse의 Performance 점수는 **97점**으로, 총 **57% 향상에 성공**했습니다.<br/>
+특히 LCP와 Speed Index가 가장 많이 개선되었고, 실제로 개선 전 보다 웹사이트의 UX가 눈에 띄게 유연함을 체감할 수 있었습니다.
 
 **FCP** 0.3s → 0.3s<br/>
 **LCP** 2.7s → 1.3s<br/>
@@ -760,10 +765,10 @@ Lighthouse를 통해 이미지와 폰트 등 다양한 리소스의 최적화 �
   />
 </p>
 
-부끄럽지만 현업에서도 이전까지의 프로젝트에서도 이렇게 성능 개선에 집중했던 경험이 없었습니다. 항상 기능 구현에 급급하게 개발하던 제가
-성능에 집중하며 테스트를 한다니 감개무량합니다.
+부끄럽지만 현업에서도, 이전의 프로젝트에서도 이처럼 성능 개선에 집중한 경험이 없었습니다. 항상 기능 구현에만 초점을 두고 급하게 개발하던
+제가 성능에 집중하며 테스트를 한다니 감개무량합니다.
 
-물론 아직 더 개선해야할 점이 많이 남아있으며, 추후 First Load JS에 집중해 개선 예정이고 댓글과 스켈레톤 UI, 결제 모듈 연결 등
+물론 아직 더 개선해야할 점이 많이 남아있으며, 추후 First Load JS에 집중해 개선 예정이고 댓글과 스켈레톤 UI, 결제 연동 등
 추가 기능도 개발 예정입니다.
 
 #### ✨ 총 정리
