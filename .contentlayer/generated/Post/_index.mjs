@@ -13,6 +13,7 @@ import objectNullMdx from './object-null.mdx.json' assert { type: 'json' }
 import peachBloom_1Mdx from './peach-bloom-1.mdx.json' assert { type: 'json' }
 import peachBloom_2Mdx from './peach-bloom-2.mdx.json' assert { type: 'json' }
 import peachBloom_3Mdx from './peach-bloom-3.mdx.json' assert { type: 'json' }
+import peachBloom_4Mdx from './peach-bloom-4.mdx.json' assert { type: 'json' }
 import peachBloomMdx from './peach-bloom.mdx.json' assert { type: 'json' }
 import videoUploadApp_3Mdx from './video-upload(app)-3.mdx.json' assert { type: 'json' }
 import videoUploadApp_4Mdx from './video-upload(app)-4.mdx.json' assert { type: 'json' }
@@ -20,4 +21,4 @@ import videoUploadApp_5Mdx from './video-upload(app)-5.mdx.json' assert { type: 
 import videoUploadWeb_1Mdx from './video-upload(web)-1.mdx.json' assert { type: 'json' }
 import videoUploadWeb_2Mdx from './video-upload(web)-2.mdx.json' assert { type: 'json' }
 
-export const allPosts = [conditionalTernaryOperatorMdx, createBlog_1Mdx, createBlog_2Mdx, createBlog_3Mdx, createBlog_4Mdx, developComponentsMdx, fileDataMdx, inputEtargetMdx, metaTagMdx, objectNullMdx, peachBloom_1Mdx, peachBloom_2Mdx, peachBloom_3Mdx, peachBloomMdx, videoUploadApp_3Mdx, videoUploadApp_4Mdx, videoUploadApp_5Mdx, videoUploadWeb_1Mdx, videoUploadWeb_2Mdx]
+export const allPosts = [conditionalTernaryOperatorMdx, createBlog_1Mdx, createBlog_2Mdx, createBlog_3Mdx, createBlog_4Mdx, developComponentsMdx, fileDataMdx, inputEtargetMdx, metaTagMdx, objectNullMdx, peachBloom_1Mdx, peachBloom_2Mdx, peachBloom_3Mdx, peachBloom_4Mdx, peachBloomMdx, videoUploadApp_3Mdx, videoUploadApp_4Mdx, videoUploadApp_5Mdx, videoUploadWeb_1Mdx, videoUploadWeb_2Mdx]
