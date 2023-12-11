@@ -9,7 +9,17 @@ export default function Meitalk() {
       </h1>
 
       {MEITALK_INFO.map(
-        ({ title, date, href, skills, skill_list, video, video_href }) => (
+        ({
+          title,
+          date,
+          href,
+          skills,
+          skill_list,
+          video,
+          video_href,
+          description,
+          description1,
+        }) => (
           <div key={href} className='flex flex-col my-4'>
             <div className='mb-2'>
               <Link
@@ -35,6 +45,12 @@ export default function Meitalk() {
               </p>
             </div>
 
+            <div className='gap-2 my-3'>
+              <h2 className='font-bold text-xl'>Description.</h2>
+              <p>{description}</p>
+              <p>{description1}</p>
+            </div>
+
             <div>
               <p className='text-xl font-bold'>{skills}</p>
               <p>{skill_list}</p>
@@ -43,7 +59,17 @@ export default function Meitalk() {
         )
       )}
 
-      {MEITALK_WORKS.map(({ title, sub_1, sub_2, sub_3 }) => (
+      <div>
+        <h2 className='font-bold text-xl'>What I did.</h2>
+        <div>
+          <div className='relative flex items-start gap-2 mb-1 pl-3'>
+            <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+            <p>asd</p>
+          </div>
+        </div>
+      </div>
+
+      {/* {MEITALK_WORKS.map(({ title, sub_1, sub_2, sub_3 }) => (
         <div key={title}>
           <h2 className='font-bold text-xl'>{title}</h2>
           <div className='mt-1 mb-4'>
@@ -192,7 +218,7 @@ export default function Meitalk() {
             </div>
           )}
         </div>
-      ))}
+      ))} */}
     </section>
   );
 }

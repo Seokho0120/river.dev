@@ -20,13 +20,10 @@ export default function Skills() {
         Tailwind CSS, Figma
       </p>
 
-      <ul>
+      <ul className='flex flex-col font-medium items-start gap-2 mb-1 whitespace-pre-line'>
         {SKILLS.map((skill, idx) => (
-          <li
-            key={idx}
-            className='flex flex-col font-medium relative items-start gap-2 mb-1 pl-3 whitespace-pre-line'
-          >
-            <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-0 top-[0.6rem] inline-block' />
+          <li key={idx} className='relative pl-3'>
+            <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 rounded-full'></span>
             {skill}
           </li>
         ))}

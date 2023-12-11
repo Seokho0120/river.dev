@@ -9,6 +9,30 @@ export const MEITALK_INFO = [
     video: '시연영상',
     video_href:
       'https://auspicious-move-42f.notion.site/Meitalk-c9a6a291c9c442bc9702d728ef985419?pvs=4',
+    description: 'MeiTalk의 메인 기능 중 하나인 비디오 업로드 코어 기능 개발.',
+    description1:
+      '초기에 1GB 이하 비디오 업로드 부터, 기획 변경 후 5GB 이상 비디오 업로드까지 구현.',
+  },
+];
+
+export const MEITALK_WORKSS = [
+  {
+    title: '비디오 업로드 기능 구현(Web)',
+    sub_1: {
+      sub_title: '1GB 이하 비디오 업로드',
+      sub_href: 'https://river-dev.vercel.app/posts/video-upload(web)-1',
+      problem: '이슈',
+      problem_list: [
+        '500mb 이상 업로드 도중 멈춤 및 속도 저하 발생',
+        '700mb 비디오 → 4분 이상 소요',
+      ],
+      solution: '개선 및 성과',
+      solution_list: [
+        'base64 형식이 아닌, URL.createObjectURL 메서드를 사용해 blob객체의 url 사용',
+        '메모리 누수 방지: revokeObjectURL 메서드를 활용해 업로드 후 메모리 해제',
+        '업로드 속도 향상: 기존 700mb 비디오 기준 4분 이상 소요 → 1분 이하로 개선',
+      ],
+    },
   },
 ];
 
