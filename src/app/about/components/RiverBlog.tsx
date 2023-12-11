@@ -14,6 +14,8 @@ export default function RiverBlog() {
           status,
           github,
           github_href,
+          description,
+          description1,
         }) => (
           <div key={href} className='flex flex-col my-4'>
             <div className='mb-2'>
@@ -39,9 +41,21 @@ export default function RiverBlog() {
                 </Link>
               </p>
             </div>
+
+            <div className='gap-2 my-3'>
+              <h2 className='font-bold text-xl'>{description}</h2>
+              <div className='relative pl-3'>
+                <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 dark:bg-darkPoint rounded-full' />
+                <p>{description1}</p>
+              </div>
+            </div>
+
             <div>
               <p className='text-xl font-bold'>{skills}</p>
-              <p>{skill_list}</p>
+              <div className='relative pl-3'>
+                <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 dark:bg-darkPoint rounded-full' />
+                {skill_list}
+              </div>
             </div>
           </div>
         )
@@ -67,9 +81,9 @@ export default function RiverBlog() {
           {contents.map((content, idx) => (
             <li
               key={idx}
-              className='font-medium relative flex items-start gap-2 mb-1 pl-7 whitespace-pre-line'
+              className='font-medium relative flex items-start gap-2 mb-1 pl-3 whitespace-pre-line'
             >
-              <div className='w-1 h-1 bg-point dark:bg-darkPoint rounded-full absolute left-4 top-[0.6rem] inline-block' />
+              <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 dark:bg-darkPoint rounded-full' />
               {content}
             </li>
           ))}

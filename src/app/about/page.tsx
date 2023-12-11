@@ -18,10 +18,6 @@ export default function MePage() {
       <Careers />
       <Skills />
       <Projects />
-      <p className='my-10 font-semibold text-lg'>
-        🚨 Peach-bloom 내용은 업데이트 중 입니다. 깃허브를 통해 확인
-        부탁드립니다.
-      </p>
       <Education />
       <OtherCareers />
     </>

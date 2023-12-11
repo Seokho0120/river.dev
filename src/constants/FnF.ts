@@ -3,7 +3,7 @@ export const FNF_INFO = [
     title: 'F&F Dash Board',
     date: '2022.01 - 2022.02',
     href: 'https://www.youtube.com/watch?v=A85Y6BtZaqw',
-    skills: 'Skills',
+    skills: 'Skills.',
     skill_list:
       'React, TypeScript, Styled-components, Recoil, Rechart.js, Material-ui',
     video: '시연영상',
@@ -13,6 +13,9 @@ export const FNF_INFO = [
     review: '회고',
     review_href:
       'https://velog.io/@leesegho/%EC%97%90%ED%94%84%EC%95%A4%EC%97%90%ED%94%84-%ED%9B%84%EA%B8%B0',
+    description: 'Description.',
+    description1:
+      '순수 자바스크립트로 개발된 데이터 대시보드를 React로 전환하는 프로젝트 참여',
   },
 ];
 

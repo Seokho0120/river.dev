@@ -1,24 +1,24 @@
 import Link from 'next/link';
-import { FNF_INFO, FNF_WORKS } from '@/src/constants/FnF';
+import { PEACHBLOOM_INFO, PEACHBLOOM_WORKS } from '@/src/constants/PeachBloom';
 
-export default function FnF() {
+export default function PeachBloom() {
   return (
     <section className='mb-10'>
-      {FNF_INFO.map(
+      {PEACHBLOOM_INFO.map(
         ({
           title,
           date,
           href,
           skills,
           skill_list,
-          video,
-          video_href,
           github,
           github_href,
-          review,
-          review_href,
+          blog,
+          blog_href,
           description,
           description1,
+          per,
+          home,
         }) => (
           <div key={href} className='flex flex-col my-4'>
             <div className='mb-2'>
@@ -32,7 +32,7 @@ export default function FnF() {
                 {title}
               </Link>
               <p className='mt-2 italic text-neutral-600 dark:text-neutral-400'>
-                {date} |{' '}
+                {date} | {per} |{' '}
                 <Link
                   href={github_href}
                   className='text-point dark:text-darkPoint underline underline-offset-2 decoration-point dark:decoration-darkPoint hover:no-underline'
@@ -44,23 +44,23 @@ export default function FnF() {
                 </Link>{' '}
                 |{' '}
                 <Link
-                  href={video_href}
+                  href={blog_href}
                   className='text-point dark:text-darkPoint underline underline-offset-2 decoration-point dark:decoration-darkPoint hover:no-underline'
                   target='_blank'
                   rel='noopener noreferrer'
-                  aria-label={video_href}
+                  aria-label={blog_href}
                 >
-                  {video}
+                  {blog}
                 </Link>{' '}
                 |{' '}
                 <Link
-                  href={review_href}
+                  href={href}
                   className='text-point dark:text-darkPoint underline underline-offset-2 decoration-point dark:decoration-darkPoint hover:no-underline'
                   target='_blank'
                   rel='noopener noreferrer'
-                  aria-label={review_href}
+                  aria-label={href}
                 >
-                  {review}
+                  {home}
                 </Link>
               </p>
             </div>
@@ -84,42 +84,37 @@ export default function FnF() {
         )
       )}
 
-      {FNF_WORKS.map(({ title, contents, title_href, sub_href }, idx) => (
-        <div key={idx} className='mb-2'>
-          <h2 className='flex items-center font-bold text-xl'>
-            {title}
-            {title_href && (
+      {PEACHBLOOM_WORKS.map(({ what, title, sub_1 }) => (
+        <div key={title}>
+          <p className='text-xl font-bold mb-1'>{what}</p>
+
+          <div className='flex items-center'>
+            <h2 className='font-bold text-xl'>{title}</h2>
+            {sub_1.sub_href && (
               <Link
                 className='text-sm ml-1 text-point dark:text-darkPoint underline decoration-point dark:decoration-darkPoint hover:no-underline'
-                href={title_href}
+                href={sub_1.sub_href}
                 target='_blank'
                 rel='noopener noreferrer'
-                aria-label={title_href}
+                aria-label={sub_1.sub_href}
               >
                 [상세보기]
               </Link>
             )}
-          </h2>
-          {contents.map((content, idx) => (
-            <li
-              key={idx}
-              className='font-medium relative flex items-center mb-1 pl-3 whitespace-pre-line'
-            >
-              <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 dark:bg-darkPoint  rounded-full' />
-              {content}
-              {sub_href && content === '재사용 컴포넌트 관리의 중요성 경험' && (
-                <Link
-                  className='ml-1 font-bold text-sm text-point dark:text-darkPoint underline decoration-point dark:decoration-darkPoint hover:no-underline'
-                  href={sub_href}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  aria-label={sub_href}
-                >
-                  [상세보기]
-                </Link>
-              )}
-            </li>
-          ))}
+          </div>
+
+          <div className='mt-1 mb-4'>
+            <h3 className='relative flex items-center font-bold text-lg mb-1'></h3>
+            {sub_1.sub_list.map((list, idx) => (
+              <li
+                key={idx}
+                className='pl-3 font-medium relative flex items-start gap-2 mb-1 whitespace-pre-line'
+              >
+                <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 dark:bg-darkPoint rounded-full' />
+                {list}
+              </li>
+            ))}
+          </div>
         </div>
       ))}
     </section>

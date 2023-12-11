@@ -9,6 +9,8 @@ export const RiverBlog_INFO = [
     github: 'Github',
     github_href: 'https://github.com/Seokho0120/river.dev',
     status: '개인프로젝트',
+    description: 'Description.',
+    description1: '개인 블로그 및 포트폴리오 개발',
   },
 ];
 
