@@ -23,7 +23,7 @@ export default function Skills() {
       <ul className='flex flex-col font-medium items-start gap-2 mb-1 whitespace-pre-line'>
         {SKILLS.map((skill, idx) => (
           <li key={idx} className='relative pl-3'>
-            <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 rounded-full'></span>
+            <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 dark:bg-darkPoint rounded-full'></span>
             {skill}
           </li>
         ))}

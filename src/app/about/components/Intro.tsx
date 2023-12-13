@@ -29,10 +29,10 @@ export default function Intro() {
         </div>
       </div>
 
-      <h3 className='text-2xl font-bold mb-2'>
+      <h3 className='flex items-center gap-1 text-2xl font-bold mb-2'>
         저는{' '}
-        <span className='inline-flex items-center rounded-md bg-blue-50 dark:bg-yellow-50 px-2 py-1 text-xs font-medium text-point dark:text-darkPoint ring-1 ring-inset ring-blue-700/10 dark:ring-yellow-700/10'>
-          _ _ _ _ _ _
+        <span className='h-7 inline-flex items-center rounded-md bg-blue-50 dark:bg-yellow-50 px-2 py-1 text-xs font-medium text-point dark:text-darkPoint ring-1 ring-inset ring-blue-700/10 dark:ring-yellow-700/10'>
+          _ _ _ _ _ _ _ _
         </span>{' '}
         하는 개발자 입니다.
       </h3>

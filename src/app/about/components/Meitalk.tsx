@@ -49,9 +49,9 @@ export default function Meitalk() {
             <div className='gap-2 my-3'>
               <h2 className='font-bold text-xl'>{description}</h2>
               <div className='relative pl-3'>
-                <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 rounded-full' />
+                <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 dark:bg-darkPoint rounded-full' />
                 <p>{description1}</p>
-                <span className='absolute left-0 top-9 w-1 h-1 bg-blue-500 rounded-full' />
+                <span className='absolute left-0 top-9 w-1 h-1 bg-blue-500 dark:bg-darkPoint rounded-full' />
                 <p>{description2}</p>
               </div>
             </div>
@@ -109,7 +109,7 @@ export default function Meitalk() {
                 key={idx}
                 className='pl-3 font-medium relative flex items-start gap-2 mb-1 whitespace-pre-line'
               >
-                <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 rounded-full' />
+                <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 dark:bg-darkPoint rounded-full' />
                 {list}
               </li>
             ))}
@@ -134,7 +134,7 @@ export default function Meitalk() {
                 key={idx}
                 className='pl-3 font-medium relative flex items-start gap-2 mb-1 whitespace-pre-line'
               >
-                <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 rounded-full' />
+                <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 dark:bg-darkPoint rounded-full' />
                 {list}
               </li>
             ))}
@@ -159,7 +159,7 @@ export default function Meitalk() {
                 key={idx}
                 className='pl-3 font-medium relative flex items-start gap-2 mb-1 whitespace-pre-line'
               >
-                <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 rounded-full' />
+                <span className='absolute left-0 top-2.5 w-1 h-1 bg-blue-500 dark:bg-darkPoint rounded-full' />
                 {list}
               </li>
             ))}
