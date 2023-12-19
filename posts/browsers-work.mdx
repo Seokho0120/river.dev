@@ -132,8 +132,8 @@ DNS가 naver.com에 해당하는 IP 주소를 전달해주고, IP 주소를 받�
 
 ## CSSOM tree
 
-일반적으로 CSS를 링크하는 코드`<link rel="stylesheet" href="styles.css">`가 HTML 코드내에 삽입되어 있기 때문에,
-HTML을 파싱하는 도중에 CSS 파싱이 시작됩니다.
+코드를 맨위에서부터 읽는 도중에 CSS를 링크하는 코드`<link rel="stylesheet" href="styles.css">`가
+HTML 코드내에 삽입되어 있기 때문에, HTML을 파싱하는 도중에 CSS 파싱이 시작됩니다.
 
 순서는 html과 동일하게 **바이트 스트림 → 캐릭터화 → 토큰화 → 노드 → CSSOM(CSS Object Model) Tree** 순서로 진행되며,
 마지막에 **CSSOM Tree**를 생성합니다.
@@ -142,7 +142,13 @@ HTML을 파싱하는 도중에 CSS 파싱이 시작됩니다.
   <img src='/blog/img/cssom.png' width='auto' alt='CSSOM' />
 </p>
 
-## asd
+## Javascript
+
+CSS와 동일하게 읽는 도중 `<script src="main.js">` 코드가 HTML 코드내에 작성되어 있다면, DOM 생성을 중지하고
+JS 엔진에 권한을 넘기게 됩니다. JS가 끝나면 HTML 파서로 권한을 넘기고, 중지되었던 시점부터 DOM 생성을 진행하게 됩니다.
+
+따라서 script 태그의 위치에 따라서 DOM 생성이 지연될 수 있기 때문에 일반적으로 body의 끝부분에 script 태그를 넣어주는 것이 좋습니다.
+혹은 script 태그의 속성인 `defer`와 `async` 옵션을 사용해 DOM의 생성을 막지 않는 방법도 있습니다.
 
 ---
 
