@@ -142,6 +142,12 @@ HTML 코드내에 삽입되어 있기 때문에, HTML을 파싱하는 도중에 
   <img src='/blog/img/cssom.png' width='auto' alt='CSSOM' />
 </p>
 
+### CSS Link 태그가 항상 위에 있는 이유
+
+CSS는 DOM의 생성을 막지 않습니다. DOM이 완성됫다고 바로 웹사이트가 보이지 않습니다. DOM은 항상 CSSOM을 기다립니다.
+그렇기 때문에 CSSOM을 최대한 빨리 생성하는게 중요합니다. CSSOM은 웹사이트의 성능에 중요한 역할을 하며, CSS 파일이 너무 크면 DOM은 계속
+CSSOM을 기다리게 되기 때문에 현재 페이지에서 필요한 CSS를 구분하여 만드는게 중요합니다. ex) media-query
+
 ## Javascript
 
 CSS와 동일하게 읽는 도중 `<script src="main.js">` 코드가 HTML 코드내에 작성되어 있다면, DOM 생성을 중지하고
@@ -149,6 +155,18 @@ JS 엔진에 권한을 넘기게 됩니다. JS가 끝나면 HTML 파서로 권�
 
 따라서 script 태그의 위치에 따라서 DOM 생성이 지연될 수 있기 때문에 일반적으로 body의 끝부분에 script 태그를 넣어주는 것이 좋습니다.
 혹은 script 태그의 속성인 `defer`와 `async` 옵션을 사용해 DOM의 생성을 막지 않는 방법도 있습니다.
+
+## Render Tree
+
+브라우저는 DOM tree와 CSSOM tree를 합쳐 **Render Tree**를 생성합니다.
+진짜로 웹사이트를 그리기 위한 최종 설계도라고 이해하면 됩니다. <br/>
+
+이때 화면에 그려지지 않는 요소들(쓸데없는 노드들), 예를들면 `<head>`와 `<script>` 같은 태그들과 `<display: none>` 스타일이 적용된 엘리먼트들은 시각적으로 나타낼 것이 없기 때문에
+렌더트리에 그려지지 않습니다.
+
+<p align='center'>
+  <img src='/blog/img/render-tree.png' width='auto' alt='render-tree' />
+</p>
 
 ---
 
