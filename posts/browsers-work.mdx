@@ -1,5 +1,5 @@
 ---
-title: 브라우저의 동작원리
+title: 브라우저의 동작원리, 브라우저는 어떻게 동작할까?
 publishedAt: '2023-12-19'
 summary: 브라우저의 동작원리를 아주 자세하게 정리해봅시다!
 category: Dev
@@ -47,3 +47,19 @@ category: Dev
 - 자료 저장소
 
   - 브라우저에서 자료를 저장하는 계층, ex) 로컬스토리지, 세션스토리지, 쿠키
+
+## 주소창에 naver.com을 입력하면 어떤일이 벌어질까? DNS란?
+
+주소창에 naver.com을 입력하면 브라우저가 naver.com을 인식하게 됩니다.
+하지만 naver.com 자체를 인식하는게 아닙니다. naver.com은 인간이 보기 편하게 부여한 이름입니다.
+브라우저가 이해하는 것은 IP주소이기 때문에 컴퓨터가 naver.com의 IP주소를 찾아야하고, DNS(Domain Name System)라는 서비스에 찾아갑니다.
+
+<p align='center'>
+  <img src='/blog/img/dns.png' width='auto' alt='dns' />
+</p>
+
+DNS는 사전처럼 naver.com의 IP 주소는 192.10.6.3 / google.com의 IP 주소는 192.5.30.3 이런식으로 이름과 IP 주소가 정리되어 있으며,
+DNS가 naver.com에 해당하는 IP 주소를 전달해주고, IP 주소를 받으면 그때서야 주소를 찾아갑니다.
+
+사실 위의 설명처럼 해당하는 IP주소를 찾는게 단순하지 않습니다. 세상에 정말 많은 웹사이트와 IP 주소가 있기 때문입니다.
+힘들게 알게된 주소는 굉장히 어렵게 알게된 만큼, `DNS cache`에 저장한 후 다음에는 여기서 바로 가져옵니다.
