@@ -16,10 +16,10 @@ export default function MePage() {
     <>
       <Intro />
       <Careers />
-      <Skills />
+      {/* <Skills />
       <Projects />
       <Education />
-      <OtherCareers />
+      <OtherCareers /> */}
     </>
   );
 }
